@@ -33,7 +33,7 @@ def init_bot() -> WebDriver:
     return driver
 
 
-def do_login(chrome, email="", pw=""):
+def do_login(chrome, email, pw):
     try:
         # TODO P4: Move URL, no magic strings
         chrome.get("https://www.linkedin.com/login?trk=guest_homepage-basic_nav-header-signin")
@@ -48,7 +48,7 @@ def do_login(chrome, email="", pw=""):
 
 
 # TODO P2: Split navigation and parse/actions
-# TODO P1: Use config fiiles
+# TODO P1: Use config files
 def jobs_actions(chrome: WebDriver, start: int = 0):
     url: str = UrlGenerator().generate(start=start)
     chrome.get(url)
@@ -85,9 +85,14 @@ def print_relevant_info(msg):
 
 
 def main():
+    # TODO P4: yaml is cacota, change it.
+    import yaml
+    with open("app_config.yaml", "r") as f:
+        config = yaml.load(f, Loader=yaml.FullLoader)
+
     chrome: WebDriver = init_bot()
     print_relevant_info("Logging into linkedin.")
-    do_login(chrome=chrome)
+    do_login(chrome=chrome, email=config["user"], pw=config["password"])
     jobs_actions(chrome=chrome)
 
 
