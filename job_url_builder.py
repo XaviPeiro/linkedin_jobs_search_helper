@@ -9,33 +9,42 @@ from plum import dispatch
 
 
 class LocationCodes(Enum):
-    USA = 103644278
+    USA: str = "103644278"
 
 
 class RemoteCodes(Enum):
-    PRESENTIAL: str = "1"
+    IN_SITE: str = "1"
     REMOTE: str = "2"
     HYBRID: str = "3"
 
 
-class SalaryCodes(IntEnum):
-    X40K: int = 1
-    X60K: int = 2
-    X80K: int = 3
-    X100K: int = 4
-    X120K: int = 5
-    X140K: int = 6
-    X160K: int = 7
-    X180K: int = 8
-    X200K: int = 9
+class SalaryCodes(Enum):
+    # It defines the minimum salary. EG
+    X0K: str = ""
+    X40K: str = "1"
+    X60K: str = "2"
+    X80K: str = "3"
+    X100K: str = "4"
+    X120K: str = "5"
+    X140K: str = "6"
+    X160K: str = "7"
+    X180K: str = "8"
+    X200K: str = "9"
 
 
 class UrlGenerator:
     def __init__(self):
         ...
 
-    # TODO: Config object od something
-    def generate(self, location: str = "", start: int = 0):
+    # TODO: Use JobFilter instead of exposing all those variables? It will more resilient.
+    #  start = paging (n_items not pages)
+    def generate(self,
+        remote: [RemoteCodes],
+        salary: SalaryCodes,
+        posted_days_ago: int,
+        location: LocationCodes,
+        start: int = 0
+    ):
         query: str
         query_d: dict
         SCHEME: str = "https"
@@ -46,8 +55,8 @@ class UrlGenerator:
 
         # TODO: from variable
         query_d = (
-                self.location(location="USA") | self.posted_on(days=30) | self.remote(["REMOTE"]) |
-                self.salary("X80K") | {"start": start}
+                self.location(location=location) | self.posted_on(days=posted_days_ago) | self.remote(remote) |
+                self.salary(salary) | {"start": start}
         )
 
         query = urlencode(query_d)
@@ -55,18 +64,18 @@ class UrlGenerator:
 
         return url
 
-    def location(self, location: str) -> dict[str, str]:
-        return {"location": LocationCodes[location].value}
+    def location(self, location: LocationCodes) -> dict[str, str]:
+        return {"location": location.value}
 
     def posted_on(self, days: int) -> dict[str, str]:
         total_seconds: str = str(86400 * days)
         any_time: str = ""
         return {"f_TPR": total_seconds if days > 0 else any_time}
 
-    def remote(self, choices: list) -> dict[str, str]:
-        parsed_choices: list[str] = [RemoteCodes[choice].value for choice in choices]
+    def remote(self, choices: list[RemoteCodes]) -> dict[str, str]:
+        parsed_choices: list[str] = [choice.value for choice in choices]
         return {"f_WT": ",".join(parsed_choices)}
 
     # As long as I know this only works for the USA and UK. Not such a feature for other countries.
-    def salary(self, minimum: str) -> dict[str, str]:
-        return {"f_SB2": str(SalaryCodes[minimum].value)}
+    def salary(self, minimum: SalaryCodes) -> dict[str, str]:
+        return {"f_SB2": str(minimum.value)}

@@ -6,6 +6,9 @@ import openai
 org_id = "***REMOVED***"
 
 
+class RateLimitException(Exception):
+    ...
+
 
 @dataclass
 class OpenAIClient:
@@ -28,23 +31,29 @@ class OpenAIClient:
         #  counterintuitive. Let's check best practices and other methods like "acreate" and "get".
         #  (the response does not include any ID to the created chat.)
 
-        # system_message = "You're helping me to find a remote IT job. I live in Poland, Europe."
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                self._system,
-                {
-                    "role": "user",
-                    "content": f"f{message}"
-                },
+        try:
+            # system_message = "You're helping me to find a remote IT job. I live in Poland, Europe."
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    self._system,
+                    {
+                        "role": "user",
+                        "content": f"f{message}"
+                    },
 
-            ],
-            temperature=1,
-            max_tokens=64,
-            top_p=1,
-            frequency_penalty=0,
-            presence_penalty=0
-        )
+                ],
+                temperature=1,
+                max_tokens=64,
+                top_p=1,
+                frequency_penalty=0,
+                presence_penalty=0
+            )
+        except openai.error.RateLimitError as rate_limit_e:
+            raise RateLimitException from rate_limit_e
+        except openai.error.ServiceUnavailableError as sue:
+            # TODO: maybe wait or retry policy, by the moment only making this usecase obvius.
+            raise sue
 
         return response
 

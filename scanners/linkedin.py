@@ -8,7 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 
 from elements_paths import LoginElements, JobsElements
-from job_url_builder import UrlGenerator
+from job_url_builder import UrlGenerator, SalaryCodes, LocationCodes, RemoteCodes
 from messaging import print_error, print_relevant_info
 from scanners.utilities import element_exists
 
@@ -18,14 +18,20 @@ class LinkedinStates(StrEnum):
 
 
 @dataclass
+class JobsFilter:
+    salary: SalaryCodes
+    location: LocationCodes
+    remote: list[RemoteCodes]
+    posted_days_ago: int
+
+
+@dataclass
 class Linkedin:
     web_driver: WebDriver
     user: str
     password: str
+    jobs_filter: JobsFilter
     _actions: dict = field(init=False, default_factory=dict)
-
-    # def __init__(self):
-    #     ...
 
     def set_actions(self, state: LinkedinStates, actions: list[Callable]):
         self._actions[state] = actions
@@ -50,7 +56,13 @@ class Linkedin:
     # TODO P2: Split navigation and parse/actions
     # TODO P1: Pass filter attributes
     def _iterate_jobs(self, start: int = 0):
-        url: str = UrlGenerator().generate(start=start)
+        url: str = UrlGenerator().generate(
+            salary=self.jobs_filter.salary,
+            location=self.jobs_filter.location,
+            posted_days_ago=self.jobs_filter.posted_days_ago,
+            remote=self.jobs_filter.remote,
+            start=start
+        )
         self.web_driver.get(url)
         time.sleep(3)
 
@@ -66,13 +78,15 @@ class Linkedin:
             job_card.click()
             time.sleep(3)
             # STATE: Active job
+            print("----------------------------------")
             print_relevant_info(f"Job number: {index}")
             for action in self._actions[LinkedinStates.ACTIVE_JOB_CARD]:
                 if isinstance(action, partial):
-                    print_relevant_info(action.func.__name__)
+                    print_relevant_info(f"Action - {action.func.__name__}")
                 else:
                     print_relevant_info(f"Action - {action.__name__}")
                 action(element=self.web_driver.find_element(By.CSS_SELECTOR, "div.scaffold-layout__list-detail-inner"))
+                print("----------------------------------\n")
         else:
             # next page
             self._iterate_jobs(start=start + 25)

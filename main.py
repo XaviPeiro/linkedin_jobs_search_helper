@@ -10,10 +10,10 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 from elements_paths import LoginElements, JobsElements
 from infraestracture.notifications.fs import FileSystemNotificator
-from job_url_builder import UrlGenerator
+from job_url_builder import UrlGenerator, SalaryCodes, LocationCodes, RemoteCodes
 from messaging import print_error, print_relevant_info
 from openai_api import OpenAIClient
-from scanners.linkedin import LinkedinStates, Linkedin
+from scanners.linkedin import LinkedinStates, Linkedin, JobsFilter
 from scanners.utilities import element_exists
 import scanners.actions as scanners_actions
 
@@ -79,9 +79,20 @@ def main():
 
     system_message = "You're helping me to find a remote IT job. I live in Poland, Europe. "
     openai_client = OpenAIClient.init_with_role(secret=config["openai_api"]["secret"], message=system_message)
+    job_filter = JobsFilter(
+        salary=SalaryCodes.X80K,
+        location=LocationCodes.USA,
+        remote=[RemoteCodes.REMOTE],
+        posted_days_ago=14
+    )
     print_relevant_info("Logging into linkedin.")
 
-    linkedin_scrapper = Linkedin(web_driver=chrome, user=config["user"], password=config["password"])
+    linkedin_scrapper = Linkedin(
+        web_driver=chrome,
+        user=config["user"],
+        password=config["password"],
+        jobs_filter=job_filter
+    )
     actions = [
         getattr(scanners_actions, "print_job_title"),
         partial(
@@ -93,9 +104,6 @@ def main():
     ]
     linkedin_scrapper.set_actions(state=LinkedinStates.ACTIVE_JOB_CARD, actions=actions)
     linkedin_scrapper()
-
-    # do_login(chrome=chrome, email=config["user"], pw=config["password"])
-    # jobs_actions(chrome=chrome)
 
 
 # TODO P1: Use config files
