@@ -1,24 +1,21 @@
 import time
+from functools import partial
 
-from selenium.common import NoSuchElementException
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.webdriver import WebDriver
 
 from elements_paths import LoginElements, JobsElements
+from infraestracture.notifications.fs import FileSystemNotificator
 from job_url_builder import UrlGenerator
-
-
-def element_exists(chrome: WebDriver, find_arguments: tuple) -> bool:
-    try:
-        chrome.find_element(*find_arguments)
-    except NoSuchElementException:
-        return False
-    return True
+from messaging import print_error, print_relevant_info
+from openai_api import OpenAIClient
+from scanners.linkedin import LinkedinStates, Linkedin
+from scanners.utilities import element_exists
+import scanners.actions as scanners_actions
 
 
 def init_bot() -> WebDriver:
@@ -27,7 +24,6 @@ def init_bot() -> WebDriver:
     # options.add_argument('--no-sandbox')
     # options.add_argument('--disable-dev-shm-usage')
     options.add_experimental_option("detach", True)
-
     driver = Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
     return driver
@@ -72,18 +68,6 @@ def jobs_actions(chrome: WebDriver, start: int = 0):
         jobs_actions(chrome=chrome, start=start+25)
 
 
-def print_warning(msg):
-    print(f"\033[93m{msg}\033[00m")
-
-
-def print_error(msg):
-    print(f"\033[91m{msg}\033[00m")
-
-
-def print_relevant_info(msg):
-    print(f"\033[92m{msg}\033[00m")
-
-
 def main():
     # TODO P4: yaml is cacota, change it.
     import yaml
@@ -91,10 +75,38 @@ def main():
         config = yaml.load(f, Loader=yaml.FullLoader)
 
     chrome: WebDriver = init_bot()
+    notificator = FileSystemNotificator(filepath="logs/openai_unexpected_responses.txt")
+
+    system_message = "You're helping me to find a remote IT job. I live in Poland, Europe. "
+    openai_client = OpenAIClient.init_with_role(secret=config["openai_api"]["secret"], message=system_message)
     print_relevant_info("Logging into linkedin.")
-    do_login(chrome=chrome, email=config["user"], pw=config["password"])
-    jobs_actions(chrome=chrome)
+
+    linkedin_scrapper = Linkedin(web_driver=chrome, user=config["user"], password=config["password"])
+    actions = [
+        getattr(scanners_actions, "print_job_title"),
+        partial(
+            getattr(scanners_actions, "discard_job"),
+            openai_client=openai_client,
+            criteria=config["discard_job"]["criteria"],
+            notificator=notificator
+        )
+    ]
+    linkedin_scrapper.set_actions(state=LinkedinStates.ACTIVE_JOB_CARD, actions=actions)
+    linkedin_scrapper()
+
+    # do_login(chrome=chrome, email=config["user"], pw=config["password"])
+    # jobs_actions(chrome=chrome)
 
 
+# TODO P1: Use config files
 if __name__ == "__main__":
     main()
+
+"""
+main
+    linkedin(config)
+        do_login(config.user, config.psw)
+        jobs(config)
+            config.jobs_tasks
+        
+"""
