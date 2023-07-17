@@ -9,7 +9,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import scanners.actions as scanners_actions
 from infraestracture.notifications.fs import FileSystemNotificator
 from job_url_builder import SalaryCodes, LocationCodes, RemoteCodes
-from messaging import print_relevant_info
+from logging import print_relevant_info
 from openai_api import OpenAIClient
 from scanners.linkedin import LinkedinStates, Linkedin, JobsFilter
 
@@ -63,6 +63,5 @@ def main():
     linkedin_scrapper()
 
 
-# TODO P1: Use config files
 if __name__ == "__main__":
     main()

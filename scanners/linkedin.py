@@ -9,7 +9,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 
 from elements_paths import LoginElements, JobsElements
 from job_url_builder import UrlGenerator, SalaryCodes, LocationCodes, RemoteCodes
-from messaging import print_error, print_relevant_info
+from logging import print_error, print_relevant_info
 from scanners.utilities import element_exists
 
 

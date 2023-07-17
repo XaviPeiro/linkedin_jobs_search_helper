@@ -6,7 +6,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 
 from domain.notificator import Notificator
 from elements_paths import JobsElements
-from messaging import print_relevant_info, print_warning
+from logging import print_relevant_info, print_warning
 from openai_api import OpenAIClient, RateLimitException
 
 
