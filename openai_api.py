@@ -3,8 +3,6 @@ from typing import Self
 
 import openai
 
-org_id = "***REMOVED***"
-
 
 class RateLimitException(Exception):
     ...
