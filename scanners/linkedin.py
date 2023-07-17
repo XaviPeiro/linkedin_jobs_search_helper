@@ -9,7 +9,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 
 from elements_paths import LoginElements, JobsElements
 from job_url_builder import UrlGenerator, SalaryCodes, LocationCodes, RemoteCodes
-from logging import print_error, print_relevant_info
+from logger import app_logger
 from scanners.utilities import element_exists
 
 
@@ -50,7 +50,7 @@ class Linkedin:
             time.sleep(3)
             self.web_driver.find_element("xpath", LoginElements.submit_btn_xpath).click()
         except Exception as e:
-            print_error("Couldn't log in Linkedin! ☠ Check if any intermediate screen appeared and credentials.")
+            app_logger.error("Couldn't log in Linkedin! ☠ Check if any intermediate screen appeared and credentials.")
             raise e
 
     # TODO P2: Split navigation and parse/actions
@@ -73,20 +73,20 @@ class Linkedin:
         time.sleep(4.4)
 
         job_cards = self.web_driver.find_elements(By.XPATH, JobsElements.all_job_cards_xpath)
-        print_relevant_info(f"scanning {len(job_cards)} elements from page {start // 25 + 1}")
+        app_logger.info(f"scanning {len(job_cards)} elements from page {start // 25 + 1}")
         for index, job_card in enumerate(job_cards):
             job_card.click()
             time.sleep(3)
             # STATE: Active job
-            print("----------------------------------")
-            print_relevant_info(f"Job number: {index}")
+            app_logger.info("----------------------------------")
+            app_logger.info(f"Job number: {index}")
             for action in self._actions[LinkedinStates.ACTIVE_JOB_CARD]:
                 if isinstance(action, partial):
-                    print_relevant_info(f"Action - {action.func.__name__}")
+                    app_logger.info(f"Action - {action.func.__name__}")
                 else:
-                    print_relevant_info(f"Action - {action.__name__}")
+                    app_logger.info(f"Action - {action.__name__}")
                 action(element=self.web_driver.find_element(By.CSS_SELECTOR, "div.scaffold-layout__list-detail-inner"))
-                print("----------------------------------\n")
+                app_logger.info("----------------------------------\n")
         else:
             # next page
             self._iterate_jobs(start=start + 25)

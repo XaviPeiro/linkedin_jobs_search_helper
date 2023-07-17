@@ -61,8 +61,6 @@ def main():
     txt_tmlpate= "Assuming this job description: \"{}\". It is mandatory to live in the USA to apply this job? Please, respond exclusively True or False."
     openai_client = OpenAIClient.init_with_role(secret=secret, message=system_message)
     res = openai_client.request(message=txt_tmlpate)
-    print("HELLLLLLLLLLLLLLLLLLLLLLL")
-    print(res)
 
 
 if __name__ == "__main__":

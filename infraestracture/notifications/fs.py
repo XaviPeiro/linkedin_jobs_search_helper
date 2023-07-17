@@ -9,5 +9,6 @@ class FileSystemNotificator(Notificator):
 
     def notify(self, message: str):
 
-        with open(mode="r+", file=self.file_path) as f:
+        # TODO: Could be nice to prepend instead of append, but it is too annoying for occasion.
+        with open(mode="a+", file=self.file_path) as f:
             f.write(message)

@@ -6,14 +6,15 @@ from selenium.webdriver.remote.webdriver import WebDriver
 
 from domain.notificator import Notificator
 from elements_paths import JobsElements
-from logging import print_relevant_info, print_warning
+from logger import app_logger
 from openai_api import OpenAIClient, RateLimitException
 
 
-# TODO: change these lil bitches into Commands
+# TODO P2: change these lil bitches into Commands and inject dependencies.
 def print_job_title(element: WebDriver):
     job_title: str = element.find_element(By.CLASS_NAME, "job-card-list__title").text
-    print_relevant_info(f"Job title = {job_title}")
+    app_logger.info(f"Job title = {job_title}")
+
 
 # TODO: remove, temporal
 print_discard_criteria_count = 0
@@ -24,21 +25,21 @@ def discard_job(element: WebDriver, criteria: str, notificator: Notificator, ope
     # TODO: Could be nice to have track of processed elements in order to repeat the same analysis
     #  over the already processed element thus reducing the time it takes and reqs to openai.
     #  !!!NOT IN THIS FUNCTION.!!!!
-    nonlocal print_discard_criteria_count
+    global print_discard_criteria_count
     if print_discard_criteria_count == 0:
         print_discard_criteria_count += 1
-        print(f"Discard if following criteria is True: \n{criteria}")
+        app_logger.info(f"Discard if following criteria is True: \n{criteria}")
 
-    # lets assume criteria is a text to search in the descr
+    # Let's assume criteria is a text to search in the descr
     job_descr_view_class = "jobs-description__container"
     job_descr: str = element.find_element(By.CLASS_NAME, job_descr_view_class).text
     try:
         res = openai_client.request(message=criteria.format(job_descr))
     except RateLimitException as rle:
-        print_warning("Openai API Rate limit reached 🤷.")
+        app_logger.warn("Openai API Rate limit reached 🤷.")
         remaining_time = 61
         while remaining_time > 0:
-            print_warning(f"Let's wait {remaining_time}")
+            app_logger.warn(f"Let's wait {remaining_time}")
             time.sleep(min(remaining_time, 5))
             remaining_time -= 5
 
@@ -52,7 +53,7 @@ def discard_job(element: WebDriver, criteria: str, notificator: Notificator, ope
 
     # TODO: I FUCKING NEED YES/NO or TURE/FALSE. Nothing else!!!!
     if answer.lower().strip(".") == "yes":
-        print_relevant_info("DISCARDED")
+        app_logger.info("DISCARDED")
         # discard job
         element.find_element(By.CSS_SELECTOR, JobsElements.discard_job_css).click()
     else:

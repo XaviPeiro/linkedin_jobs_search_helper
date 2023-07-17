@@ -9,7 +9,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import scanners.actions as scanners_actions
 from infraestracture.notifications.fs import FileSystemNotificator
 from job_url_builder import SalaryCodes, LocationCodes, RemoteCodes
-from logging import print_relevant_info
+from logger import app_logger
 from openai_api import OpenAIClient
 from scanners.linkedin import LinkedinStates, Linkedin, JobsFilter
 
@@ -42,7 +42,7 @@ def main():
         remote=[RemoteCodes.REMOTE],
         posted_days_ago=14
     )
-    print_relevant_info("Logging into linkedin.")
+    app_logger.info("Logging into linkedin.")
 
     linkedin_scrapper = Linkedin(
         web_driver=chrome,
