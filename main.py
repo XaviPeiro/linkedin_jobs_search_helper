@@ -66,12 +66,3 @@ def main():
 # TODO P1: Use config files
 if __name__ == "__main__":
     main()
-
-"""
-main
-    linkedin(config)
-        do_login(config.user, config.psw)
-        jobs(config)
-            config.jobs_tasks
-        
-"""

@@ -1,4 +1,5 @@
 import time
+from datetime import datetime
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -20,10 +21,10 @@ print_discard_criteria_count = 0
 
 # TODO: criteria and client to Command init
 def discard_job(element: WebDriver, criteria: str, notificator: Notificator, openai_client: OpenAIClient) -> None:
-    # TODO: COuld be nice to have track of processed elements in order to repeat the same analisy
+    # TODO: Could be nice to have track of processed elements in order to repeat the same analysis
     #  over the already processed element thus reducing the time it takes and reqs to openai.
     #  !!!NOT IN THIS FUNCTION.!!!!
-    global print_discard_criteria_count
+    nonlocal print_discard_criteria_count
     if print_discard_criteria_count == 0:
         print_discard_criteria_count += 1
         print(f"Discard if following criteria is True: \n{criteria}")
@@ -57,7 +58,7 @@ def discard_job(element: WebDriver, criteria: str, notificator: Notificator, ope
     else:
         if answer.lower().strip(".") != "no":
             # TODO: notify. The model is returning an unexpected message (I request a yes-no response, but sometimes...)
-            notificator.notify(f"{answer}")
+            notificator.notify(f"{datetime.now()} - {answer}")
 
 
 # TODO: Easy to apply job

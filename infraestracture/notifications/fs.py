@@ -8,5 +8,6 @@ class FileSystemNotificator(Notificator):
         self.file_path = filepath
 
     def notify(self, message: str):
-        with open(mode="a+", file=self.file_path) as f:
+
+        with open(mode="r+", file=self.file_path) as f:
             f.write(message)

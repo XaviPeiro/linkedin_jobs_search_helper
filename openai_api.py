@@ -13,7 +13,6 @@ class RateLimitException(Exception):
 @dataclass
 class OpenAIClient:
     secret: str
-    # system_descr: str
     _system: dict[str, str] = field(init=False, default_factory=lambda: {"system": ""})
 
     def __post_init__(self):
@@ -59,7 +58,6 @@ class OpenAIClient:
 
 
 def main():
-    # print(list_models())
     secret = ""
     system_message = "You're helping me to find a remote IT job. I live in Poland, Europe."
     txt_tmlpate= "Assuming this job description: \"{}\". It is mandatory to live in the USA to apply this job? Please, respond exclusively True or False."
