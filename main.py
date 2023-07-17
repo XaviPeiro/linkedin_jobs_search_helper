@@ -25,6 +25,7 @@ def init_bot() -> WebDriver:
     return driver
 
 
+# TODO P2: Handle graceful stop
 def main():
     # TODO P4: yaml is cacota, change it.
     import yaml

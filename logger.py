@@ -7,6 +7,7 @@ app_logger = logging.getLogger("app")
 app_logger.setLevel(logging.DEBUG)
 
 # ---
+# TODO: Maybe change the file handler to per execution.
 file_handler = TimedRotatingFileHandler(logs_file, when="D", interval=1)
 log_formatter = logging.Formatter(
     "%(asctime)s [%(threadName)s] [%(levelname)-5.5s]  %(message)s",

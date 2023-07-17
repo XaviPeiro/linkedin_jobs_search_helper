@@ -25,6 +25,8 @@ class JobsFilter:
     posted_days_ago: int
 
 
+# TODO P2: Ideally the Crawlers should only gather data, and the data processing should be apart and agnostic.
+#  However, if an action (changing state) depends on processing data... I have to think about that.
 @dataclass
 class Linkedin:
     web_driver: WebDriver

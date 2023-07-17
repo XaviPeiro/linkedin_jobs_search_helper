@@ -49,7 +49,7 @@ class OpenAIClient:
         except openai.error.RateLimitError as rate_limit_e:
             raise RateLimitException from rate_limit_e
         except openai.error.ServiceUnavailableError as sue:
-            # TODO: maybe wait or retry policy, by the moment only making this usecase obvius.
+            # TODO: maybe wait or retry policy, by the moment only making this usecase obvious.
             raise sue
 
         return response
