@@ -80,15 +80,18 @@ class Linkedin:
             job_card.click()
             time.sleep(3)
             # STATE: Active job
-            app_logger.info("----------------------------------")
+            app_logger.info("---------------------------------")
             app_logger.info(f"Job number: {index}")
+            app_logger.info(f"Job URL: {self.web_driver.current_url}")
+            # TODO: Change actions execution for a notifier call.
             for action in self._actions[LinkedinStates.ACTIVE_JOB_CARD]:
                 if isinstance(action, partial):
                     app_logger.info(f"Action - {action.func.__name__}")
                 else:
                     app_logger.info(f"Action - {action.__name__}")
                 action(element=self.web_driver.find_element(By.CSS_SELECTOR, "div.scaffold-layout__list-detail-inner"))
-                app_logger.info("----------------------------------\n")
+                app_logger.info("__ __\n")
+            app_logger.info("----------------------------------\n")
         else:
             # next page
             self._iterate_jobs(start=start + 25)

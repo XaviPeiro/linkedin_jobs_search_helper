@@ -1,7 +1,7 @@
-from domain.notificator import Notificator
+from domain.notifier import Notifier
 
 
-class FileSystemNotificator(Notificator):
+class FileSystemNotificator(Notifier):
     file_path: str
 
     def __init__(self, filepath: str):

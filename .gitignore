@@ -1,4 +1,11 @@
+# IDEs & editors
 .idea
-__pycache__
 *~
+
+# Python
+__pycache__
+
+
+# Project files
 app_config.yaml
+openai_playground.txt

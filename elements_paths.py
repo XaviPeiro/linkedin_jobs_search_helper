@@ -15,3 +15,5 @@ class JobsElements(ElementsPaths):
     job_cards_clickable: str = "job-card-container--clickable"
     all_job_cards_xpath: str = "//li[@data-occludable-job-id]"
     discard_job_css: str = "div.job-card-container__action--visible-on-hover > button"
+    # job
+
