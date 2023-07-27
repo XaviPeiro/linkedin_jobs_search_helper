@@ -42,7 +42,7 @@ def ask_openai(openai_client: OpenAIClient, question: str) -> dict:
     except Exception as e:
         # TODO: Ensure every action stores the result achieved.
         app_logger.error(
-            "Some unexpected error happent. Do not worry, previous work has been saved, next execution will"
+            "Some unexpected error happened. Do not worry, previous work has been saved, next execution will"
             "continue from the prev last job."
         )
         raise e
