@@ -1,0 +1,12 @@
+user:
+password:
+
+openai_api:
+  secret:
+
+discard_job:
+  # set on on the second line what it your criteria in natural language.
+  criteria: > 
+    Assuming this job description: \"{}\".
+    It is mandatory to live in the USA to apply this job? 
+    This is a yes-no question, I do not want you to respond anything else than yes or no.
