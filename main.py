@@ -20,7 +20,7 @@ def init_bot() -> WebDriver:
     # options.add_argument('--no-sandbox')
     # options.add_argument('--disable-dev-shm-usage')
     options.add_experimental_option("detach", True)
-    driver = Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    driver = Chrome(service=Service(ChromeDriverManager(version="114.0.5735.90").install()), options=options)
 
     return driver
 
@@ -55,9 +55,12 @@ def main():
         getattr(scanners_actions, "print_job_title"),
         partial(
             getattr(scanners_actions, "discard_job"),
-            openai_client=openai_client,
+            apply_criteria=partial(
+                getattr(scanners_actions, "ask_openai"),
+                openai_client=openai_client
+            ),
             criteria=config["discard_job"]["criteria"],
-            notificator=notificator
+            notifier=notificator
         )
     ]
     linkedin_scrapper.set_actions(state=LinkedinStates.ACTIVE_JOB_CARD, actions=actions)

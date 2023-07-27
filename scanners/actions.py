@@ -1,5 +1,6 @@
 import time
 from datetime import datetime
+from typing import Callable
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -17,29 +18,8 @@ def print_job_title(element: WebDriver):
     app_logger.info(f"Job title = {job_title}")
 
 
-# TODO: remove, temporal
-print_discard_criteria_count = 0
-
-
-def discard_job(element: WebElement, criteria: str, notifier: Notifier, openai_client: OpenAIClient) -> None:
-    # TODO: Will be nice to have track of processed elements in order to repeat the same analysis
-    #  over the already processed element thus reducing the time it takes and reqs to openai.
-    #  !!!NOT IN THIS FUNCTION.!!!!
-
-    # DOING: store url from this job in order to later check them if required.
-    # Isnt possible to undiscard it manually, so the btn only appears after clicking discard.
-    # However it can be done by requesting to the proper endpoint.
-
-    global print_discard_criteria_count
-    if print_discard_criteria_count == 0:
-        print_discard_criteria_count += 1
-        app_logger.info(f"Discard if following criteria is True: \n{criteria}")
-
-    # Let's assume criteria is a text to search in the descr
-    job_descr_view_class = "jobs-description__container"
-    job_descr: str = element.find_element(By.CLASS_NAME, job_descr_view_class).text
+def ask_openai(openai_client: OpenAIClient, question: str) -> dict:
     try:
-
         # TODO:
         #  - I cannot work from my residence country.
         #  - Linkedin’s filter fails and the job found isn’t demanding the language/s I work with.
@@ -47,7 +27,7 @@ def discard_job(element: WebElement, criteria: str, notifier: Notifier, openai_c
         #  - Profile requested or tasks do not fit with my requirements/needs.
         #  All those usecases, a priori, could be done at once, thus saving on requests and tokens.
 
-        res = openai_client.request(message=criteria.format(job_descr))
+        res = openai_client.request(message=question)
     except RateLimitException as rle:
         # TODO: this is a retry policy. Should no bet here, move it into the client.
         app_logger.warn("Openai API Rate limit reached 🤷.")
@@ -57,7 +37,37 @@ def discard_job(element: WebElement, criteria: str, notifier: Notifier, openai_c
             time.sleep(min(remaining_time, 5))
             remaining_time -= 5
 
-        res = openai_client.request(message=criteria.format(job_descr))
+        res = openai_client.request(message=question)
+
+    except Exception as e:
+        # TODO: Ensure every action stores the result achieved.
+        app_logger.error(
+            "Some unexpected error happent. Do not worry, previous work has been saved, next execution will"
+            "continue from the prev last job."
+        )
+        raise e
+    finally:
+        return res
+
+
+def get_job_description_text(element: WebElement) -> str:
+    job_descr_view_class = "jobs-description__container"
+    job_descr: str = element.find_element(By.CLASS_NAME, job_descr_view_class).text
+    return job_descr
+
+
+def discard_job(element: WebElement, criteria: str, notifier: Notifier, apply_criteria: Callable) -> None:
+    # TODO: Will be nice to have track of processed elements in order to repeat the same analysis
+    #  over the already processed element thus reducing the time it takes and reqs to openai.
+    #  !!!NOT IN THIS FUNCTION.!!!!
+
+    # DOING: store url from this job in order to later check them if required.
+    # Isnt possible to undiscard it manually, so the btn only appears after clicking discard.
+    # However it can be done by requesting to the proper endpoint.
+
+    # Let's assume criteria is a text to search in the descr
+    job_descr = get_job_description_text(element)
+    res = apply_criteria(question=criteria.format(job_descr))
 
     answer: str = res["choices"][0]["message"]["content"]
 
@@ -74,6 +84,7 @@ def discard_job(element: WebElement, criteria: str, notifier: Notifier, openai_c
         if answer.lower().strip(".") != "no":
             # The model is returning an unexpected message (I request a yes-no response, but sometimes...)
             notifier.notify(f"{datetime.now()} - {answer}")
+            app_logger.info("NOT DISCARDED")
 
     """
     curl 'https://www.linkedin.com/voyager/api/jobs/jobPostings/3554205489?decorationId=com.linkedin.voyager.deco.jobs.web.shared.WebJobSearchDismissJobPosting-5' \

@@ -1,11 +1,15 @@
+import sys
 import time
 from dataclasses import field, dataclass
 from enum import StrEnum
 from functools import partial
 from typing import Callable
 
+from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.wait import WebDriverWait
 
 from elements_paths import LoginElements, JobsElements
 from job_url_builder import UrlGenerator, SalaryCodes, LocationCodes, RemoteCodes
@@ -47,10 +51,38 @@ class Linkedin:
             # TODO P4: Move URL, no magic strings
             self.web_driver.get("https://www.linkedin.com/login?trk=guest_homepage-basic_nav-header-signin")
             self.web_driver.find_element("id", "username").send_keys(email)
-            time.sleep(3)
+            time.sleep(1)
             self.web_driver.find_element("id", "password").send_keys(pw)
-            time.sleep(3)
+            time.sleep(2.8)
             self.web_driver.find_element("xpath", LoginElements.submit_btn_xpath).click()
+            try:
+                profile_icon = WebDriverWait(self.web_driver, 5).until(
+                    expected_conditions.presence_of_element_located((By.CSS_SELECTOR, ".global-nav__me-photo.evi-image.ember-view")),
+                )
+            except TimeoutException as timeout_exception:
+                """
+                    the prev element it has been waited it is to ensure the login was successful.
+                    Know reasons for failing are:
+                        - It is asking for a pin code that it is sent to the users email. It can be entered manually,
+                            and it is only requested once (as long as I know).
+                """
+                # self.web_driver.find_element(By.ID, "input__email_verification_pin")
+                input_add_pin = WebDriverWait(self.web_driver, 5).until(
+                    expected_conditions.presence_of_element_located((By.ID, "input__email_verification_pin")),
+                )
+                # If no exception it means it has been found and pin has to be introduced.
+                message = """📢📢📢READ ME📢📢📢
+                You need to introduce a pin. Run this program enabling the UI web driver and introduce the pin you 
+                got in your email in the browser instance, submit it and rerun the program. You have 5 minutes to do it, 
+                after those 5 min the program will end. If you got no time, rerun the program and you will get another 
+                chance.
+                !!IT WILL BE NECESSARY ONLY ONCE!!
+                """
+                app_logger.error(message)
+                time.sleep(300)
+                # TODO: Detect if pin has been introduced in order to keep with the normal execution.
+                sys.exit()
+
         except Exception as e:
             app_logger.error("Couldn't log in Linkedin! ☠ Check if any intermediate screen appeared and credentials.")
             raise e
