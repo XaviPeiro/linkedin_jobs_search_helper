@@ -11,4 +11,4 @@ class FileSystemNotificator(Notifier):
 
         # TODO P4: Could be nice to prepend instead of append, but it is too annoying for occasion.
         with open(mode="a+", file=self.file_path) as f:
-            f.write(message)
+            f.write(message + "\n")
