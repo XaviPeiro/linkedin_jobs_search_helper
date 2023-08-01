@@ -5,8 +5,10 @@ openai_api:
   secret:
 
 discard_job:
-  # set on on the second line what it your criteria in natural language.
+  # !IMPORTANT
+  # Set on the second line what it your criteria in natural language.
+  # If the response to your question is YES it will be discarded.
   criteria: > 
     Assuming this job description: \"{}\".
-    It is mandatory to live in the USA to apply this job? 
+    Will I be discarded from this selection process if I intend to work remotely from Poland? 
     This is a yes-no question, I do not want you to respond anything else than yes or no.
