@@ -70,7 +70,7 @@ class UrlGenerator:
     def posted_on(self, days: int) -> dict[str, str]:
         total_seconds: str = str(86400 * days)
         any_time: str = ""
-        return {"f_TPR": total_seconds if days > 0 else any_time}
+        return {"f_TPR": ("r" + total_seconds) if days > 0 else any_time}
 
     def remote(self, choices: list[RemoteCodes]) -> dict[str, str]:
         parsed_choices: list[str] = [choice.value for choice in choices]
