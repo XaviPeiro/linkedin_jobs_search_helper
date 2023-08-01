@@ -33,7 +33,7 @@ def main():
         config = yaml.load(f, Loader=yaml.FullLoader)
 
     chrome: WebDriver = init_bot()
-    notificator = FileSystemNotificator(filepath="logs/openai_unexpected_responses.txt")
+    notifier_unexpected_openai_response = FileSystemNotificator(filepath="logs/openai_unexpected_responses.txt")
 
     system_message = "You're helping me to find a remote IT job. I live in Poland, Europe. "
     openai_client = OpenAIClient.init_with_role(secret=config["openai_api"]["secret"], message=system_message)
@@ -60,7 +60,7 @@ def main():
                 openai_client=openai_client
             ),
             criteria=config["discard_job"]["criteria"],
-            notifier=notificator
+            notifier=notifier_unexpected_openai_response
         )
     ]
     linkedin_scrapper.set_actions(state=LinkedinStates.ACTIVE_JOB_CARD, actions=actions)
