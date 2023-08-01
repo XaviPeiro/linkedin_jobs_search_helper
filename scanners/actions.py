@@ -70,6 +70,7 @@ def discard_job(element: WebElement, criteria: str, notifier: Notifier, apply_cr
     res = apply_criteria(question=criteria.format(job_descr))
 
     answer: str = res["choices"][0]["message"]["content"]
+    app_logger.info(f"ANSWER: {answer}")
 
     # To keep it cheap I use 3.5-turbo. Besides that, I want to get only True/False as response, but the only way
     # I've found to do that is specifying "this is a yes-no question" (pregunta directa total); exchanging
@@ -79,12 +80,14 @@ def discard_job(element: WebElement, criteria: str, notifier: Notifier, apply_cr
     if answer.lower().strip(".") == "yes":
         app_logger.info("DISCARDED")
         # discard job
-        element.find_element(By.CSS_SELECTOR, JobsElements.discard_job_css).click()
-    else:
-        if answer.lower().strip(".") != "no":
-            # The model is returning an unexpected message (I request a yes-no response, but sometimes...)
-            notifier.notify(f"{datetime.now()} - {answer}")
+        element.find_element(By.CSS_SELECTOR, JobsElements.discard_selected_job_css).click()
+    elif answer.lower().strip(".") == "no":
             app_logger.info("NOT DISCARDED")
+    else:
+        # The model is returning an unexpected message (I request a yes-no response, but sometimes...)
+        app_logger.info("NOT DISCARDED - Because unexpected answer from OPENAI.")
+        notifier.notify(f"{datetime.now()} - {answer}")
+
 
     """
     curl 'https://www.linkedin.com/voyager/api/jobs/jobPostings/3554205489?decorationId=com.linkedin.voyager.deco.jobs.web.shared.WebJobSearchDismissJobPosting-5' \

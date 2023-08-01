@@ -14,6 +14,6 @@ class JobsElements(ElementsPaths):
     no_results_class: str = "jobs-search-no-results-banner"
     job_cards_clickable: str = "job-card-container--clickable"
     all_job_cards_xpath: str = "//li[@data-occludable-job-id]"
-    discard_job_css: str = "div.job-card-container__action--visible-on-hover > button"
+    discard_selected_job_css: str = ".jobs-search-results-list__list-item--active div.job-card-container__action--visible-on-hover > button"
     # job
 
