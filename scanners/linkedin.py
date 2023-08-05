@@ -91,6 +91,7 @@ class Linkedin:
     # TODO P1: Pass filter attributes
     def _iterate_jobs(self, start: int = 0):
         url: str = UrlGenerator().generate(
+            search_term="Python Backend Engineer",
             salary=self.jobs_filter.salary,
             location=self.jobs_filter.location,
             posted_days_ago=self.jobs_filter.posted_days_ago,

@@ -38,7 +38,9 @@ class UrlGenerator:
 
     # TODO: Use JobFilter instead of exposing all those variables? It will more resilient.
     #  start = paging (n_items not pages)
-    def generate(self,
+    def generate(
+        self,
+        search_term: str,
         remote: [RemoteCodes],
         salary: SalaryCodes,
         posted_days_ago: int,
@@ -56,7 +58,7 @@ class UrlGenerator:
         # TODO: from variable
         query_d = (
                 self.location(location=location) | self.posted_on(days=posted_days_ago) | self.remote(remote) |
-                self.salary(salary) | {"start": start}
+                self.salary(salary) | {"start": start} | {"keywords": search_term}
         )
 
         query = urlencode(query_d)
