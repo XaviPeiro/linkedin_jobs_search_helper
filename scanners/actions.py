@@ -38,7 +38,6 @@ def ask_openai(openai_client: OpenAIClient, question: str) -> dict:
             remaining_time -= 5
 
         res = openai_client.request(message=question)
-
     except Exception as e:
         # TODO: Ensure every action stores the result achieved.
         app_logger.error(
@@ -46,8 +45,8 @@ def ask_openai(openai_client: OpenAIClient, question: str) -> dict:
             "continue from the prev last job."
         )
         raise e
-    finally:
-        return res
+
+    return res
 
 
 def get_job_description_text(element: WebElement) -> str:

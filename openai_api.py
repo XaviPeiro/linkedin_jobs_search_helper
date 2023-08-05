@@ -51,6 +51,8 @@ class OpenAIClient:
         except openai.error.ServiceUnavailableError as sue:
             # TODO: maybe wait or retry policy, by the moment only making this usecase obvious.
             raise sue
+        except Exception as e:
+            a=1
 
         return response
 

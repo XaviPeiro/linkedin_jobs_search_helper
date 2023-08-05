@@ -27,6 +27,7 @@ class JobsFilter:
     location: LocationCodes
     remote: list[RemoteCodes]
     posted_days_ago: int
+    search_term: str
 
 
 # TODO P2: Ideally the Crawlers should only gather data, and the data processing should be apart and agnostic.
@@ -91,7 +92,7 @@ class Linkedin:
     # TODO P1: Pass filter attributes
     def _iterate_jobs(self, start: int = 0):
         url: str = UrlGenerator().generate(
-            search_term="Python Backend Engineer",
+            search_term=self.jobs_filter.search_term,
             salary=self.jobs_filter.salary,
             location=self.jobs_filter.location,
             posted_days_ago=self.jobs_filter.posted_days_ago,
@@ -109,20 +110,17 @@ class Linkedin:
 
         job_cards = self.web_driver.find_elements(By.XPATH, JobsElements.all_job_cards_xpath)
         app_logger.info(f"scanning {len(job_cards)} elements from page {start // 25 + 1}")
-        for index, job_card in enumerate(job_cards):
+        for index, job_card in enumerate(reversed(job_cards)):
             job_card.click()
             time.sleep(3)
             # STATE: Active job
             app_logger.info("---------------------------------")
             app_logger.info(f"Job number: {index}")
             app_logger.info(f"Job URL: {self.web_driver.current_url}")
-            # TODO: Change actions execution for a notifier call.
+            # TODO: Actions can alter the webdriver's state, so the outcome of the following actions. Kurwa macz...
             for action in self._actions[LinkedinStates.ACTIVE_JOB_CARD]:
-                if isinstance(action, partial):
-                    app_logger.info(f"Action - {action.func.__name__}")
-                else:
-                    app_logger.info(f"Action - {action.__name__}")
-                action(element=self.web_driver.find_element(By.CSS_SELECTOR, "div.scaffold-layout__list-detail-inner"))
+                action()
+                # action(element=self.web_driver.find_element(By.CSS_SELECTOR, "div.scaffold-layout__list-detail-inner"))
                 app_logger.info("__ __\n")
             app_logger.info("----------------------------------\n")
         else:

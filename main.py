@@ -7,6 +7,7 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 from webdriver_manager.chrome import ChromeDriverManager
 
 import scanners.actions as scanners_actions
+from domain.command import SeleniumReceiver, LinkedinDiscardJobCommand
 from infraestracture.notifications.fs import FileSystemNotificator
 from job_url_builder import SalaryCodes, LocationCodes, RemoteCodes
 from logger import app_logger
@@ -35,13 +36,14 @@ def main():
     chrome: WebDriver = init_bot()
     notifier_unexpected_openai_response = FileSystemNotificator(filepath="logs/openai_unexpected_responses.txt")
 
-    system_message = "You're helping me to find a remote IT job. I live in Poland, Europe. "
+    system_message = "You're helping me to find a remote IT job. I live in Poland, Europe."
     openai_client = OpenAIClient.init_with_role(secret=config["openai_api"]["secret"], message=system_message)
     job_filter = JobsFilter(
         salary=SalaryCodes.X80K,
         location=LocationCodes.USA,
         remote=[RemoteCodes.REMOTE],
-        posted_days_ago=14
+        posted_days_ago=30,
+        search_term="Python Backend Engineer"
     )
     app_logger.info("Logging into linkedin.")
 
@@ -51,17 +53,29 @@ def main():
         password=config["password"],
         jobs_filter=job_filter
     )
+
+    selenium_receiver = SeleniumReceiver(net_navigator=linkedin_scrapper.web_driver)
+    discard_jobs = LinkedinDiscardJobCommand(
+        net_navigator=selenium_receiver,
+        notifier=notifier_unexpected_openai_response,
+        ask_openai_service=partial(
+            getattr(scanners_actions, "ask_openai"),
+            openai_client=openai_client
+        ),
+        criteria=config["discard_job"]["criteria"]
+    )
     actions = [
-        getattr(scanners_actions, "print_job_title"),
-        partial(
-            getattr(scanners_actions, "discard_job"),
-            apply_criteria=partial(
-                getattr(scanners_actions, "ask_openai"),
-                openai_client=openai_client
-            ),
-            criteria=config["discard_job"]["criteria"],
-            notifier=notifier_unexpected_openai_response
-        )
+        # getattr(scanners_actions, "print_job_title"),
+        discard_jobs
+        # partial(
+        #     getattr(scanners_actions, "discard_job"),
+        #     apply_criteria=partial(
+        #         getattr(scanners_actions, "ask_openai"),
+        #         openai_client=openai_client
+        #     ),
+        #     criteria=config["discard_job"]["criteria"],
+        #     notifier=notifier_unexpected_openai_response
+        # )
     ]
     linkedin_scrapper.set_actions(state=LinkedinStates.ACTIVE_JOB_CARD, actions=actions)
     linkedin_scrapper()
