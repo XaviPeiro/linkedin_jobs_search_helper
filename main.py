@@ -21,7 +21,7 @@ def init_bot() -> WebDriver:
     # options.add_argument('--no-sandbox')
     # options.add_argument('--disable-dev-shm-usage')
     options.add_experimental_option("detach", True)
-    driver = Chrome(service=Service(ChromeDriverManager(version="114.0.5735.90").install()), options=options)
+    driver = Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
     return driver
 
@@ -36,7 +36,7 @@ def main():
     chrome: WebDriver = init_bot()
     notifier_unexpected_openai_response = FileSystemNotificator(filepath="logs/openai_unexpected_responses.txt")
 
-    system_message = "You're helping me to find a remote IT job. I live in Poland, Europe."
+    system_message = "You're helping me to find a remote IT job. Help me to screen job offers."
     openai_client = OpenAIClient.init_with_role(secret=config["openai_api"]["secret"], message=system_message)
     job_filter = JobsFilter(
         salary=SalaryCodes.X80K,
@@ -58,10 +58,11 @@ def main():
     discard_jobs = LinkedinDiscardJobCommand(
         net_navigator=selenium_receiver,
         notifier=notifier_unexpected_openai_response,
-        ask_openai_service=partial(
-            getattr(scanners_actions, "ask_openai"),
-            openai_client=openai_client
-        ),
+        # ask_openai_service=partial(
+        #     getattr(scanners_actions, "ask_openai"),
+        #     openai_client=openai_client
+        # ),
+        open_ai_client=openai_client,
         criteria=config["discard_job"]["criteria"]
     )
     actions = [

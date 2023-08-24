@@ -58,7 +58,9 @@ class Linkedin:
             self.web_driver.find_element("xpath", LoginElements.submit_btn_xpath).click()
             try:
                 profile_icon = WebDriverWait(self.web_driver, 5).until(
-                    expected_conditions.presence_of_element_located((By.CSS_SELECTOR, ".global-nav__me-photo.evi-image.ember-view")),
+                    expected_conditions.presence_of_element_located(
+                        (By.CSS_SELECTOR, ".global-nav__me-photo.evi-image.ember-view")
+                    ),
                 )
             except TimeoutException as timeout_exception:
                 """
@@ -91,6 +93,7 @@ class Linkedin:
     # TODO P2: Split navigation and parse/actions
     # TODO P1: Pass filter attributes
     def _iterate_jobs(self, start: int = 0):
+
         url: str = UrlGenerator().generate(
             search_term=self.jobs_filter.search_term,
             salary=self.jobs_filter.salary,
@@ -108,6 +111,7 @@ class Linkedin:
 
         time.sleep(4.4)
 
+        # TODO: ¿Iterate view items in the commands and just using crawlers to request data?
         job_cards = self.web_driver.find_elements(By.XPATH, JobsElements.all_job_cards_xpath)
         app_logger.info(f"scanning {len(job_cards)} elements from page {start // 25 + 1}")
         for index, job_card in enumerate(reversed(job_cards)):

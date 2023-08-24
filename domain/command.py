@@ -11,6 +11,14 @@ from selenium.webdriver.support.wait import WebDriverWait
 from domain.notifier import Notifier
 from elements_paths import JobsElements
 from logger import app_logger
+from openai_api import OpenAIClient
+
+
+class Command(ABC):
+
+    @abstractmethod
+    def __call__(self):
+        ...
 
 
 class CrawlerReceiver(ABC):
@@ -53,19 +61,13 @@ class SeleniumReceiver(CrawlerReceiver):
         return job_title
 
 
-class Command(ABC):
-
-    @abstractmethod
-    def __call__(self):
-        ...
-
-
 @dataclass
 class LinkedinDiscardJobCommand(Command):
     net_navigator: CrawlerReceiver
     notifier: Notifier
-    ask_openai_service: Callable[[str], dict]
-    criteria: str
+    # ask_openai_service: Callable[[str], dict]
+    open_ai_client: OpenAIClient
+    criteria: list
 
     _action_name: ClassVar[str] = "DISCARD JOB"  # field(init=False, default="DISCARD JOB")
 
@@ -83,32 +85,41 @@ class LinkedinDiscardJobCommand(Command):
         #  over the already processed element thus reducing the time it takes and reqs to openai.
         #  !!!NOT IN THIS FUNCTION.!!!!
 
-        # DOING: store url from this job in order to later check them if required.
-        # Isn't possible to undiscard it manually, so the btn only appears after clicking discard.
+        # Isn't possible to manually undo the "discard" action, so the btn only appears after clicking discard.
         # However, it can be done by requesting to the proper endpoint.
 
         # Let's assume criteria is a text to search in the descr
         job_descr = self.net_navigator.get_job_description()
-        res = self.ask_openai_service(question=self.criteria.format(job_descr))
+        prelude = self.get_prelude()
 
-        answer: str = res["choices"][0]["message"]["content"]
-        app_logger.info(f"ANSWER: {answer}")
+        self.open_ai_client.start_chat()
+        self.open_ai_client.add_message(message=prelude.format(job_descr))
+        for crite in self.criteria:
+            answer = self.open_ai_client.chat_request(message=crite)
+            # answer: str = res["choices"][0]["message"]["content"]
+            app_logger.info(f"Question: {crite}")
+            app_logger.info(f"ANSWER: {answer}")
 
-        # To keep it cheap I use 3.5-turbo. Besides that, I want to get only True/False as response, but the only way
-        # I've found to do that is specifying "this is a yes-no question" (pregunta directa total); exchanging
-        # yes/no byt True/False doesn't work. The "Yes/No" answer comes with a final dot, so it has to be trimmed.
+            # To keep it cheap I use 3.5-turbo. Besides that, I want to get only True/False as response, but the only way
+            # I've found to do that is specifying "this is a yes-no question" (pregunta directa total); exchanging
+            # yes/no byt True/False doesn't work. The "Yes/No" answer comes with a final dot, so it has to be trimmed.
 
-        # TODO: I need a simple response. RN depends on the message set in the app_config.yaml... It is not ideal.
-        #  Sometimes it adds kinda explanation, a workaround can be just checking the first word.
-        if answer.lower().strip(".") == "yes":
-            app_logger.info("DISCARDED")
-            self.net_navigator.linkedin_discard_job()
-        elif answer.lower().strip(".") == "no":
-            app_logger.info("NOT DISCARDED")
-        else:
-            # The model is returning an unexpected message.
-            app_logger.info("NOT DISCARDED - Because unexpected answer from OPENAI.")
-        self.notifier.notify(f"{datetime.now()} - {answer}")
+            # TODO: I need a simple response. RN depends on the message set in the app_config.yaml... It is not ideal.
+            #  Sometimes it adds kinda explanation, a workaround can be just checking the first word.
+            if answer.lower().strip(".") == "yes":
+                app_logger.info("DISCARDED")
+                self.net_navigator.linkedin_discard_job()
+            elif answer.lower().strip(".") == "no":
+                app_logger.info("NOT DISCARDED")
+            else:
+                # The model is returning an unexpected message.
+                app_logger.info("NOT DISCARDED - Because unexpected answer from OPENAI.")
+            self.notifier.notify(f"{datetime.now()} - {answer}")
+        self.open_ai_client.clear_chat()
 
-
-
+    # TODO: Temporary, rm me
+    def get_prelude(self) -> str:
+        import yaml
+        with open("app_config.yaml", "r") as f:
+            config = yaml.load(f, Loader=yaml.FullLoader)
+        return config["discard_job"]["prelude"]

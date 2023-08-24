@@ -12,6 +12,7 @@ class RateLimitException(Exception):
 class OpenAIClient:
     secret: str
     _system: dict[str, str] = field(init=False, default_factory=lambda: {"system": ""})
+    _chat_context: list[dict] = field(init=False, default_factory=list)
 
     def __post_init__(self):
         openai.api_key = self.secret
@@ -23,25 +24,17 @@ class OpenAIClient:
 
         return instance
 
-    def request(self, message: str):
+    def _request(self, messages: list[dict]):
         # TODO: I really have to investigate more about the openai API, so using "create" all the time sounds
         #  counterintuitive. Let's check best practices and other methods like "acreate" and "get".
         #  (the response does not include any ID to the created chat.)
 
         try:
-            # system_message = "You're helping me to find a remote IT job. I live in Poland, Europe."
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
-                messages=[
-                    self._system,
-                    {
-                        "role": "user",
-                        "content": f"f{message}"
-                    },
-
-                ],
+                messages=messages,
                 temperature=1,
-                max_tokens=64,
+                max_tokens=1,
                 top_p=1,
                 frequency_penalty=0,
                 presence_penalty=0
@@ -52,9 +45,38 @@ class OpenAIClient:
             # TODO: maybe wait or retry policy, by the moment only making this usecase obvious.
             raise sue
         except Exception as e:
-            a=1
+            raise e
 
         return response
+
+    """
+        Clean brand new request.
+    """
+    def request(self, message: str):
+        messages = [self._system]
+        messages.extend({"role": "user", "content": f"{message}"})
+        return self._request(messages=messages)
+
+    # TODO: Better to use a context manager for the whole chat thing.
+    def start_chat(self):
+        self._chat_context = [self._system]
+
+    """
+        Works in a chat, ie keeps the context, the previous both sides messages.
+    """
+    def chat_request(self, message: str):
+        self.add_message(message=message)
+        res = self._request(messages=self._chat_context)
+        answer = res["choices"][0]["message"]["content"]
+        self._chat_context.append({"role": "assistant", "content": f"{answer}"})
+
+        return answer
+
+    def add_message(self, message: str):
+        self._chat_context.append({"role": "user", "content": f"{message}"})
+
+    def clear_chat(self):
+        self._chat_context = []
 
 
 def main():
