@@ -34,7 +34,7 @@ class OpenAIClient:
                 model="gpt-3.5-turbo",
                 messages=messages,
                 temperature=1,
-                max_tokens=1,
+                max_tokens=50,
                 top_p=1,
                 frequency_penalty=0,
                 presence_penalty=0
@@ -48,6 +48,15 @@ class OpenAIClient:
             raise e
 
         return response
+
+    @property
+    def system(self):
+        return self._system.get("content")
+
+    @system.setter
+    def system(self, message: str):
+        self._system["content"] = message
+
 
     """
         Clean brand new request.

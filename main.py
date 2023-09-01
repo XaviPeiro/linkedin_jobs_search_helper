@@ -30,13 +30,13 @@ def init_bot() -> WebDriver:
 def main():
     # TODO P4: yaml is cacota, change it.
     import yaml
-    with open("app_config.yaml", "r") as f:
+    with open("app_config1.yaml", "r") as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
 
     chrome: WebDriver = init_bot()
     notifier_unexpected_openai_response = FileSystemNotificator(filepath="logs/openai_unexpected_responses.txt")
 
-    system_message = "You're helping me to find a remote IT job. Help me to screen job offers."
+    system_message = "You're helping me to find a remote IT job, help me to screen job offers."
     openai_client = OpenAIClient.init_with_role(secret=config["openai_api"]["secret"], message=system_message)
     job_filter = JobsFilter(
         salary=SalaryCodes.X80K,

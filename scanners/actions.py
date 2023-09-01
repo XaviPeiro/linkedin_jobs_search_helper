@@ -26,20 +26,19 @@ class OAIAnswer:
 
 
 def ask_openai(openai_client: OpenAIClient, prelude: list[str], questions: list[str]) -> dict:
-    try:
         # TODO:
         #  - I cannot work from my residence country.
         #  - Linkedin’s filter fails and the job found isn’t demanding the language/s I work with.
         #  - I do not do/know a strong requirement.
         #  - Profile requested or tasks do not fit with my requirements/needs.
         #  All those usecases, a priori, could be done at once, thus saving on requests and tokens.
-        openai_client.start_chat()
-        for p  in prelude:
-            openai_client.add_message(message=p)
+    openai_client.start_chat()
+    for p in prelude:
+        openai_client.add_message(message=p)
 
+    try:
         for question in questions:
             answer = openai_client.chat_request(message=question)
-            # answer: str = res["choices"][0]["message"]["content"]
             app_logger.info(f"Question: {question}")
             app_logger.info(f"ANSWER: {answer}")
     except RateLimitException as rle:
@@ -51,7 +50,7 @@ def ask_openai(openai_client: OpenAIClient, prelude: list[str], questions: list[
             time.sleep(min(remaining_time, 5))
             remaining_time -= 5
 
-        res = openai_client.request(message=question)
+        answer = openai_client.chat_request(message=question)
     except Exception as e:
         # TODO: Ensure every action stores the result achieved.
         app_logger.error(
@@ -60,7 +59,7 @@ def ask_openai(openai_client: OpenAIClient, prelude: list[str], questions: list[
         )
         raise e
 
-    return res
+    # Should return a list of answers I guess
 
 
 def get_job_description_text(element: WebElement) -> str:
