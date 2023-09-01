@@ -8,6 +8,7 @@ from typing import Callable
 from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -112,15 +113,24 @@ class Linkedin:
         time.sleep(4.4)
 
         # TODO: ¿Iterate view items in the commands and just using crawlers to request data?
-        job_cards = self.web_driver.find_elements(By.XPATH, JobsElements.all_job_cards_xpath)
+        job_cards = self.web_driver.find_elements(By.XPATH, JobsElements.all_not_dismissed_job_cards_xpath)
         app_logger.info(f"scanning {len(job_cards)} elements from page {start // 25 + 1}")
+        job_card: WebElement
         for index, job_card in enumerate(reversed(job_cards)):
+
+            # If it is the first element (the last on the document) the click is not fully working on the first click
+            # (probably due to it is not fully loaded and requires to scroll). This is a shitty but working solution.
+            # Let's keep move and look for something more adequate later.
             job_card.click()
+            if index == 0:
+                job_card.click()
             time.sleep(3)
+
             # STATE: Active job
             app_logger.info("---------------------------------")
             app_logger.info(f"Job number: {index}")
             app_logger.info(f"Job URL: {self.web_driver.current_url}")
+
             # TODO: Actions can alter the webdriver's state, so the outcome of the following actions. Kurwa macz...
             for action in self._actions[LinkedinStates.ACTIVE_JOB_CARD]:
                 action()
