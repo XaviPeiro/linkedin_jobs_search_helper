@@ -7,5 +7,5 @@ __pycache__
 
 
 # Project files
-app_config.yaml
+app_config*.yaml
 openai_playground.txt
