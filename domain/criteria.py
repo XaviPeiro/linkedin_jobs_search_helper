@@ -31,7 +31,7 @@ class ICriteria(ABC):
 
 
 @dataclass
-class JobNLPCriteria(ICriteria):
+class JobDescriptionOAICriteria(ICriteria):
     open_ai_client: OpenAIClient
     criteria: list[str]
 
@@ -48,6 +48,10 @@ class JobNLPCriteria(ICriteria):
     def apply(self, entities: list) -> list[bool, None]:
         res: list = []
 
+        # To keep it cheap I use 3.5-turbo. Besides that, I want to get only True/False as response, but the only way
+        # I've found to do that is specifying "this is a yes-no question" (pregunta directa total); exchanging
+        # yes/no by True/False doesn't work. The "Yes/No" answer comes with a final dot, so it has to be trimmed
+        # and hyphens if many.
         for job_descr in entities:
             prelude = OAI_prompts_v3_5.get("prompts_prelude_for_job_description")
             self.open_ai_client.start_chat()
@@ -57,7 +61,7 @@ class JobNLPCriteria(ICriteria):
             answer = self.open_ai_client.chat_request(message=criteria)
             bool_answer = self.any_yes_in_response(answer)
             res.append(bool_answer)
-            # answer: str = res["choices"][0]["message"]["content"]
+
             app_logger.info(f"Question: {criteria}")
             app_logger.info(f"ANSWER: {answer}")
 

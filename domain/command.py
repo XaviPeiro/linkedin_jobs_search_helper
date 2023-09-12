@@ -7,11 +7,10 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 
-from domain.criteria import JobNLPCriteria
+from domain.criteria import ICriteria
 from domain.notifier import Notifier
 from elements_paths import JobsElements
 from logger import app_logger
-from openai_api import OpenAIClient
 
 """
     Not really a Command but the best name found so far.
@@ -67,43 +66,35 @@ class SeleniumReceiver(CrawlerReceiver):
 
 @dataclass
 class LinkedinDiscardJobCommand(Command):
-    open_ai_client: OpenAIClient
+    criteria: list[ICriteria]
     net_navigator: CrawlerReceiver
     notifier: Notifier
-    # ask_openai_service: Callable[[str], dict]
-    open_ai_client: OpenAIClient
-    criteria: list
-
     _action_name: ClassVar[str] = "DISCARD JOB"  # field(init=False, default="DISCARD JOB")
 
     def __str__(self):
         return f"Action: {self._action_name}."
 
+    """
+        Isn't possible to manually undo the "discard" action, so the btn only appears after clicking discard.
+        However, it can be done by requesting to the proper endpoint.
+    """
     def __call__(self):
         app_logger.info(f"Executing {str(self)} for {self.net_navigator.get_job_title()}")
         # TODO: Will be nice to have track of processed elements in order to repeat the same analysis
         #  over the already processed element thus reducing the time it takes and reqs to openai.
         #  !!!NOT IN THIS FUNCTION.!!!!
 
-        # Isn't possible to manually undo the "discard" action, so the btn only appears after clicking discard.
-        # However, it can be done by requesting to the proper endpoint.
-        # Answer the following yes-no questions, I do not want you to respond anything else than yes or no.
-        NLP_criteria = JobNLPCriteria(open_ai_client=self.open_ai_client, criteria=self.criteria)
-        answer: [bool, None] = NLP_criteria.apply(entities=[self.net_navigator.get_job_description()])[0]
-        # To keep it cheap I use 3.5-turbo. Besides that, I want to get only True/False as response, but the only way
-        # I've found to do that is specifying "this is a yes-no question" (pregunta directa total); exchanging
-        # yes/no byt True/False doesn't work. The "Yes/No" answer comes with a final dot, so it has to be trimmed.
-
-        # TODO: I need a simple response. RN depends on the message set in the app_config.yaml... It is not ideal.
-        #  Sometimes it adds kinda explanation, a workaround can be just checking the first word.
-        if answer is True:
-            self.net_navigator.linkedin_discard_job()
-            app_logger.info("DISCARDED")
-        elif answer is False:
-            app_logger.info("NOT DISCARDED")
-        else:
-            # The model is returning an unexpected message.
-            app_logger.info("NOT DISCARDED - Because unexpected answer from OPENAI.")
+        job_descr = self.net_navigator.get_job_description()
+        for criteria in self.criteria:
+            answer: [bool, None] = criteria.apply(entities=[job_descr])[0]
+            if answer is True:
+                self.net_navigator.linkedin_discard_job()
+                app_logger.info("DISCARDED")
+            elif answer is False:
+                app_logger.info("NOT DISCARDED")
+            else:
+                # The model is returning an unexpected message.
+                app_logger.info("NOT DISCARDED - Because unexpected answer from OPENAI.")
 
 
 """
