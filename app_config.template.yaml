@@ -5,10 +5,11 @@ openai_api:
   secret:
 
 discard_job:
-  # !IMPORTANT
-  # Set on the second line what it your criteria in natural language.
-  # If the response to your question is YES it will be discarded.
-  criteria: > 
-    Assuming this job description: \"{}\".
-    Will I be discarded from this selection process if I intend to work remotely from Poland? 
-    This is a yes-no question, I do not want you to respond anything else than yes or no.
+  system: >
+    You will be provided with IT job descriptions and you will be asked many questions about it in order to know if I should discard this job offer or not. 
+    Answer exclusively with a "yes" and "no". I do not want you to answer anything else than "yes" or "no", no explanation allowed.
+  prelude: 'Assuming this job description: \"{}\". Answer the following yes-no questions, I do not want you to respond anything else than yes or no.'
+  criteria:
+    - '- Is it written in any other language than spanish, catalan or english?'
+    - '- Will I be discarded from this selection process if I intend to work remotely from Poland?'
+    - '- Is Python irrelevant for this offer?'

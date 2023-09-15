@@ -1,4 +1,5 @@
 import time
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Callable
 
@@ -18,16 +19,28 @@ def print_job_title(element: WebDriver):
     app_logger.info(f"Job title = {job_title}")
 
 
-def ask_openai(openai_client: OpenAIClient, question: str) -> dict:
-    try:
+@dataclass
+class OAIAnswer:
+    question: str
+    answer: str
+
+
+def ask_openai(openai_client: OpenAIClient, prelude: list[str], questions: list[str]) -> dict:
         # TODO:
         #  - I cannot work from my residence country.
         #  - Linkedin’s filter fails and the job found isn’t demanding the language/s I work with.
         #  - I do not do/know a strong requirement.
         #  - Profile requested or tasks do not fit with my requirements/needs.
         #  All those usecases, a priori, could be done at once, thus saving on requests and tokens.
+    openai_client.start_chat()
+    for p in prelude:
+        openai_client.add_message(message=p)
 
-        res = openai_client.request(message=question)
+    try:
+        for question in questions:
+            answer = openai_client.chat_request(message=question)
+            app_logger.info(f"Question: {question}")
+            app_logger.info(f"ANSWER: {answer}")
     except RateLimitException as rle:
         # TODO: this is a retry policy. Should no bet here, move it into the client.
         app_logger.warn("Openai API Rate limit reached 🤷.")
@@ -37,7 +50,7 @@ def ask_openai(openai_client: OpenAIClient, question: str) -> dict:
             time.sleep(min(remaining_time, 5))
             remaining_time -= 5
 
-        res = openai_client.request(message=question)
+        answer = openai_client.chat_request(message=question)
     except Exception as e:
         # TODO: Ensure every action stores the result achieved.
         app_logger.error(
@@ -46,7 +59,7 @@ def ask_openai(openai_client: OpenAIClient, question: str) -> dict:
         )
         raise e
 
-    return res
+    # Should return a list of answers I guess
 
 
 def get_job_description_text(element: WebElement) -> str:
@@ -61,7 +74,7 @@ def discard_job(element: WebElement, criteria: str, notifier: Notifier, apply_cr
     #  !!!NOT IN THIS FUNCTION.!!!!
 
     # DOING: store url from this job in order to later check them if required.
-    # Isnt possible to undiscard it manually, so the btn only appears after clicking discard.
+    # Isn't possible to undiscard it manually, so the btn only appears after clicking discard.
     # However it can be done by requesting to the proper endpoint.
 
     # Let's assume criteria is a text to search in the descr
