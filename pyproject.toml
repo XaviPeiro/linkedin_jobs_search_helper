@@ -7,7 +7,7 @@ authors = ["Strong Punch Xavier"]
 [tool.poetry.dependencies]
 python = "^3.11"
 selenium = "4.9.0"
-webdriver-manager = "3.8.6"
+webdriver-manager = "4.0.0"
 plum-dispatch = "^2.1.1"
 pyyaml = "^6.0"
 tiktoken = "^0.4.0"

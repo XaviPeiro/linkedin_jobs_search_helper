@@ -1,0 +1,92 @@
+Acerca del empleo
+Who We Are
+
+
+In today’s economy, an increasing number of workers are choosing to freelance. By 2027, half the U.S. workforce will be independent contractors. Yet there is no system of record for this vast self-employed community and the legions of businesses that increasingly rely on it. A new paradigm is needed to accommodate the future of work that is suddenly no longer in the future. That is what Wingspan is building.
+
+
+Wingspan is the first payroll platform designed specifically for independent contractors and their businesses. We make onboarding, payments, and compliance easy for flexible workforces of all sizes. Whether you’re a one-person business or a large enterprise, Wingspan has you covered.
+
+
+We’re a Series A startup based in NYC with backing from some of the best VCs and operators around, including Andreessen Horowitz (a16z) and the CEOs and founders of Warby Parker, Harry’s, Allbirds, Invision, and Flatiron Health.
+
+
+Now we're hiring for you: an ambitious individual ready to help build, design, and support enterprise-grade software scaled to millions of individuals.
+
+
+Are you ready to be part of a team redefining the future of work? Apply now!
+
+
+Impact of the Role:
+
+
+As a Senior Software Engineer at Wingspan, you will play a pivotal role in shaping the future of technology by developing cutting-edge solutions that empower businesses and improve people's lives. You will work alongside a team of passionate and talented engineers, helping us maintain our position as industry leaders and ensuring our products continue to outperform the competition.
+
+
+What you'll do:
+
+
+Design, develop, and implement high-quality, scalable software solutions that meet client needs and exceed expectations
+Collaborate with cross-functional teams to ensure seamless integration and timely delivery of projects
+Continuously improve and optimize existing software systems by identifying inefficiencies, refactoring code, and implementing best practices
+Participate in agile development processes, including sprint planning, daily standups, and retrospectives, to ensure project success and team alignment
+Contribute to the growth of our engineering culture by sharing knowledge, mentoring new engineering hires, and actively participating in code reviews and technical discussions
+Stay current with industry trends, emerging technologies, and best practices, and proactively identify opportunities to incorporate these into our tech stack
+
+
+Qualifications:
+
+
+Extensive experience with at least one back-end programming language (we use Node)
+Strong communication and collaboration skills, with a track record of working effectively in cross-functional teams and adapting to diverse perspectives
+Experience in proactively identifying opportunities for process improvements and driving the adoption of best practices to optimize cross-functional collaboration and overall team productivity.
+Track record of promoting a culture of continuous learning and innovation, encouraging the exploration of new technologies and techniques to enhance backend system performance and capabilities.
+Proven ability to lead and manage complex projects end-to-end, from initial planning and scoping to successful implementation and delivery, ensuring timely completion and alignment with business objectives.
+
+
+Requirements:
+
+
+5+ years of professional software development experience, with a strong background in object-oriented programming
+Solid understanding of data structures, algorithms, and software design principles
+Familiarity with software testing methodologies, including unit, integration, and system testing
+Knowledge of industry trends, emerging technologies, and best practices in software development
+Experience with agile development processes, such as sprint planning, daily standups, and retrospectives
+Must be authorized to work in the United States. At this time we are unable to transfer or sponsor visas
+
+
+Compensation
+
+
+At Wingspan, we pride ourselves on offering a competitive and comprehensive compensation package that reflects our commitment to attracting top talent. The annual base salary for this role ranges from $155,000-$180,000 and is accompanied by a target equity package and an extensive suite of benefits, including medical, dental, and vision insurance. All figures cited are in USD and pertain to workers located in the United States.
+We understand that each candidate brings a unique combination of skills, experience, and qualifications to the table, which is why we tailor our compensation packages based on factors such as expertise, years of experience, certifications, and other factors.
+Join us in our mission to innovate and excel, knowing that you will be valued and recognized for your job-related knowledge, skills, and experience. Our comprehensive benefits and rewards are designed to help you thrive both professionally and personally, as we work together to shape the future of our industry.
+
+
+Benefits & Perks
+
+
+Unlimited vacation
+Competitive stock option package
+$300 one-time WFH stipend
+Medical, dental, and vision benefits
+Top of the line 14" Macbook Pro
+Travel stipend for team off-sites
+
+
+**We appreciate candidates who are open and honest about what they’re looking for so we can ensure it’s a fit on both sides.**
+
+
+To all recruitment firms we do not work with: Wingspan does not permit the submission of agency-provided resumes. Kindly refrain from sending resumes to our job-related email addresses and Wingspan staff members. Wingspan will not be held accountable for any charges associated with unsought resumes.
+
+
+At Wingspan, we are an equal opportunity employer passionately dedicated to fostering a diverse and inclusive workplace. We wholeheartedly believe that embracing diversity of perspectives and backgrounds is essential to building the best products and providing delightful experiences for our users and team members. We are proud to maintain an environment free from discrimination, retaliation, and harassment.
+
+
+All qualified applicants will receive consideration for employment without regard to race, color, religion, sex, sexual orientation, gender identity, national origin, age, ancestry, ethnicity, marital status, pregnancy, disability, genetic information, protected veteran status, or any other characteristic protected by law or ordinance. As we strive for excellence, we are committed to ensuring fair employment practices and business dealings and rejecting any form of discrimination or retaliation. These protections and commitments extend to all management practices and decisions, including recruitment and hiring, appraisal systems, promotions, training, and career development programs. Consistent with these obligations, Wingspan also provides reasonable accommodations to employees and applicants with disabilities and for sincerely held religious beliefs, observances, and practices.
+
+
+If you would like to request an accommodation as part of the application process, please contact [Clifton Jadoo at cliffj@wingspan.app].
+
+
+Join us in our mission to create a company and products we love, as we celebrate our diverse workforce and promote an inclusive work environment that drives innovation and success.
