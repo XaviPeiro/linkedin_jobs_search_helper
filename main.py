@@ -20,6 +20,7 @@ from scanners.linkedin import LinkedinStates, Linkedin, JobsFilter
 # TODO P4: yaml is cacota, change it.
 import yaml
 
+
 with open("app_config1.yaml", "r") as f:
     config = yaml.load(f, Loader=yaml.FullLoader)
 
@@ -42,7 +43,6 @@ def init_discard_criteria() -> list[ICriteria]:
         Answer exclusively with a "yes" and "no". I do not want you to answer anything else than "yes" or "no", no explanation allowed.
     """
     openai_client = OpenAIClient.init_with_role(secret=config["openai_api"]["secret"], message=system_message)
-
     return [
         JobDescriptionOAICriteria(open_ai_client=openai_client, criteria=config["discard_job"]["criteria"]),
     ]
@@ -50,9 +50,7 @@ def init_discard_criteria() -> list[ICriteria]:
 
 # TODO P2: Handle graceful stop
 def main():
-
     chrome: WebDriver = init_bot()
-
     job_filter = JobsFilter(
         salary=SalaryCodes.X80K,
         location=LocationCodes.USA,
@@ -60,15 +58,21 @@ def main():
         posted_days_ago=30,
         search_term="Python Backend Engineer"
     )
-    app_logger.info("Logging into linkedin.")
+    job_filter_eu = JobsFilter(
+        salary=SalaryCodes.X80K,
+        location=LocationCodes.EU,
+        remote=[RemoteCodes.REMOTE],
+        posted_days_ago=30,
+        search_term="Python Backend Engineer"
+    )
 
+
+    app_logger.info("Logging into linkedin.")
     linkedin_scrapper = Linkedin(
         web_driver=chrome,
         user=config["user"],
         password=config["password"],
-        jobs_filter=job_filter
     )
-
     selenium_receiver = SeleniumReceiver(net_navigator=linkedin_scrapper.web_driver)
     discard_jobs = LinkedinDiscardJobCommand(
         net_navigator=selenium_receiver,
@@ -80,7 +84,7 @@ def main():
         discard_jobs
     ]
     linkedin_scrapper.set_actions(state=LinkedinStates.ACTIVE_JOB_CARD, actions=actions)
-    linkedin_scrapper()
+    linkedin_scrapper(job_filters=[job_filter, job_filter_eu], max_jobs=25)
 
 
 if __name__ == "__main__":
