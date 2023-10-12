@@ -11,6 +11,10 @@ from plum import dispatch
 class LocationCodes(Enum):
     USA: str = "103644278"
     EU: str = "91000000"
+    SWTZ: str = "106693272"
+    IL: str = "101620260"
+    UK: str = "3702942170"
+    PL: str = "105072130"
 
 
 class RemoteCodes(Enum):

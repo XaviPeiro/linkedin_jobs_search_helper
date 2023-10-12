@@ -29,7 +29,7 @@ class JobsFilter:
     remote: list[RemoteCodes]
     posted_days_ago: int
     search_term: str
-    pagination_offset: int = 25
+    pagination_offset: int = 0
 
 
 # TODO P2: Ideally the Crawlers should only gather data, and the data processing should be apart and agnostic.
@@ -142,7 +142,7 @@ class Linkedin:
             # Apparently, LinkedIn's jobs per page is fixed to 25, so...
             jobs_number = 25
             # TODO: This just works if multiple of 25 (pages), not important rn.
-            if jobs_filter.pagination_offset + jobs_number > max_jobs:
+            if jobs_filter.pagination_offset + jobs_number >= max_jobs:
                 return None
 
             jobs_filter.pagination_offset += jobs_number

@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Config file helper for linkedin bot",
+  "description": "",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "filters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "location": {
+            "type": "string",
+            "enum": ["EU", "USA"]
+          },
+          "remote": {
+            "type": "string",
+            "enum": ["IN_SITE", "REMOTE", "HYBRID"]
+          }
+        }
+      }
+    }
+  }
+}
