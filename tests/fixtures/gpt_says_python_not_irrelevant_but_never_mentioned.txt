@@ -1,0 +1,35 @@
+Acerca del empleo
+A market leader in credit intelligence, Reorg brings together journalists, financial analysts, legal analysts, technologists, and data scientists to collect and synthesize highly complex information into actionable intelligence. Since 2013, tens of thousands of professionals across hedge funds, investment banks, management consulting, and law firm verticals have come to rely on Reorg to make better, faster, and more confident decisions in pace with the fast-moving credit markets. For more information, visit: www.reorg.com
+
+Working at Reorg
+
+Consistent with our growth, Reorg hires innovators and trailblazers across the globe to drive our business and our incredible corporate culture alike. Our core values – Action Oriented, Customer First Mindset, Effective Team Players, and Driven to Excel – define an organizational ethos that’s as high-performing as it is human. Among other perks, Reorg employees enjoy competitive health benefits, matched 401k and pension plans, Paid time off, generous parental leave, gym subsidies, educational reimbursements for career development, recognition programs, pet-friendly offices, and much more.
+
+The Role
+
+At Reorg, we are seeking a highly skilled and experienced Backend Engineer to join our platform team. The ideal candidate will play a key role in designing, developing, and maintaining our global platform tools and services. And will work closely with application development teams to provide guidance on technical designs and implementation patterns.
+
+Responsibilities
+
+Build and maintain APIs & Services: Design, develop, and optimize high-quality APIs using C# .NET, PostgreSQL, and Event Driven Architecture. Implement best practices for performance, scalability, and security. Collaborate with teams to define requirements, ensure seamless integration, and provide ongoing support and maintenance.
+Managing contributions to our SDK: Work with other teams to help facilitate contributions to our global SDK. Enforcing and maintaining high quality coding standards and patterns for our SDK.
+Testing Code: Implement unit and integration tests using industry best practices. Performing thorough testing to ensure reliability, performance, and security.
+Code Review: Conduct code reviews to ensure adherence to best practices, code quality, and maintainability. Provide constructive feedback to team members, identifying areas for improvement and suggesting solutions. Collaborate to enhance overall codebase quality and promote a culture of continuous learning and improvement.
+Sprint Planning: Collaborate with the team to define and prioritize user stories and tasks for upcoming sprints. Participate in sprint planning meetings to estimate effort, allocate resources, and set achievable sprint goals. Contribute to creating a well defined plan that ensures timely delivery of features and efficient utilization of resources.
+Leadership: Take a leadership role by mentoring and guiding junior engineers, sharing knowledge, and promoting best practices. Drive technical excellence by setting high standards, fostering a collaborative and inclusive environment, and promoting a culture of innovation and continuous improvement. Inspire and motivate the team to achieve exceptional results.
+Troubleshooting: Monitor and troubleshoot production systems to ensure high availability and performance. Identify and analyze complex issues in a distributed environment, applying problem-solving skills to diagnose root causes and implement effective solutions. Collaborate with cross-functional teams to resolve incidents and ensure smooth operation of backend systems.
+Documentation: Create and maintain comprehensive documentation for backend systems, APIs, and processes. Document architectural designs, code guidelines, and API specifications. Ensure documentation accuracy, clarity, and accessibility for the team and stakeholders. Contribute to a knowledge base that facilitates smooth onboarding, troubleshooting, and future enhancements.
+
+Requirements
+
+Experience with C#, PHP, or similar languages (Knowledge of both C# and PHP is a plus)
+Experience with PostgreSQL, MySQL or similar relational database (Knowledge of both Postgres & MySQL is a plus) Experience with Kafka, RabbitMQ or similar Event Driven Architecture Experience with Redis or similar caching framework
+
+At Reorg, we consider a range of factors in connection with compensation decisions, including experience, skills, location, and our business needs and limitations. As a result, compensation may vary within and across similar roles and positions. Please note that the salary range information below is a good faith estimate for this position and actual compensation for any individual may fall outside this range if warranted by the circumstances applicable to that individual. If we identify a role that would be suitable for a broader range of skills and experience such that we would consider hiring at multiple levels then the range listed below may reflect that breadth.
+
+The salary range estimate for this position is $140,000-$160,000.
+
+The actual compensation will be at Reorg’s sole discretion and will be determined by the aforementioned and other relevant factors. This position is eligible for an annual discretionary bonus.
+
+Reorg provides equal employment opportunities (EEO) to all employees and applicants for employment without regard to race, color, religion, sex, national origin, age, disability or genetics. In addition to federal law requirements, Reorg complies with applicable state and local laws governing nondiscrimination in employment in every location in which the company has facilities. This policy applies to all terms and conditions of employment, including recruiting, hiring, placement, promotion, termination, layoff, recall, transfer, leaves of absence, compensation, and training.
+Publicado el 14 sept. 2023.

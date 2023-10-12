@@ -1,0 +1,60 @@
+Acerca del empleo
+About Minware
+
+
+minware's aims to eliminate waste from software engineering by helping engineers write less bad code. We do that by analyzing what happens to code after it is written to help people improve the way they work.
+
+
+Kevin Borders founded minware after bootstrapping his previous company to $86m in revenue and selling in 2021, with the idea of helping others benefit from lessons learned growing an engineering team from 0 to 40.
+
+
+minware is a self-funded seed-stage company. After promising initial customer traction, we are looking for people who share our values to help bring minware to a larger audience.
+
+
+The Role
+
+
+As an early engineer, you will have the unique opportunity to work directly with minware's founders to build the product from the ground up. We are looking for someone who enjoys operating in the full stack and learning new things, with an emphasis on using React, GraphQL, and Next.js to build the main analytics application.
+
+
+We are seeking an ambitious and nice senior engineer who has experience independently executing complex projects and building scalable, maintainable software. As a purveyor of developer productivity analytics, we are diligent about process efficiency and code quality. Though we are small, we try to avoid unnecessarily creating technical debt and are looking for someone who can lead us toward this goal.
+
+
+Primary Responsibilities
+
+
+Independently plan, implement, and test features in the minware application
+Work closely with product managers and customers to define minware's capabilities
+Design and architect new system components
+Manage a backlog of tech debt reduction and internal efficiency improvements
+(Optional) Conduct interviews and help with hiring other engineers
+
+
+Qualifications
+
+
+Experience building and maintaining a complex full-stack application
+Familiarity with principles of high-quality code, including continuous integration, declarative and functional programming
+Strong communication skills for interfacing with non-technical stakeholders and occasionally with customers
+Well-versed in agile or lean planning and project management processes
+Experience with the core stack (Postgres, Next.js, Apollo GraphQL, React) or similar technologies is preferred
+Proficiency with infrastructure (AWS, Terraform) and UI (HTML, CSS, Figma) is optional, but nice to have
+
+
+Benefits and Perks
+
+
+Competitive base salary, bonus, and seed-stage equity compensation
+100% remote work, flexible hours, and unlimited vacation policy. (Read here about how we built trust in our previous all-remote company.)
+Full health care premium coverage for you and your family
+Unique career development guidance reporting directly to the founder/CEO
+
+
+We offer competitive compensation packages along with stock options based on industry benchmarks for function, and level. Offer amounts are determined by multiple factors such as a candidate's experience and expertise.
+
+
+Base Compensation:
+
+
+$120,000—$190,000 USD
+Publicado el 27 sept. 2023.

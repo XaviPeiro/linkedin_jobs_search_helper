@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import ClassVar
+from typing import ClassVar, Any
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -12,19 +12,9 @@ from domain.notifier import Notifier
 from elements_paths import JobsElements
 from logger import app_logger
 
-"""
-    Not really a Command but the best name found so far.
-"""
-
-
-class Command(ABC):
-
-    @abstractmethod
-    def __call__(self):
-        ...
-
 
 class CrawlerReceiver(ABC):
+    # net_navigator: Any
 
     @abstractmethod
     def linkedin_discard_job(self):
@@ -42,12 +32,23 @@ class CrawlerReceiver(ABC):
         ...
 
 
+class Command(ABC):
+    """
+        Not really a Command but the best name found so far.
+    """
+    net_navigator: CrawlerReceiver
+
+    @abstractmethod
+    def __call__(self):
+        ...
+
+
 @dataclass
 class SeleniumReceiver(CrawlerReceiver):
-    net_navigator: WebDriver
-
     # Makes no sense to place here actions related to concrete crawlers, so the receiver is Selenium. However, as long
     # as I do not intend to add any other crawler I will leave it like this for the nonce.
+    net_navigator: WebDriver
+
     def linkedin_discard_job(self):
         discard_btn = WebDriverWait(self.net_navigator, 5).until(
             expected_conditions.presence_of_element_located((By.CSS_SELECTOR, JobsElements.discard_selected_job_css))
@@ -85,6 +86,8 @@ class LinkedinDiscardJobCommand(Command):
         #  !!!NOT IN THIS FUNCTION.!!!!
 
         job_descr = self.net_navigator.get_job_description()
+        # TODO: "criteria" is used as JobDescriptionOAICriteria.criteria (class and yaml) as the different algs to
+        #  to discard (JobDescriptionOAICriteria is ne of them, JobDescriptionOAICriteria). CONFUSING.
         for criteria in self.criteria:
             answer: [bool, None] = criteria.apply(entities=[job_descr])[0]
             if answer is True:

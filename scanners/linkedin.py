@@ -3,7 +3,7 @@ import time
 from dataclasses import field, dataclass
 from enum import StrEnum
 from functools import partial
-from typing import Callable
+from typing import Callable, Optional
 
 from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
@@ -29,6 +29,7 @@ class JobsFilter:
     remote: list[RemoteCodes]
     posted_days_ago: int
     search_term: str
+    pagination_offset: int = 0
 
 
 # TODO P2: Ideally the Crawlers should only gather data, and the data processing should be apart and agnostic.
@@ -38,15 +39,15 @@ class Linkedin:
     web_driver: WebDriver
     user: str
     password: str
-    jobs_filter: JobsFilter
     _actions: dict = field(init=False, default_factory=dict)
 
     def set_actions(self, state: LinkedinStates, actions: list[Callable]):
         self._actions[state] = actions
 
-    def __call__(self, *args, **kwargs):
+    def __call__(self, job_filters: list[JobsFilter], max_jobs: Optional[int] = None):
         self._do_login(email=self.user, pw=self.password)
-        self._iterate_jobs()
+        for job_filter in job_filters:
+            self._iterate_jobs(jobs_filter=job_filter, max_jobs=max_jobs)
 
     def _do_login(self, email: str, pw: str):
         try:
@@ -86,22 +87,21 @@ class Linkedin:
                 time.sleep(300)
                 # TODO: Detect if pin has been introduced in order to keep with the normal execution.
                 sys.exit()
-
         except Exception as e:
             app_logger.error("Couldn't log in Linkedin! ☠ Check if any intermediate screen appeared and credentials.")
             raise e
 
     # TODO P2: Split navigation and parse/actions
     # TODO P1: Pass filter attributes
-    def _iterate_jobs(self, start: int = 0):
+    def _iterate_jobs(self, jobs_filter: JobsFilter, max_jobs: Optional[int] = None):
 
         url: str = UrlGenerator().generate(
-            search_term=self.jobs_filter.search_term,
-            salary=self.jobs_filter.salary,
-            location=self.jobs_filter.location,
-            posted_days_ago=self.jobs_filter.posted_days_ago,
-            remote=self.jobs_filter.remote,
-            start=start
+            search_term=jobs_filter.search_term,
+            salary=jobs_filter.salary,
+            location=jobs_filter.location,
+            posted_days_ago=jobs_filter.posted_days_ago,
+            remote=jobs_filter.remote,
+            start=jobs_filter.pagination_offset
         )
         self.web_driver.get(url)
         time.sleep(3)
@@ -114,7 +114,7 @@ class Linkedin:
 
         # TODO: ¿Iterate view items in the commands and just using crawlers to request data?
         job_cards = self.web_driver.find_elements(By.XPATH, JobsElements.all_not_dismissed_job_cards_xpath)
-        app_logger.info(f"scanning {len(job_cards)} elements from page {start // 25 + 1}")
+        app_logger.info(f"scanning {len(job_cards)} elements from page {jobs_filter.pagination_offset // 25 + 1}")
         job_card: WebElement
         for index, job_card in enumerate(reversed(job_cards)):
 
@@ -139,7 +139,14 @@ class Linkedin:
             app_logger.info("----------------------------------\n")
         else:
             # next page
-            self._iterate_jobs(start=start + 25)
+            # Apparently, LinkedIn's jobs per page is fixed to 25, so...
+            jobs_number = 25
+            # TODO: This just works if multiple of 25 (pages), not important rn.
+            if jobs_filter.pagination_offset + jobs_number >= max_jobs:
+                return None
+
+            jobs_filter.pagination_offset += jobs_number
+            self._iterate_jobs(jobs_filter=jobs_filter)
 
 
 

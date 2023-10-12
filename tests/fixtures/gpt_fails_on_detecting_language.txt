@@ -1,0 +1,72 @@
+As a full-stack team lead you will work closely with the product team to help build features for the SelfDecode personalized health platform. You will help define the technical architecture that supports these business goals and create robust and maintainable solutions as you guide your team using the SCRUM framework.
+
+
+We are a flat organization and prioritize efficiency.
+We work as a team and every input and suggestion is taken into account, no matter who it comes from.
+We thrive on open communication and dedication.
+We are a meritocracy and people who show good abilities or skills can move up in the organization fast, get raises, etc…
+We expect people to work full-time without side gigs.
+We expect the applicant to have a long-term relationship with our company.
+We expect employees to be proactive and autonomous.
+We do not micromanage.
+Dishonesty is not tolerated at all, and we thrive on trust.
+When you're working, we expect you to work.
+We emphasize skills & abilities rather than formal education.
+
+
+The Role is:
+
+
+
+Full-time
+Fully remote
+No agencies
+Salary $90k – $120k; Will be in accordance with skill, abilities, and experience, and can vary widely.
+Equity is also available for outstanding applicants with leadership abilities.
+
+
+Responsibilities:
+
+
+
+Developing scalable and easily maintainable software through sound architectural practices in a timely manner
+Guide a SCRUM team to deliver new features for our personalized health platform
+Perform code reviews
+Be a technical leader, mentor, collaborator, and champion of best practices
+
+
+Required Skills & Experience:
+
+
+
+5+ years of full-stack experience, especially with React and Django
+Proficiency in HTML/CSS, JavaScript and TypeScript using React and Redux
+Experience with building interactive front-end interfaces
+Experience building back-end APIs with Django
+Experience with databases, writing and optimizing SQL queries
+Experience building applications in an AWS cloud environment
+Experience writing testable code, e.g. unit testing and integration testing
+Well-versed in source control with Git
+
+
+Plusses:
+
+
+
+Understanding of event driven systems
+Website optimization, e.g. bundling, code-splitting, image optimization
+Experience leading a team
+
+
+Important: Share your LinkedIn profile. Having an up-to-date LinkedIn profile will make you a more competitive applicant!
+
+
+You will be prompted to take a short series of logic tests as soon as you submit your application. The screening tests help us predict if you are able to solve complex problems and reason well.
+
+
+Note: You must pass the initial screening tests in order to be considered for employment, so please be sure to fully complete it within 7 days of starting.
+
+
+
+Questions? If you have any questions, you can email us at recruiting@selfdecode.com
+Publicado el 7 oct. 2023.
