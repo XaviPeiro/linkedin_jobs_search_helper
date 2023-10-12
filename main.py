@@ -25,6 +25,23 @@ with open("app_config1.yaml", "r") as f:
     config = yaml.load(f, Loader=yaml.FullLoader)
 
 
+def config_to_job_filters(file_path: str = "app_config1.yaml") -> list[JobsFilter]:
+    with open(file_path, "r") as f:
+        config = yaml.load(f, Loader=yaml.FullLoader)
+
+        # TODO: This return part should be a service on its own, for reusability. However, not necessary for the nonce,
+        #  due to this is the only client available.
+        return [
+            JobsFilter(
+                salary=SalaryCodes[c["minimum_salary"]],
+                location=LocationCodes[c["location"]],
+                search_term=c["search_term"],
+                posted_days_ago=c["max_ad_days"],
+                remote=[RemoteCodes[c["remote"]]]
+            ) for c in config["filters"]
+        ]
+
+
 # TODO: Add dependency_injector lib
 def init_bot() -> WebDriver:
     options = Options()
@@ -51,21 +68,6 @@ def init_discard_criteria() -> list[ICriteria]:
 # TODO P2: Handle graceful stop
 def main():
     chrome: WebDriver = init_bot()
-    job_filter = JobsFilter(
-        salary=SalaryCodes.X80K,
-        location=LocationCodes.USA,
-        remote=[RemoteCodes.REMOTE],
-        posted_days_ago=30,
-        search_term="Python Backend Engineer"
-    )
-    job_filter_eu = JobsFilter(
-        salary=SalaryCodes.X80K,
-        location=LocationCodes.EU,
-        remote=[RemoteCodes.REMOTE],
-        posted_days_ago=30,
-        search_term="Python Backend Engineer"
-    )
-
 
     app_logger.info("Logging into linkedin.")
     linkedin_scrapper = Linkedin(
@@ -84,7 +86,7 @@ def main():
         discard_jobs
     ]
     linkedin_scrapper.set_actions(state=LinkedinStates.ACTIVE_JOB_CARD, actions=actions)
-    linkedin_scrapper(job_filters=[job_filter, job_filter_eu], max_jobs=25)
+    linkedin_scrapper(job_filters=config_to_job_filters(), max_jobs=25)
 
 
 if __name__ == "__main__":
