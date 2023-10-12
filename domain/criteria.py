@@ -30,11 +30,11 @@ class ICriteria(ABC):
         ...
 
 
-"""
-    Actually it is an "anyYes"
-"""
 @dataclass
 class JobDescriptionOAICriteria(ICriteria):
+    """
+        Actually it is an "anyYes"
+    """
     open_ai_client: OpenAIClient
     criteria: list[str]
 
