@@ -45,9 +45,6 @@ class Command(ABC):
 
 @dataclass
 class SeleniumReceiver(CrawlerReceiver):
-    # TODO: Makes no sense having this class when Linkedin, the class, (or any "crawler logic") depends on "WebDriver"
-    #  (especially when it comes to be a Selenium dependency 😕), likewise this class.
-
     # Makes no sense to place here actions related to concrete crawlers, so the receiver is Selenium. However, as long
     # as I do not intend to add any other crawler I will leave it like this for the nonce.
     net_navigator: WebDriver
