@@ -15,7 +15,7 @@ class JobsElements(ElementsPaths):
     job_cards_clickable: str = "job-card-container--clickable"
     all_job_cards_xpath: str = "//li[@data-occludable-job-id]"
     all_not_dismissed_job_cards_xpath: str = "//li[@data-occludable-job-id and not(.//div[contains(@class, 'ob-card-list--is-dismissed')])]"
-    discard_selected_job_css: str = ".jobs-search-results-list__list-item--active div.job-card-list__dismiss > button"
+    discard_selected_job_css: str = ".jobs-search-results-list__list-item--active button.artdeco-button--muted"
     selected_job_css: str = ".jobs-search-results-list__list-item--active"
     job_card_title_css: str = ".job-card-list__title"
     discarded_job_card_css = ".job-card-list--is-dismissed"
