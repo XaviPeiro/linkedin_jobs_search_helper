@@ -2,12 +2,13 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import ClassVar, Any
 
+from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 
-from domain.criteria import ICriteria
+from domain.criteria.criteria import ICriteria
 from domain.notifier import Notifier
 from elements_paths import JobsElements
 from logger import app_logger
@@ -50,9 +51,14 @@ class SeleniumReceiver(CrawlerReceiver):
     net_navigator: WebDriver
 
     def linkedin_discard_job(self):
-        discard_btn = WebDriverWait(self.net_navigator, 5).until(
-            expected_conditions.presence_of_element_located((By.CSS_SELECTOR, JobsElements.discard_selected_job_css))
-        )
+        try:
+            discard_btn = WebDriverWait(self.net_navigator, 5).until(
+                expected_conditions.presence_of_element_located((By.CSS_SELECTOR, JobsElements.discard_selected_job_css))
+            )
+        except TimeoutException as te:
+            app_logger.error(f"Discard button not found. Selector: {JobsElements.discard_selected_job_css}")
+            raise te
+
         discard_btn.click()
 
     def get_job_description(self) -> str:
