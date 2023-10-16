@@ -112,6 +112,8 @@ class LinkedinDiscardJobCommand(Command):
 
         # TODO: Should I separate actions that requires change state and those that do not? Pass the job descr instead
         #  of depending on the net navigator?
+        job_url = self.net_navigator.get_job_url()
+        message = "Discarded: {answer}; " + f"Job: {self.net_navigator.get_job_title()}; JobUrl: {job_url}"
         job_descr = self.net_navigator.get_job_description()
         # TODO: The term "criteria" is used as JobDescriptionOAICriteria.criteria (class and yaml) as the
         #  different algs to to discard (JobDescriptionOAICriteria is ne of them, JobDescriptionOAICriteria). CONFUSING.
@@ -125,6 +127,7 @@ class LinkedinDiscardJobCommand(Command):
             else:
                 # The model is returning an unexpected message.
                 app_logger.info("NOT DISCARDED - Because unexpected answer from OPENAI.")
+            self.notifier.notify(message=message.format(answer=answer))
 
 
 @dataclass
@@ -136,7 +139,8 @@ class NotifyJobsRelevanceCommand(Command):
 
     def __call__(self):
         app_logger.info(f"Executing {str(self)} for {self.net_navigator.get_job_title()}")
-        message = "{score} -> " + f"Job: {self.net_navigator.get_job_title()}[{self.net_navigator.get_job_url()}]"
+        job_url = self.net_navigator.get_job_url()
+        message = "Score: {score}; " + f"Job: {self.net_navigator.get_job_title()}; JobUrl: {job_url}"
         job_descr = self.net_navigator.get_job_description()
 
         is_discarded = self.net_navigator.is_job_discarded()
