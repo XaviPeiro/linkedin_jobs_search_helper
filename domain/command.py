@@ -32,6 +32,10 @@ class CrawlerReceiver(ABC):
     def get_job_title(self) -> str:
         ...
 
+    @abstractmethod
+    def get_job_url(self) -> str:
+        ...
+
 
 class Command(ABC):
     """
@@ -70,6 +74,9 @@ class SeleniumReceiver(CrawlerReceiver):
         job_title: str = self.net_navigator.find_element(By.CSS_SELECTOR, JobsElements.selected_job_card_title_css).text
         return job_title
 
+    def get_job_url(self) -> str:
+        return self.net_navigator.current_url
+
 
 @dataclass
 class LinkedinDiscardJobCommand(Command):
@@ -91,9 +98,11 @@ class LinkedinDiscardJobCommand(Command):
         #  over the already processed element thus reducing the time it takes and reqs to openai.
         #  !!!NOT IN THIS FUNCTION.!!!!
 
+        # TODO: Should I separate actions that requires change state and those that do not? Pass the job descr instead
+        #  of depending on the net navigator?
         job_descr = self.net_navigator.get_job_description()
-        # TODO: "criteria" is used as JobDescriptionOAICriteria.criteria (class and yaml) as the different algs to
-        #  to discard (JobDescriptionOAICriteria is ne of them, JobDescriptionOAICriteria). CONFUSING.
+        # TODO: The term "criteria" is used as JobDescriptionOAICriteria.criteria (class and yaml) as the
+        #  different algs to to discard (JobDescriptionOAICriteria is ne of them, JobDescriptionOAICriteria). CONFUSING.
         for criteria in self.criteria:
             answer: [bool, None] = criteria.apply(entities=[job_descr])[0]
             if answer is True:
@@ -104,6 +113,22 @@ class LinkedinDiscardJobCommand(Command):
             else:
                 # The model is returning an unexpected message.
                 app_logger.info("NOT DISCARDED - Because unexpected answer from OPENAI.")
+
+
+@dataclass
+class NotifyJobsRelevanceCommand(Command):
+    criteria: list[ICriteria]
+    notifier: Notifier
+    _action_name: ClassVar[str] = "NOTIFY JOB RELEVANCE"  # field(init=False, default="DISCARD JOB")
+    net_navigator: CrawlerReceiver
+
+    def __call__(self):
+        app_logger.info(f"Executing {str(self)} for {self.net_navigator.get_job_title()}")
+        message = "{score} -> " + f"Job: {self.net_navigator.get_job_title()}[{self.net_navigator.get_job_url()}]"
+        job_descr = self.net_navigator.get_job_description()
+        for criteria in self.criteria:
+            answer: [bool, None] = criteria.apply(entities=[job_descr])[0]
+            self.notifier.notify(message=message.format(score=answer))
 
 
 """
