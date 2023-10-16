@@ -1,25 +1,20 @@
-from functools import partial
-
+# TODO P4: yaml is cacota, change it.
+import yaml
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.webdriver import WebDriver
 from webdriver_manager.chrome import ChromeDriverManager
 
-import scanners.actions as scanners_actions
-from components import notifier_unexpected_openai_response
-from domain.command import SeleniumReceiver, LinkedinDiscardJobCommand
-from domain.criteria import ICriteria, JobDescriptionOAICriteria
-from infraestracture.notifications.fs import FileSystemNotificator
+from components import notifier_unexpected_openai_response, notifier_ordered_jobs_by_relevance
+from domain.command import SeleniumReceiver, LinkedinDiscardJobCommand, NotifyJobsRelevanceCommand
+from domain.criteria.criteria import ICriteria
+from domain.criteria.job_discard_oai_criteria import JobDescriptionOAICriteria
+from domain.criteria.relevant_job_OAI_criteria import JobDescriptionOAICriteriaRelevance
 from job_url_builder import SalaryCodes, LocationCodes, RemoteCodes
 from logger import app_logger
 from openai_api import OpenAIClient
 from scanners.linkedin import LinkedinStates, Linkedin, JobsFilter
-
-
-# TODO P4: yaml is cacota, change it.
-import yaml
-
 
 with open("app_config1.yaml", "r") as f:
     config = yaml.load(f, Loader=yaml.FullLoader)
@@ -65,6 +60,18 @@ def init_discard_criteria() -> list[ICriteria]:
     ]
 
 
+def init_order_by_relevance_criteria() -> list[ICriteria]:
+    system_message = config["order_jobs_by_relevance"]["system"]
+    openai_client = OpenAIClient.init_with_role(secret=config["openai_api"]["secret"], message=system_message)
+    return [
+        JobDescriptionOAICriteriaRelevance(open_ai_client=openai_client, criteria=config["order_jobs_by_relevance"]["criteria"]),
+    ]
+
+
+def init_relevant_jobs():
+    ...
+
+
 # TODO P2: Handle graceful stop
 def main():
     chrome: WebDriver = init_bot()
@@ -82,8 +89,14 @@ def main():
         criteria=init_discard_criteria()
 
     )
+    notify_relevant_jobs = NotifyJobsRelevanceCommand(
+        criteria=init_order_by_relevance_criteria(),
+        notifier=notifier_ordered_jobs_by_relevance,
+        net_navigator=selenium_receiver
+    )
     actions = [
-        discard_jobs
+        # discard_jobs,
+        notify_relevant_jobs
     ]
     linkedin_scrapper.set_actions(state=LinkedinStates.ACTIVE_JOB_CARD, actions=actions)
     linkedin_scrapper(job_filters=config_to_job_filters(), max_jobs=25)
