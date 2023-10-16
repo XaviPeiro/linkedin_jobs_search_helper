@@ -1,3 +1,4 @@
+import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import ClassVar, Any
@@ -34,6 +35,10 @@ class CrawlerReceiver(ABC):
 
     @abstractmethod
     def get_job_url(self) -> str:
+        ...
+
+    @abstractmethod
+    def is_job_discarded(self) -> bool:
         ...
 
 
@@ -76,6 +81,13 @@ class SeleniumReceiver(CrawlerReceiver):
 
     def get_job_url(self) -> str:
         return self.net_navigator.current_url
+
+    def is_job_discarded(self) -> bool:
+        # TODO: I have to wait til the DOM is refreshed due to the discard action is triggered just bf this action.
+        #  OBVIOUSLY THIS IS A BOTCH. IMPLICIT DEPENDENCY < EXPLICIT DEPENDENCY
+        time.sleep(3)
+        classes: str = self.net_navigator.find_element(By.CSS_SELECTOR, JobsElements.selected_job_css).get_attribute("class")
+        return JobsElements.discarded_job_card_css[1:] in classes
 
 
 @dataclass
@@ -126,9 +138,12 @@ class NotifyJobsRelevanceCommand(Command):
         app_logger.info(f"Executing {str(self)} for {self.net_navigator.get_job_title()}")
         message = "{score} -> " + f"Job: {self.net_navigator.get_job_title()}[{self.net_navigator.get_job_url()}]"
         job_descr = self.net_navigator.get_job_description()
-        for criteria in self.criteria:
-            answer: [bool, None] = criteria.apply(entities=[job_descr])[0]
-            self.notifier.notify(message=message.format(score=answer))
+
+        is_discarded = self.net_navigator.is_job_discarded()
+        if is_discarded is False:
+            for criteria in self.criteria:
+                answer: [bool, None] = criteria.apply(entities=[job_descr])[0]
+                self.notifier.notify(message=message.format(score=answer))
 
 
 """

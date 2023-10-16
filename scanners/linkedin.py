@@ -134,7 +134,6 @@ class Linkedin:
             # TODO: Actions can alter the webdriver's state, so the outcome of the following actions. Kurwa macz...
             for action in self._actions[LinkedinStates.ACTIVE_JOB_CARD]:
                 action()
-                # action(element=self.web_driver.find_element(By.CSS_SELECTOR, "div.scaffold-layout__list-detail-inner"))
                 app_logger.info("__ __\n")
             app_logger.info("----------------------------------\n")
         else:

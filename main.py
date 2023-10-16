@@ -87,7 +87,6 @@ def main():
         net_navigator=selenium_receiver,
         notifier=notifier_unexpected_openai_response,
         criteria=init_discard_criteria()
-
     )
     notify_relevant_jobs = NotifyJobsRelevanceCommand(
         criteria=init_order_by_relevance_criteria(),
@@ -95,7 +94,7 @@ def main():
         net_navigator=selenium_receiver
     )
     actions = [
-        # discard_jobs,
+        discard_jobs,
         notify_relevant_jobs
     ]
     linkedin_scrapper.set_actions(state=LinkedinStates.ACTIVE_JOB_CARD, actions=actions)
