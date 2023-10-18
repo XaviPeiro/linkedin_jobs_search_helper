@@ -115,10 +115,11 @@ class LinkedinDiscardJobCommand(Command):
         job_url = self.net_navigator.get_job_url()
         message = "Discarded: {answer}; " + f"Job: {self.net_navigator.get_job_title()}; JobUrl: {job_url}"
         job_descr = self.net_navigator.get_job_description()
+        job_title = self.net_navigator.get_job_title()
         # TODO: The term "criteria" is used as JobDescriptionOAICriteria.criteria (class and yaml) as the
         #  different algs to to discard (JobDescriptionOAICriteria is ne of them, JobDescriptionOAICriteria). CONFUSING.
         for criteria in self.criteria:
-            answer: [bool, None] = criteria.apply(entities=[job_descr])[0]
+            answer: [bool, None] = criteria.apply(entities=[job_title + "\n\n" + job_descr])[0]
             if answer is True:
                 self.net_navigator.linkedin_discard_job()
                 app_logger.info("DISCARDED")
@@ -148,26 +149,4 @@ class NotifyJobsRelevanceCommand(Command):
             for criteria in self.criteria:
                 answer: [bool, None] = criteria.apply(entities=[job_descr])[0]
                 self.notifier.notify(message=message.format(score=answer))
-
-
-"""
-You will be provided with IT job descriptions and you will be asked many questions about it in order to know if I should discard this job offer or not. 
-
-For each list of questions you receive from a job offer do the following:
-1. - Evaluate every single question independently, ie, check if they would get a positive or negative answer. If you are not sure about how a question should be evaluated, assume it will have a negative answer.
-2. - If the answer to one of the previously evaluated questions is positive, respond a single "yes", if any of the previous questions has 
- a negative answer, respond "no".
-
-Remember to answer a single "yes" or "no", according to the rules defined above.
-"""
-
-"""
-You will be provided with IT job descriptions and you will be asked many questions about it in order to know if I should discard this job offer or not. Do not guess, be strict and stick to the job description.
-
-For each list of questions you receive from a job offer do the following:
-1. - Evaluate every single question independently, ie, check if they would get a positive or negative answer. If you are not sure about how a question should be evaluated, assume it will have a negative answer.
-
-2. - Finally, write "yes" if the answer to any of them is yes, otherwise write "no".
-
-Remember to answer a single "yes" or "no", according to the rules defined above.
-"""
+                
