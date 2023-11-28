@@ -1,0 +1,48 @@
+Acerca del empleo
+Endpoint is a digital title and settlement company built from the ground up to make home closing easy for all. For many, buying or selling a home is one of life’s biggest transactions. At Endpoint, we help our customers close every deal so they can start their next chapter with confidence. Whether it’s a first-time homebuyer choosing a place to start a family, a real estate agent securing a record-breaking deal, or a proptech company scaling its services, we believe that closing on a home is a milestone worth celebrating and a process that should be easy for all parties involved.
+
+Founded in 2018 by a diverse group of tech and real estate veterans, Endpoint develops technology that streamlines home closing for real estate agents, buyers and sellers, and empowers proptech companies and investors looking to scale their closing operations. Backed by First American Financial Corporation, a Fortune 500 company, Endpoint has secured $220 million in funding and has operations across the US.
+
+We are looking for a Senior Backend Engineer (7+ years) to build services and functionality for our client applications using Python.
+
+We are open to remote candidates for this role
+
+
+As a Senior Backend Engineer, you will use your skills to:
+
+Work with a cross-functional team to deliver timely, high quality, and well-tested code
+Be the technical leader of the development team owning the delivery of critical epics and features
+Author TDDs, provide feedback, and partner with the team to address requirements of one or more projects
+Collaborate with the team on technical decision making and software architecture
+Define and enforce standards regarding code quality and test coverage
+Mentor other team members, share your learnings and ideas within department
+Help continue to build the engineering culture at Endpoint
+
+
+You'll come to Endpoint with:
+
+7+ years of experience building web services with Python using modern frameworks
+Experience developing in a microservices architecture, and following domain-driven design principles
+Solid coding practices including writing technical specifications, peer code review, and unit & integration testing
+Experience designing and building complex products or major features from concept to launch
+Demonstrated leadership abilities in an engineering environment operating in the role of tech lead, driving operational excellence and best practices
+
+
+Why work at Endpoint:
+
+You’ll join a fast-growing company where you can make an impact
+You’ll work alongside industry experts and the brightest minds in tech to transform an industry
+We foster a vibrant, welcoming, and inclusive company culture
+You’ll be entrusted with responsibility and autonomy in your day-to-day work
+You’ll have opportunities to advance your career from within, or for internal mobility
+Customizable benefits including Health, Dental, Vision, and 401K Match
+Flexible work options for certain roles
+Virtual and in-person team events
+We offer competitive compensation; Base pay is one part of your total compensation package in addition to annual bonus. This role pays between $145,000 and $205,000 and your actual base pay will depend on your skills, qualifications and experience. We also offer a long-term incentive plan
+
+
+This hiring range is a good faith and reasonable estimate of the salary range of possible compensation at the time of posting and is subject to change. The actual compensation offered will be determined by various factors, which may include a candidate's education, training and experience.
+
+#BI-Remote
+
+Endpoint is an Equal Opportunity Employer. All qualified applicants will receive consideration for employment without regard to race, color, age, religion, sex, national origin, disability, protected veteran status, or any other characteristic protected under federal, state or local law.

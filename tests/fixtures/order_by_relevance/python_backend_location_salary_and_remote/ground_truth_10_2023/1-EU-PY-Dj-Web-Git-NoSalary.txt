@@ -1,0 +1,38 @@
+Senior Python Developer
+
+Acerca del empleo We’re growing fast and are looking for Python Developer professionals at all levels to work on
+an exciting international software development project. You’ll work with the latest technologies in our bright,
+talented team. The environment at Amdaris is synergistic and supportive, so everyone can build the career they want
+in an organization going from strength to strength. Willingness to be part of a team and lead by example is essential.
+
+WE ARE AMDARIS
+
+We bring together the best talent and next-level ideas to create outstanding solutions. With 40% year-on-year
+growth every year under our belt over the past four years, we have big plans for the future. Our growth plan is
+ambitious and our projects take software to the next level, so join our team in the centre of Chisinau.
+
+PYTHON DEVELOPER RESPONSIBILITIES
+
+The main purpose of the role is to develop and support Python projects and functions, as well as complete specific
+client project work and miscellaneous tasks. This role involves using established work procedures to analyse, design,
+develop, implement, maintain, re-engineer and troubleshoot customers’ applications. Your primary focus will be the
+development of all server-side logic, ensuring high performance and responsiveness to requests from the front-end.
+As a Python Developer you will be responsible for writing reusable, testable, and efficient code, designing and
+implementing low-latency, high-availability, and performant applications. You will have to integrate user-facing
+elements developed by front-end developers with server-side logic and implement security and data protection.
+The successful Python Developer will have to participate in all phases of the software development lifecycle and
+support other developers, implementing software enhancements and suggesting improvements to create high-quality
+products that meet customer needs
+
+PYTHON DEVELOPER REQUIREMENTS
+Experience with Python.
+Knowledge of at least one Python web framework (Django, Flask, Bottle, etc)
+Knowledge of SCM Tools (GIT or CVS)
+Proven experience in developing web-based user interfaces
+Good understanding of server-side templating
+Understanding of the differences between multiple delivery platforms, such as mobile vs desktop, and optimizing output to match the specific platform
+Ability to create database schemas that represent and support business processes
+A keen interest in the latest technologies and a demonstrable desire to push the boundaries of what is possible
+Strong unit test and debugging skills
+Strong analytical skills and good attention to details
+Publicado el 2 oct. 2023.

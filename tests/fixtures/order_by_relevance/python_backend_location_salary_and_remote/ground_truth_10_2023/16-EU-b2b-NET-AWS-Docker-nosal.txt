@@ -1,0 +1,59 @@
+Acerca del empleo
+⚡️ Why Altium?
+
+Altium is transforming the way electronics are designed and built. From startups to world’s technology giants, our digital platforms give more power to PCB designers, supply chain, and manufacturing, letting them collaborate as never before.
+
+ Constant innovation has created a transformative technology, unique in its space
+ More than 30,000 companies and 100,000 electronics engineers worldwide use Altium
+ We are growing, debt-free, and financially strong, with the resources to become #1 in the EDA industry
+
+Why A365 Software Engineering?
+
+Build the cloud platform that’s transforming electronics design. Altium 365 for cloud lets design engineers communicate, collaborate and bring their ideas to market more efficiently than any platform in the industry. These are some of the R&D Software Engineering contributions you might make to Altium 365:
+
+ Building new cloud-native applications and scalable infrastructure
+ Utilizing AI and ML to power advanced search capabilities
+ Large-scale data processing; data modeling; holistic, intent-based API design
+ Stateful and stateless servers, relational databases, ORM frameworks
+
+Altium offers the opportunity to conceive and build new product features for electronics engineers, and add your own ideas to the world’s most collaborative and efficient electronics design platform.
+
+ A day in the life of our Software Engineer
+
+As a Senior .NET Developer , your primary role will be product development for complex cloud applications with the Altium 365 R&D team.
+
+Who We’re Looking For
+
+ Work with a tech stack of .NET Core, AWS, multi-tenant architecture, and distributed highload systems.
+ Handle tech challenges different from most others on the market, a mixture of complex engineering software, microelectronics and cloud services
+ Add to the team’s expertise through collaboration and sharing knowledge
+
+Required Technology Experience
+
+ .NET Core, .NET Framework.
+ AWS, EC2, ECS, RDS, etc.
+ Multi-tenant architecture, microservices.
+ CI, CD, Jenkins, Docker, Kubernetes.
+ MySQL (FireBird, Oracle as a plus).
+
+only umowa o pracę (no B2B contracts)
+
+🎯 What Matters to Us
+
+Big-thinking in pursuit of purpose
+Diversity of thought
+Courage of conviction
+Transparency of intent
+Ingenuity of AND
+Agility in action
+Adaptability of approach
+Grit in pursuit of mission
+
+🌍 Also, we would like you to know  We are committed to equal employment opportunity regardless of race, color, ancestry, religion, sex, national origin, sexual orientation, age, citizenship, marital status, disability, gender, gender identity or expression, or veteran status. We are proud to be an equal opportunity workplace.
+
+💡 Learn more about why a career at Altium is an opportunity like no other: https://www.youtube.com/watch?v=cAYCOLpPLPE
+
+✈️ Altium Benefits:  https://careers.altium.com/#s-benefits
+
+👏 Are you already an Altium employee? Please apply directly through our internal Greenhouse job board. If you have questions, please contact HR.
+Publicado el 12 oct. 2023.

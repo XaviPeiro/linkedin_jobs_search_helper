@@ -1,0 +1,87 @@
+Acerca del empleo
+Reef Technologies is a fully remote Python backend software house. 💡
+
+
+We’re a small, agile, senior-only team. All of our current members have more than seven years of strong experience, so we don’t ever have anything urgent to fix. We only deliver stable solutions, as we have developed a system that has delivered more than a hundred challenging projects in the last three years. We’d like to improve it even further with you on the team.
+
+
+Join Reef Technologies and work on your own terms:
+
+
+
+Contribute from wherever you like – we are fully remote.
+Pick your own working hours individually. We only hold ~2 calls per week.
+Work with dynamic startups from all over the world on the projects of your choice.
+Contribute to the decision-making process and influence the way we operate.
+Choose the projects you want to work on. We receive enough offers to only accept the ones that we like.
+
+
+Remuneration on a B2B contract: 💵
+
+
+
+45-70 USD or 190-295 PLN per hour, or
+7560-11760 USD or 31920-49560 PLN a month if you do 40 hours per week
+Flexible work schedule (measured by time tracker).
+We usually adjust the hourly rates once a year.
+
+
+Additional perks of working at Reef Technologies:
+
+We offer a stable position at an established company in a booming industry.
+All decision-makers, including the Founder, are Senior Python Engineers.
+We cover reasonable coworking space expenses.
+You’ll be assigned a private assistant to save time on personal obligations.
+You’ll get financial help to buy the necessary hardware.
+You’ll work in a multicultural environment where everyone has a say.
+You’ll get to use your English skills on an everyday basis.
+You’ll get to take advantage of our flexible leave policy.
+
+
+And don’t forget that you’ll be free to work wherever and whenever you want to. We believe that you’ll do your part by independently taking the right decisions.
+
+
+Our only expectation timewise is for you to contribute around 30–40 hours per week, which we believe is optimal for sustainable full-time engagement in a remote setting. You’re free to distribute those hours throughout the week in the way that you find the most convenient, within reason.
+
+
+Expert Python engineer wanted 🚀
+
+
+
+Do you have at least 5 years of programming experience – not necessarily professional – including at least a year with Python? If so, you have probably written so much Python code in your life that at times you want to express your thoughts through list comprehensions. Thanks to your extensive experience, you can solve any problem that gets thrown at you, but that is not enough – you come up with multiple solutions for every issue, and you always know how to choose the most Pythonic one.
+
+
+What type of projects would you work on? 🧑‍💻
+
+
+The demand for our work is extremely high, so we get to pick and choose the projects that we want to take on – and the same goes for you. Before you’re assigned to a project, you’ll be personally asked if you’re interested in that particular task and if you don’t like it, you’ll just get something else.
+
+
+
+We mainly accept offers from startups and small-to-medium businesses from the US, the UK, and Canada. Some projects may only last a couple of hours, while others take even a few years for us to complete. There is one thing that you can be sure of, though - that it will always be your personal choice whether to work on a particular project or reject it. What would you have thought about these?
+
+
+financial data warehouse, which aggregates over 31 000 time series into a few hundred charts for a fintech company from London
+graph data search/visualization system for auditors/investigators from Norway
+super scalable WAF optimized down to extremely low running costs for a client from Chicago, IL
+multisource cloud object synthesizer library for a storage provider from San Mateo, CA
+report generator/inventory tracker for an e-commerce/healthcare company from Canada
+k8s-based revenue optimizer for large private GPU compute clusters in North America
+paper product level tracker for toilet cleaners from Canada
+hydrant certification report generator for Australian plumbers
+multi-tenant hospitality management system for large properties in the US
+large scale information display system for retailers (international)
+
+
+We have already delivered those, but you can be sure we’ve got even more exciting projects coming up in the future.
+
+
+
+Want to know more?
+
+
+
+Check out the Reef Technologies Handbook to see our company policies: https://github.com/reef-technologies/handbook
+Want to see what our clients have to say about our work? We’re quite proud of our Clutch profile: https://clutch.co/profile/reef-technologies
+Publicado el 30 oct. 2023.
+

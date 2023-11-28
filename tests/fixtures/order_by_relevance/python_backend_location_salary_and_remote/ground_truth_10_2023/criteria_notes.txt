@@ -1,0 +1,17 @@
+By relevance
+- Allowance to work; idiom, location, remote and work permit -> (EN, ES, CAT), (EU, PL), (REMOTE), (EU work permit)
+- Main programming languages -> Python
+- Work position -> (Backend Developer, Backend Engineer), Team Lead
+- Work topics -> (Web development, Distributed Systems, Software architecture, CI/CD), (Data)
+- Type of contract (b2b/contractor, employee, ...) -> b2b/contractor, employee
+- Salary -> >30k PLN, >7k USD, >6k EUR monthly: Excellent
+- Timezone / Schedule
+- Techonologies -> SaaS, MicroServices, RabbitMQ, AWS, Docker, Django, MySQL, FastAPI,
+- Experience -> 7 years
+- Perks (holidays, paid education, private med insurance, ...)
+- Sector -> Finance, Healthcare, Cybersecurity, Sport, rest...
+
+---
+
+Hay que reformular pq la lógica és más compleja, hay interacciones entre categorías.
+Keep it simple but take into account.

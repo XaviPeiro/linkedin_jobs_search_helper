@@ -1,0 +1,26 @@
+Python Developer
+Acerca del empleo
+*Remote b2b contract in Poland*
+
+
+An agile software house producing top quality applications since 2009 is seeking a bright, motivated Python/Django developer to join an intellectually stimulating environment, utilizing the best software engineering practices and modern solutions on a fully remote basis.
+
+
+As Python developer, you will architect and implement the solutions they build, translate business needs to technical solutions and communicate with the client and work on code refactor/libraries upgrades.
+
+
+Essential skills:
+
+4+ years of experience with Python, Django
+Proficient with REST framework, Docker, Kubernetes, SQL and NoSQL databases, AWS
+Bachelor’s degree in Computer Science, Engineering or similar
+
+
+Compensation:
+
+Up to 150pln per hour (24k per month)
+
+
+Location:
+
+Remote in Poland

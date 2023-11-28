@@ -1,0 +1,47 @@
+Senior Python Developer
+
+Acerca del empleo
+We are a digitally native technology services company where innovation, design and engineering meet scale. We use some of the latest technologies in the digital and cognitive field to empower organizations in every aspect.
+
+Join our Scalable Platforms Studio as a Senior Python Developer. Inside our studio we build technology platforms and digital products able to adapt to future changes. With a solid foundational backbone and a robust composable architecture we design ecosystems which allows us to accelerate the business in an agile way.
+Be part of our team at Globant!
+
+What will help you succeed:
+Believe & love what you do.
+Build bridges & open doors.
+Enjoy solving technical challenges.
+Taking a step back to look at a bigger picture.
+Advanced English skills.
+Very strong analytical skills.
+Excellent Python experience (5+ years).
+Good grasp of web technologies & solid knowledge of FastAPI.
+Experience with Kubernetes, Docker and Helm.
+Knowledge of Cloud Build.
+Experienced in deploying performant software in cloud environments (GCP & Terraform are nice to know)
+Excellent knowledge of Computer Science fundamentals (e.g., data structures, algorithms, object-oriented programming, concurrency, etc).
+Experience in working with memory / performance critical applications.
+Able to debug defects of a wide array of complexities, including memory-related issues, multi-threading.
+
+You will get the chance to:
+Be part of the I&R team over 3 internal prototypes, code assistant for IDEs, and chat assistant, all of those using LLMS created APIs.
+Solve problems related to scalability, observability, authentication/authorization, etc. that would be expected from a production application.
+Collaborate with the Front-end developers and cross-functional teams.
+Create revolutionary solutions with our team of professionals.
+Make an impact. Work in large-scale projects globally.
+Develop your career in our Studios - a community of expertise on the latest technologies and trends.
+Choose your career path: choose one of over 800 simultaneous projects.
+Be part of an Agile POD - a self-regulated teamwork, driven by culture and working directly with our customers with a full maturity path that evolves as they increase speed, quality and autonomy.
+
+Are you ready?
+
+Be Kind is at the heart of Globant culture.
+The Be Kind To Yourself Day is an extra free day that allows you to dedicate time to proper self-care. The well-being of our employees matters.
+Through our Employee Assistance Program, Globers get support from licensed counselors on topics such as stress, finances and social matters.
+Globant supports employees across life domains: the Assisted Reproduction medical procedures are reimbursed up to 3000 dollars.
+
+About Globant
+We are over 27000 professionals with a presence in 25 countries working for companies like LinkedIn, BBVA, EA and Coca Cola, among others.
+We were also featured as a business case study at Harvard, MIT, and Stanford.
+We want you to join us to work for the biggest clients in tech, retail, travel, banking, and media & entertainment, revolutionizing and growing their core businesses while helping them (and you!) stay ahead of the curve.
+Be part of a company with the most cutting-edge practices and technologies plus a unique team.
+Publicado el 20 oct. 2023.

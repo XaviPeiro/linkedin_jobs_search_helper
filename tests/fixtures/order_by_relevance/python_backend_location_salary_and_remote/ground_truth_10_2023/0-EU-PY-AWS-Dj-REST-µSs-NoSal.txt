@@ -1,0 +1,73 @@
+Acerca del empleo
+Who Are Tide
+
+At Tide, we’re on a mission to save businesses time and money. We’re the leading provider of UK SME business accounts and one of the fastest-growing FinTechs in the UK. Using the latest tech, we design solutions with SMEs in mind and our member-driven financial platform is transforming the business banking market. Not only do we offer our members business accounts and related banking services, but also a comprehensive set of highly connected admin tools for businesses.
+
+Tide is about doing what you love. We’re looking for someone to join us on our exciting scale up journey and be a part of something special. We want passionate Tideans to drive innovation and help build a best-in-class platform to support our members. You will be comfortable in ambiguous situations and will be able to navigate the evolving FinTech environment. Imagine shaping how millions of Tide members discover and engage with business banking platforms and building this on a global scale.
+
+We’re the UK’s leading provider of smart current accounts for sole traders and small companies. We’re also on a mission to save business owners time and money on their banking and finance admin so they can get back to doing what they love - for too long, these customers have been under-served by the big banks.
+
+Funding Options joined the Tide family in early 2023 to lead their Partner Credit Services offering. Through their panel of 120 leading lender partners, Funding Options supports UK SMEs to get the right finance in place so they can trade, plan and grow with confidence. Through their multi award-winning platform, Funding Cloud, they can effectively match customers to the right lender and finance product that best suits their needs in minutes with funding decisions in as little as 20 seconds, giving every customer a 5 Star experience whether successful or not, through our sheer professionalism and outstanding standard of customer service.
+
+Our offices are in London - UK, Sofia - Bulgaria, Belgrade - Serbia and Hyderabad - India, where our teams are dedicated to our small business members; revolutionising business banking for SMEs.
+
+We’re scaling at speed with a focus on hiring talented individuals with a growth mindset and ownership mentality, who are able to juggle multiple and sometimes changing priorities. Our values show our commitment to working as one team, working collaboratively to take action and deliver results. Member first, we are passionate about our members and put them first. We are data-driven, we make decisions, creating insight using data.
+
+We’re also one of LinkedIn’s top 10 hottest UK companies to work for.
+
+What We’re Looking For
+
+We’re looking for an experienced Backend Engineer with excellent programming skills and a passion for developing applications or improving existing ones, we would like to meet you.
+
+As an Engineer at Tide, you’ll report directly to the People Manager and Staff Engineer (Functional) and work in a team of highly skilled Engineers.
+
+You’ll work closely with our tech team to ensure system consistency and improve user experience. Ultimately, you should be able to develop and maintain functional and stable web applications to meet both the company’s and our customer’s needs.
+
+We work in an agile fashion, small cross functional squads, grouped under common domains owning the full lifecycle of some microservices in Tide’s service catalogue.
+
+You’ll bring new ideas, and become an integral part of the process of continuously improving our product. Outside of working in your squad you will discuss technical challenges, in our different Communities of Practice.
+
+Our stack includes - Python, AWS (including Lambda, Fargate, EKS, SQS, SNS, SES and S3), Postgres, Google BigQuery, Terraform and Sentry.
+
+As a Senior Python Engineer You’ll Be
+
+ Defining, owning and maintaining the services your team owns from our service catalogue that fall in one of our domains (you design it, you build it, you run it, you scale it globally)
+ Working with the product team to select technology partners
+ Work with backend engineers across multiple agile teams carefully dividing your time between design/refinement, implementation and mentoring other team members
+ Regularly aligning your team’s vision and roadmap with the target architecture within your domain and to ensure the success of complex multi domain initiatives
+ Working closely with product owners, mobile & web engineers, data scientist and other business members to translate requirements into well-engineered solutions
+ Making key contributions to our Community of Practice. You will apply your extensive experience on our problem domain and existing guidelines to become a true beacon of best practices among your fellow engineers
+ Career progression is as important to us as it is for you, and we, therefore, have put in place a Tide Growth Framework to guide you. With our expanding teams and business, we will encourage you to outgrow your initial responsibilities, if you so desire
+
+What Makes You a Great Fit
+
+ Proven work experience as a Python Developer (working with this as a primary language)
+ Basic understanding of software engineering fundamentals (SOLID, ACID, Testing)
+ Hands-on experience with AWS and frameworks such as: Django, FastAPI and Flask
+ Extensive experience integrating with or creating REST APIs
+ (Desirable) Experience working with event driven microservice or message queues
+ (Desirable) An understanding of Salesforce integrations
+ Experience working in Scrum and following Agile development practises
+ Teamwork skills with a problem-solving attitude
+ You’re passionate about learning every day and sharing your knowledge and experience every day
+ Genuinely excited about supporting small businesses, in the UK and in global markets
+
+What You’ll Get In Return
+
+Make work, work for you! We are embracing new ways of working and support flexible working arrangements. With our Working Out of Office (WOO) policy our colleagues can work remotely from home or anywhere in their home country. Additionally, you can work from a different country for up to 90 days a year .
+
+Plus, You’ll Get
+
+ 25 day of annual holiday
+ National holidays
+ Shared Options
+
+Tidean Ways of Working
+
+At Tide, we’re Member First and Data Driven, but above all, we’re One Team. Our Working Out of Office (WOO) policy allows you to work from anywhere in the world for up to 90 days a year. We are remote first, but when you do want to meet new people, collaborate with your team or simply hang out with your colleagues, our offices are always available and equipped to the highest standard. We offer flexible working hours and trust our employees to do their work well, at times that suit them and their team.
+
+Tide is a place for everyone
+
+At Tide, we believe that we can only succeed if we let our differences enrich our culture. Our Tideans come from a variety of backgrounds and experience levels. We consider everyone irrespective of their ethnicity, religion, sexual orientation, gender identity, family or parental status, national origin, veteran, neurodiversity status or disability status. We believe it’s what makes us awesome at solving problems! We are One Team and foster a transparent and inclusive environment, where everyone’s voice is heard.
+
+Publicado el 18 sept. 2023.
