@@ -1,0 +1,41 @@
+Python Developer
+
+Acerca del empleo
+At Nielsen, we believe that career growth is a partnership. You ultimately own, fuel and set the journey. By joining our team of nearly 14,000 associates, you will become part of a community that will help you to succeed. We champion you because when you succeed, we do too. Embark on a new initiative, explore a fresh approach, and take license to think big, so we can all continuously improve. We enable your best to power our future.
+
+Join the Media Technology team as a Python Developer to design and develop the process of cloud migration of the software used across the globe for Television Advertisement Measurement in TV and Radio markets.
+
+The environment is composed of both AWS cloud and on-premises solutions. We are currently migrating our solutions to AWS cloud. Backend environments are Linux based, developed in Python using Pandas. PostgreSQL is the technology of choice when it comes to relational database technologies.
+
+Key Tasks And Responsibilities
+
+Design, develop, test, and document new software features required by the business.
+Contribute to the process of migration of the current solutions to the AWS cloud.
+Gather functional requirements by analysis of existing systems.
+Investigate application incidents for missing or incorrect functionality.
+Perform code reviews.
+
+Required Competencies
+
+Strong knowledge of Python and Pandas.
+Experience in PostgreSQL and PL/pgSQL or other relational databases.
+Basic Linux administration skills.
+At least intermediate level of English, both written and verbal.
+Three years of working experience in a field related to a similar position.
+
+Nice To Have Skills
+
+Experience in AWS cloud application development.
+Basic C#/WPF knowledge.
+
+Technology stack
+
+AWS, Bash, C#, CI/CD, Docker, Git, Jenkins, Jira, Linux, Pandas, PostgreSQL, Python, SQLAlchemy, WPF, Airflow.
+
+Diversity
+
+Here at Nielsen, we believe strongly in the value of diversity and creating supportive, inclusive environments where our colleagues can succeed. As such, Nielsen is proud to be an Equal Opportunity Employer. We welcome applications from people that are excited to work for us, regardless of their background - so please get in touch!
+
+Nielsen provides equal employment opportunities to applicants and employees without regard to any protected characteristics under local law.
+
+Publicado el 13 oct. 2023.

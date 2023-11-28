@@ -1,0 +1,62 @@
+Acerca del empleo
+CAPCO POLAND
+
+
+
+Capco Poland is a global technology and management consultancy specializing in driving digital transformation across
+the financial services industry. We are passionate about helping our clients succeed in an ever-changing industry.
+We also are experts in mobile, data, frontend, backend and many more... focused on development, automation,
+innovation, and long-term projects in financial services.  In Capco, you can code, write, create, and live at your
+maximum capabilities without getting dull, tired, or foggy.
+
+We are looking for a Senior Python Developer to join our engineering team at Capco Poland to help us develop and
+maintain various software products. Python Developer responsibilities include writing and testing code, debugging
+programs and integrating applications with third-party web services. To be successful in this role, you should
+have experience using server-side logic and work well in a team. Ultimately, you’ll build highly responsive web
+applications that align with our business needs.
+
+
+THINGS YOU WILL DO
+
+Write effective, scalable code
+Develop back-end components to improve responsiveness and overall performance
+Integrate user-facing elements into applications Test and debug programs
+Improve functionality of existing systems
+Implement security and data protection solutions
+Assess and prioritize feature requests
+Coordinate with internal teams to understand user requirements and provide technical solution
+
+
+SKILLS & EXPERIENCE TO GET THE JOB DONE
+
+Work experience as a Python Developer Expertise in at least one popular Python framework (like Django, Flask or Pyramid)
+Knowledge of object-relational mapping (ORM)
+Familiarity with front-end technologies (like JavaScript and HTML5)
+Team spirit
+Good problem-solving skills, time management, communication skills
+Excellent soft skills like being proactive, open-minded, creative
+Bachelor / Master in Computer Science, Engineering or relevant field Great
+English skills (written and spoken)
+Banking / consulting experience is beneficial
+
+
+WHY JOIN CAPCO?
+
+Employment contract and/or Business to Business - whichever you prefer
+Possibility to work remotely
+Speaking English on daily basis, mainly in contact with foreign stakeholders and peers
+Multiple employee benefits packages
+(MyBenefit Cafeteria, private medical care, life-insurance) Access to 3.000+ Business Courses Platform (Udemy)
+Access to required IT equipment
+Paid Referral
+Program Participation in charity events e.g. Szlachetna Paczka
+Ongoing learning opportunities to help you acquire new skills or deepen existing expertise
+Being part of the core squad focused on the growth of the Polish business unit
+A flat, non-hierarchical structure that will enable you to work with senior partners and directly with clients
+A work culture focused on innovation and creating lasting value for our clients and employees
+
+
+ONLINE RECRUITMENT PROCESS STEPS
+
+Screening call with the Recruiter
+Technical interview with Capco Hiring Manager Client Interview Feedback/Offer
