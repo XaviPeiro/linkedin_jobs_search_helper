@@ -141,7 +141,7 @@ class Linkedin:
             # Apparently, LinkedIn's jobs per page is fixed to 25, so...
             jobs_number = 25
             # TODO: This just works if multiple of 25 (pages), not important rn.
-            if jobs_filter.pagination_offset + jobs_number >= max_jobs:
+            if max_jobs is not None and jobs_filter.pagination_offset + jobs_number >= max_jobs:
                 return None
 
             jobs_filter.pagination_offset += jobs_number

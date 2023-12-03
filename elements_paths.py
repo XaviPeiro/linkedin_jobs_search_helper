@@ -20,5 +20,6 @@ class JobsElements(ElementsPaths):
     job_card_title_css: str = ".job-card-list__title"
     discarded_job_card_css = ".job-card-list--is-dismissed"
     selected_job_card_title_css: str = selected_job_css + " " + job_card_title_css
+    # easy_to_apply_job_button: str = '//button[contains(@class, "jobs-apply-button")]'
+    easy_to_apply_job_button: str = '//button[contains(@class, "jobs-apply-button") and @data-job-id]'
     # job
-

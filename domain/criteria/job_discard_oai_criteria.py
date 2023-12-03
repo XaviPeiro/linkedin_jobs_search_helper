@@ -18,9 +18,14 @@ class JobDescriptionOAICriteria(ICriteria):
     # TODO: create a transformer (ToBool(gpt_res)||AnyYes(gpt_res)). This make no sense.
     @staticmethod
     def any_yes_in_response(answer: str):
-        if "yes" in answer.lower():
+        # REVERSED MOMENTARILY
+        # if "yes" in answer.lower():
+            # return True
+            # return False
+        if "no" in answer.lower():
             return True
-        elif "no" in answer.lower():
+            # return False
+        if "yes" in answer.lower():
             return False
         else:
             notifier_unexpected_openai_response.notify(f"{datetime.now()} - {answer}")
@@ -46,7 +51,7 @@ class JobDescriptionOAICriteria(ICriteria):
             app_logger.info(f"Question: {criteria}")
             app_logger.info(f"ANSWER: {answer}")
 
-            self.open_ai_client.clear_chat()
+        self.open_ai_client.clear_chat()
 
         return res
 

@@ -1,0 +1,28 @@
+Python Developer
+
+Acerca del empleo
+¿Eres Desarrollador Phyton con experiencia en Flask y te gustaría trabajar desde casa en proyecto del sector financiero? En Boycor buscamos Programador/a Phyton para trabajar en multinacional española IT de desarrollo de soluciones a medida.
+
+¡Queremos conocerte!
+
+¿Cuál es la CLAVE de este PUESTO?
+Ingeniería, Licenciatura o Grado relacionado con la Informática
+Al menos 2 años de experiencia con Python
+Desarrollo de APIs en Python con Flask .
+Experiencia en pruebas funcionales.
+Experiencia con productización de desarrollos en Python.
+
+Tendrás PUNTOS EXTRA si tienes experiencia...:
+Trabajando con Angular.
+Trabajando con AWS
+
+Como PROGRAMADOR PYTHON participarás en el desarrollo de un gestor de contratos que en base a cláusulas y reglas definidas (podrás definirlas tú) lo genere automáticamente
+
+¿Qué te podemos OFRECER?
+Contrato indefinido con Boycor para puesto estable
+Modalidad de trabajo: Remoto
+Horario: Flexible L-J de 8/9h a 17/18h. Viernes 8 - 15h
+ Salario: 27.000 - 30.000 € bruto/año (abierto a negociación según experiencia y capacidades)
+
+Si estás leyendo esto y te has sentido identificado/a con esta oferta, no lo dudes y únete a este equipo.
+Publicado el 10 nov. 2023.
