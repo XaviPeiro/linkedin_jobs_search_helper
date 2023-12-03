@@ -1,9 +1,11 @@
+import logging
 import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from datetime import date
 from typing import ClassVar, Any
 
-from selenium.common import TimeoutException
+from selenium.common import TimeoutException, NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions
@@ -12,7 +14,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from domain.criteria.criteria import ICriteria
 from domain.notifier import Notifier
 from elements_paths import JobsElements
-from logger import app_logger
+from logger import app_logger, easy_to_apply_logger, jobs_to_apply_logger
 
 
 class CrawlerReceiver(ABC):
@@ -39,6 +41,10 @@ class CrawlerReceiver(ABC):
 
     @abstractmethod
     def is_job_discarded(self) -> bool:
+        ...
+
+    @abstractmethod
+    def is_easy_to_apply(self) -> bool:
         ...
 
 
@@ -89,6 +95,15 @@ class SeleniumReceiver(CrawlerReceiver):
         classes: str = self.net_navigator.find_element(By.CSS_SELECTOR, JobsElements.selected_job_css).get_attribute("class")
         return JobsElements.discarded_job_card_css[1:] in classes
 
+    def is_easy_to_apply(self) -> bool:
+        try:
+            btn = self.net_navigator.find_element(By.XPATH, JobsElements.easy_to_apply_job_button)
+        except NoSuchElementException as non_easy_to_apply_job:
+            return False
+        return True
+
+
+
 
 @dataclass
 class LinkedinDiscardJobCommand(Command):
@@ -124,12 +139,40 @@ class LinkedinDiscardJobCommand(Command):
                 self.net_navigator.linkedin_discard_job()
                 app_logger.info("DISCARDED")
             elif answer is False:
+                # TODO: The logging thing should be abstracted and I could/should use the python's logger.
                 app_logger.info("NOT DISCARDED")
+                self.log_not_discarded_job()
+                # if self.is_easy_to_apply() is True:
+                #     with open(f"./logs/EASY-jobs-to-apply-{date.today()}.txt", mode="a+") as daily_file:
+                #         daily_file.write(f"{self.net_navigator.get_job_url()}\n")
+                # else:
+                #     with open(f"./logs/NOTEASY-jobs-to-apply-{date.today()}.txt", mode="a+") as daily_file:
+                #         daily_file.write(f"{self.net_navigator.get_job_url()}\n")
+                # Write data to jobs that has not been discarded
+                #     self.net_navigator.linkedin_discard_job()
+                #     app_logger.info("DISCARDED BECAUSE IT HAS BEEN PERSISTED TO THE LIST 'TO APPLY'")
             else:
+
                 # The model is returning an unexpected message.
                 app_logger.info("NOT DISCARDED - Because unexpected answer from OPENAI.")
             self.notifier.notify(message=message.format(answer=answer))
 
+    def log_not_discarded_job(self):
+        # TODO: refactor
+        jobs_to_apply_logger = logging.getLogger("jobs-to-apply")
+        if self.is_easy_to_apply() is True:
+            easy_to_apply_logger.info(f"{self.net_navigator.get_job_url()}\n")
+            app_logger.info(f"{self.net_navigator.get_job_url()}\n")
+        else:
+            jobs_to_apply_logger.info(f"{self.net_navigator.get_job_url()}\n")
+            app_logger.info(f"{self.net_navigator.get_job_url()}\n")
+
+        # self.net_navigator.linkedin_discard_job()
+        app_logger.info("DISCARDED BECAUSE IT HAS BEEN PERSISTED TO THE LIST 'TO APPLY'")
+
+    def is_easy_to_apply(self) -> bool:
+        res = self.net_navigator.is_easy_to_apply()
+        return res
 
 @dataclass
 class NotifyJobsRelevanceCommand(Command):
@@ -149,4 +192,3 @@ class NotifyJobsRelevanceCommand(Command):
             for criteria in self.criteria:
                 answer: [bool, None] = criteria.apply(entities=[job_descr])[0]
                 self.notifier.notify(message=message.format(score=answer))
-                

@@ -30,7 +30,7 @@ class JobDescriptionOAICriteriaRelevance(ICriteria):
     open_ai_client: OpenAIClient
     criteria: list[str]
 
-    def apply(self, entities: list) -> list[bool, None]:
+    def apply(self, entities: list) -> list[int, None]:
         res: list = []
 
         for job_descr in entities:

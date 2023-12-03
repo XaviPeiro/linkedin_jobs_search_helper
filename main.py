@@ -21,8 +21,8 @@ with open("app_config1.yaml", "r") as f:
 
 
 def config_to_job_filters(file_path: str = "app_config1.yaml") -> list[JobsFilter]:
-    with open(file_path, "r") as f:
-        config = yaml.load(f, Loader=yaml.FullLoader)
+    with open(file_path, "r") as f2:
+        config = yaml.load(f2, Loader=yaml.FullLoader)
 
         # TODO: This return part should be a service on its own, for reusability. However, not necessary for the nonce,
         #  due to this is the only client available.
@@ -95,10 +95,11 @@ def main():
     )
     actions = [
         discard_jobs,
-        notify_relevant_jobs
+        # notify_relevant_jobs
     ]
     linkedin_scrapper.set_actions(state=LinkedinStates.ACTIVE_JOB_CARD, actions=actions)
-    linkedin_scrapper(job_filters=config_to_job_filters(), max_jobs=25)
+    # linkedin_scrapper(job_filters=config_to_job_filters(), max_jobs=25)
+    linkedin_scrapper(job_filters=config_to_job_filters())
 
 
 if __name__ == "__main__":
