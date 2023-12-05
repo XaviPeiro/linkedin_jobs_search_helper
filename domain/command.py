@@ -14,7 +14,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from domain.criteria.criteria import ICriteria
 from domain.notifier import Notifier
 from elements_paths import JobsElements
-from logger import app_logger, easy_to_apply_logger, jobs_to_apply_logger
+from logger import app_logger, easy_to_apply_logger
 
 
 class CrawlerReceiver(ABC):
@@ -167,12 +167,13 @@ class LinkedinDiscardJobCommand(Command):
             jobs_to_apply_logger.info(f"{self.net_navigator.get_job_url()}\n")
             app_logger.info(f"{self.net_navigator.get_job_url()}\n")
 
-        # self.net_navigator.linkedin_discard_job()
+        self.net_navigator.linkedin_discard_job()
         app_logger.info("DISCARDED BECAUSE IT HAS BEEN PERSISTED TO THE LIST 'TO APPLY'")
 
     def is_easy_to_apply(self) -> bool:
         res = self.net_navigator.is_easy_to_apply()
         return res
+
 
 @dataclass
 class NotifyJobsRelevanceCommand(Command):
