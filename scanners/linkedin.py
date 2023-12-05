@@ -5,7 +5,7 @@ from enum import StrEnum
 from functools import partial
 from typing import Callable, Optional
 
-from selenium.common import TimeoutException
+from selenium.common import TimeoutException, NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
@@ -110,7 +110,7 @@ class Linkedin:
             # TODO P3: raise a finish Exception
             return
 
-        time.sleep(4.4)
+        time.sleep(1.4)
 
         # TODO: ¿Iterate view items in the commands and just using crawlers to request data?
         job_cards = self.web_driver.find_elements(By.XPATH, JobsElements.all_not_dismissed_job_cards_xpath)
@@ -124,7 +124,16 @@ class Linkedin:
             job_card.click()
             if index == 0:
                 job_card.click()
-            time.sleep(3)
+            # Something that tells me it has been already discarded.
+            try:
+                if job_card.find_element(By.XPATH, ".//div[contains(@class, 'ob-card-list--is-dismissed')]"):
+                    app_logger.info("Skipped because it was already discarded")
+                    continue
+            except NoSuchElementException:
+                # everything is ok and such a shitty way to check this.
+                ...
+
+            time.sleep(1)
 
             # STATE: Active job
             app_logger.info("---------------------------------")

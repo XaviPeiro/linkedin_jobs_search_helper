@@ -41,7 +41,7 @@ easy_to_apply_logger.setLevel(logging.DEBUG)
 
 easy_to_apply_file_handler = TimedRotatingFileHandler(easy_to_apply_file, when='D', interval=1)
 easy_to_apply_log_formatter = logging.Formatter(
-    "%(asctime)s [%(threadName)s] [%(levelname)-5.5s]  %(message)s",
+    "%(message)s",
     datefmt='%Y-%m-%d %H:%M:%S'
 )
 easy_to_apply_file_handler.setFormatter(easy_to_apply_log_formatter)
@@ -56,9 +56,10 @@ jobs_to_apply_logger.setLevel(logging.DEBUG)
 
 jobs_to_apply_file_handler = TimedRotatingFileHandler(jobs_to_apply_file, when='D', interval=1)
 jobs_to_apply_log_formatter = logging.Formatter(
-    "%(asctime)s [%(threadName)s] [%(levelname)-5.5s]  %(message)s",
+    "%(message)s",
     datefmt='%Y-%m-%d %H:%M:%S'
 )
 jobs_to_apply_file_handler.setFormatter(jobs_to_apply_log_formatter)
 jobs_to_apply_logger.addHandler(jobs_to_apply_file_handler)
 jobs_to_apply_logger.propagate = False
+
