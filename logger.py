@@ -28,8 +28,22 @@ log_formatter = ColoredFormatter(
 console_handler.setFormatter(log_formatter)
 app_logger.addHandler(console_handler)
 
+# --- Summary results
+summary_logger = logging.getLogger("summary")
+logs_summary_folder = "./logs/summary"
+logs_summary_file = os.path.join(logs_summary_folder, f"summary-{date.today()}.log")
+summary_logger.setLevel(logging.DEBUG)
 
-# --
+summary_logger_handler = TimedRotatingFileHandler(filename=logs_summary_file, when='D', interval=1)
+summary_logger_handler_formatter = logging.Formatter(
+    "%(asctime)s [%(threadName)s] [%(levelname)-5.5s]  %(message)s",
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
+summary_logger_handler.setFormatter(summary_logger_handler_formatter)
+summary_logger.addHandler(summary_logger_handler)
+
+
+# -- log_jobs
 logs_jobs_folder = "./logs_jobs"
 
 # --- Easy to apply logger

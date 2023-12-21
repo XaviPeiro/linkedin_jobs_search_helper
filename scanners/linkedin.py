@@ -1,3 +1,4 @@
+import random
 import sys
 import time
 from dataclasses import field, dataclass
@@ -14,7 +15,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from elements_paths import LoginElements, JobsElements
 from job_url_builder import UrlGenerator, SalaryCodes, LocationCodes, RemoteCodes
-from logger import app_logger
+from logger import app_logger, summary_logger
 from scanners.utilities import element_exists
 
 
@@ -40,6 +41,7 @@ class Linkedin:
     user: str
     password: str
     _actions: dict = field(init=False, default_factory=dict)
+    __total_jobs_iterated: int = field(default=0)
 
     def set_actions(self, state: LinkedinStates, actions: list[Callable]):
         self._actions[state] = actions
@@ -121,11 +123,22 @@ class Linkedin:
             # If it is the first element (the last on the document) the click is not fully working on the first click
             # (probably due to it is not fully loaded and requires to scroll). This is a shitty but working solution.
             # Let's keep move and look for something more adequate later.
+
+            # At some point selenium gets stuck, I am checking if it is bc of lack of throttling
+            time.sleep(random.uniform(5, 20))
+            job_card = WebDriverWait(driver=self.web_driver, timeout=10).until(
+                expected_conditions.element_to_be_clickable(job_card)
+            )
             job_card.click()
             if index == 0:
                 job_card.click()
             # Something that tells me it has been already discarded.
             try:
+                self.__total_jobs_iterated += 1
+                # TODO: this logger is tmp; due to is getting stuck I want to write iterated jobs asap.
+                summary_logger.info(
+                    f"For {self.__class__.__name__}. Total card jobs iterated: {self.__total_jobs_iterated}"
+                )
                 if job_card.find_element(By.XPATH, ".//div[contains(@class, 'ob-card-list--is-dismissed')]"):
                     app_logger.info("Skipped because it was already discarded")
                     continue
@@ -143,6 +156,7 @@ class Linkedin:
             # TODO: Actions can alter the webdriver's state, so the outcome of the following actions. Kurwa macz...
             for action in self._actions[LinkedinStates.ACTIVE_JOB_CARD]:
                 action()
+
                 app_logger.info("__ __\n")
             app_logger.info("----------------------------------\n")
         else:
@@ -151,6 +165,9 @@ class Linkedin:
             jobs_number = 25
             # TODO: This just works if multiple of 25 (pages), not important rn.
             if max_jobs is not None and jobs_filter.pagination_offset + jobs_number >= max_jobs:
+                summary_logger.info(
+                    f"For {self.__class__.__name__}. Total card jobs iterated: {self.__total_jobs_iterated}"
+                )
                 return None
 
             jobs_filter.pagination_offset += jobs_number
