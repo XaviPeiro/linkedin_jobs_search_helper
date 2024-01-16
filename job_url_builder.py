@@ -16,6 +16,7 @@ class LocationCodes(Enum):
     IL: str = "101620260"
     UK: str = "3702942170"
     PL: str = "105072130"
+    BG_NL_LX: str = "91000005"
 
 
 class RemoteCodes(Enum):
@@ -51,7 +52,8 @@ class UrlGenerator:
         salary: SalaryCodes,
         posted_days_ago: int,
         location: LocationCodes,
-        start: int = 0
+        start: int = 0,
+        easy_to_apply: bool = False
     ):
         query: str
         query_d: dict
@@ -64,7 +66,7 @@ class UrlGenerator:
         # TODO: from variable
         query_d = (
                 self.location(location=location) | self.posted_on(days=posted_days_ago) | self.remote(remote) |
-                self.salary(salary) | {"start": start} | {"keywords": search_term}
+                self.salary(salary) | {"start": start} | {"keywords": search_term} | {"f_AL": easy_to_apply}
         )
 
         query = urlencode(query_d)

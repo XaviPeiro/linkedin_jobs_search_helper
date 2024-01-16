@@ -32,7 +32,8 @@ def config_to_job_filters(file_path: str = "app_config1.yaml") -> list[JobsFilte
                 location=LocationCodes[c["location"]],
                 search_term=c["search_term"],
                 posted_days_ago=c["max_ad_days"],
-                remote=[RemoteCodes[c["remote"]]]
+                remote=[RemoteCodes[c["remote"]]],
+                easy_to_apply=c["easy_to_apply"]
             ) for c in config["filters"]
         ]
 
