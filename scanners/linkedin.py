@@ -31,6 +31,7 @@ class JobsFilter:
     posted_days_ago: int
     search_term: str
     pagination_offset: int = 0
+    easy_to_apply: bool = False
 
 
 # TODO P2: Ideally the Crawlers should only gather data, and the data processing should be apart and agnostic.
@@ -103,10 +104,11 @@ class Linkedin:
             location=jobs_filter.location,
             posted_days_ago=jobs_filter.posted_days_ago,
             remote=jobs_filter.remote,
-            start=jobs_filter.pagination_offset
+            start=jobs_filter.pagination_offset,
+            easy_to_apply=jobs_filter.easy_to_apply
         )
         self.web_driver.get(url)
-        time.sleep(3)
+        time.sleep(2)
 
         if element_exists(chrome=self.web_driver, find_arguments=(By.CLASS_NAME, JobsElements.no_results_class)):
             # TODO P3: raise a finish Exception
@@ -119,13 +121,12 @@ class Linkedin:
         app_logger.info(f"scanning {len(job_cards)} elements from page {jobs_filter.pagination_offset // 25 + 1}")
         job_card: WebElement
         for index, job_card in enumerate(reversed(job_cards)):
-
             # If it is the first element (the last on the document) the click is not fully working on the first click
             # (probably due to it is not fully loaded and requires to scroll). This is a shitty but working solution.
             # Let's keep move and look for something more adequate later.
 
             # At some point selenium gets stuck, I am checking if it is bc of lack of throttling
-            time.sleep(random.uniform(5, 20))
+            time.sleep(random.uniform(1, 3))
             job_card = WebDriverWait(driver=self.web_driver, timeout=10).until(
                 expected_conditions.element_to_be_clickable(job_card)
             )
@@ -133,18 +134,13 @@ class Linkedin:
             if index == 0:
                 job_card.click()
             # Something that tells me it has been already discarded.
-            try:
-                self.__total_jobs_iterated += 1
-                # TODO: this logger is tmp; due to is getting stuck I want to write iterated jobs asap.
-                summary_logger.info(
-                    f"For {self.__class__.__name__}. Total card jobs iterated: {self.__total_jobs_iterated}"
-                )
-                if job_card.find_element(By.XPATH, ".//div[contains(@class, 'ob-card-list--is-dismissed')]"):
-                    app_logger.info("Skipped because it was already discarded")
-                    continue
-            except NoSuchElementException:
-                # everything is ok and such a shitty way to check this.
-                ...
+            self.__total_jobs_iterated += 1
+            # TODO: this logger is tmp; due to is getting stuck I want to write iterated jobs asap.
+            summary_logger.info(
+                f"For {self.__class__.__name__}. Total card jobs iterated: {self.__total_jobs_iterated}"
+            )
+            if self._should_ignore_card(job_card=job_card) is True:
+                continue
 
             time.sleep(1)
 
@@ -172,6 +168,25 @@ class Linkedin:
 
             jobs_filter.pagination_offset += jobs_number
             self._iterate_jobs(jobs_filter=jobs_filter)
+
+    def _should_ignore_card(self, job_card: WebElement):
+        # Company
+        company_name: str = job_card.find_element(
+            By.CSS_SELECTOR,
+            JobsElements.job_card_company
+        ).text
+        companies_to_ignore = ["crossover", "turing", "canonical", "tui"]
+
+        if company_name.lower() in companies_to_ignore:
+            app_logger.info("Skipped because this company is excluded")
+            return True
+        # Already discarded
+        try:
+            if job_card.find_element(By.XPATH, ".//div[contains(@class, 'ob-card-list--is-dismissed')]"):
+                app_logger.info("Skipped because it was already discarded")
+                return True
+        except NoSuchElementException:
+            return False
 
 
 
