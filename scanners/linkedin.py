@@ -126,7 +126,7 @@ class Linkedin:
             # Let's keep move and look for something more adequate later.
 
             # At some point selenium gets stuck, I am checking if it is bc of lack of throttling
-            time.sleep(random.uniform(1, 3))
+            time.sleep(random.uniform(3, 10))
             job_card = WebDriverWait(driver=self.web_driver, timeout=10).until(
                 expected_conditions.element_to_be_clickable(job_card)
             )
@@ -142,7 +142,6 @@ class Linkedin:
             if self._should_ignore_card(job_card=job_card) is True:
                 continue
 
-            time.sleep(1)
 
             # STATE: Active job
             app_logger.info("---------------------------------")
@@ -171,22 +170,35 @@ class Linkedin:
 
     def _should_ignore_card(self, job_card: WebElement):
         # Company
-        company_name: str = job_card.find_element(
-            By.CSS_SELECTOR,
-            JobsElements.job_card_company
-        ).text
-        companies_to_ignore = ["crossover", "turing", "canonical", "tui"]
+        res: bool = False
+        try:
+            company_name: str = job_card.find_element(
+                By.CSS_SELECTOR,
+                JobsElements.job_card_company
+            ).text
+        except NoSuchElementException as e:
+            return False
+
+        companies_to_ignore = ["crossover", "turing", "canonical", "tui", "luxsoft"]
 
         if company_name.lower() in companies_to_ignore:
             app_logger.info("Skipped because this company is excluded")
             return True
+
         # Already discarded
         try:
             if job_card.find_element(By.XPATH, ".//div[contains(@class, 'ob-card-list--is-dismissed')]"):
                 app_logger.info("Skipped because it was already discarded")
                 return True
         except NoSuchElementException:
-            return False
+            pass
 
+        # Already applied
+        try:
+            if self.web_driver.find_element(By.CSS_SELECTOR, JobsElements.apply_button):
+                pass
+        except NoSuchElementException as nse:
+            app_logger.info("Skipped because it cannot be applied")
+            return True
 
 

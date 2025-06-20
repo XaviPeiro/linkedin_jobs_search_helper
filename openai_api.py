@@ -45,6 +45,7 @@ class OpenAIClient:
         except openai.error.ServiceUnavailableError as sue:
             # TODO: maybe wait or retry policy, by the moment only making this usecase obvious.
             raise sue
+        # Bad Gateway?
         except Exception as e:
             raise e
 

@@ -14,8 +14,9 @@ class LocationCodes(Enum):
     DK: str = "104514075"
     SWTZ: str = "106693272"
     IL: str = "101620260"
-    UK: str = "3702942170"
+    UK: str = "101165590"
     PL: str = "105072130"
+    WARSAW: str = "105076658"
     BG_NL_LX: str = "91000005"
 
 
@@ -75,7 +76,7 @@ class UrlGenerator:
         return url
 
     def location(self, location: LocationCodes) -> dict[str, str]:
-        return {"location": location.value}
+        return {"geoId": location.value}
 
     def posted_on(self, days: int) -> dict[str, str]:
         total_seconds: str = str(86400 * days)

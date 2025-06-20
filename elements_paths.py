@@ -24,4 +24,5 @@ class JobsElements(ElementsPaths):
     selected_job_card_title_css: str = selected_job_css + " " + job_card_title_css
     # easy_to_apply_job_button: str = '//button[contains(@class, "jobs-apply-button")]'
     easy_to_apply_job_button: str = '//button[contains(@class, "jobs-apply-button") and @data-job-id]'
+    apply_button: str = 'div.jobs-apply-button--top-card'
     # job
