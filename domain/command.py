@@ -61,8 +61,13 @@ class SeleniumReceiver(CrawlerReceiver):
         return job_descr
 
     def get_job_title(self) -> str:
-        job_title: str = self.net_navigator.find_element(By.CSS_SELECTOR, JobsElements.selected_job_card_title_css).text
+        job_title: str = self.net_navigator.find_element(By.CSS_SELECTOR, JobsElements.selected_job_css).text.split("\n")[0]
         return job_title
+        
+    def get_job_link(self) -> str:
+        job_id = self.net_navigator.find_element(By.CSS_SELECTOR, JobsElements.selected_job_css).get_attribute("data-job-id")
+        job_link: str = f"https://www.linkedin.com/jobs/view/{job_id}/"
+        return job_link
 
 
 @dataclass
