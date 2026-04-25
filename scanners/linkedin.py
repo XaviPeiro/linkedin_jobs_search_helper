@@ -66,8 +66,8 @@ class Linkedin:
                 )
             except TimeoutException as timeout_exception:
                 """
-                    the prev element it has been waited it is to ensure the login was successful.
-                    Know reasons for failing are:
+                    The prev element has been awaited it is to ensure the login was successful.
+                    Known reasons for failing are:
                         - It is asking for a pin code that it is sent to the users email. It can be entered manually,
                             and it is only requested once (as long as I know).
                 """
@@ -94,7 +94,6 @@ class Linkedin:
     # TODO P2: Split navigation and parse/actions
     # TODO P1: Pass filter attributes
     def _iterate_jobs(self, jobs_filter: JobsFilter, max_jobs: Optional[int] = None):
-
         url: str = UrlGenerator().generate(
             search_term=jobs_filter.search_term,
             salary=jobs_filter.salary,
@@ -117,7 +116,6 @@ class Linkedin:
         app_logger.info(f"scanning {len(job_cards)} elements from page {jobs_filter.pagination_offset // 25 + 1}")
         job_card: WebElement
         for index, job_card in enumerate(reversed(job_cards)):
-
             # If it is the first element (the last on the document) the click is not fully working on the first click
             # (probably due to it is not fully loaded and requires to scroll). This is a shitty but working solution.
             # Let's keep move and look for something more adequate later.
@@ -147,6 +145,3 @@ class Linkedin:
 
             jobs_filter.pagination_offset += jobs_number
             self._iterate_jobs(jobs_filter=jobs_filter)
-
-
-

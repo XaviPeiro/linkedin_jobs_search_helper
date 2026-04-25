@@ -1,24 +1,18 @@
-from functools import partial
-
+# TODO P4: yaml is cacota, change it.
+import yaml
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.webdriver import WebDriver
 from webdriver_manager.chrome import ChromeDriverManager
 
-import scanners.actions as scanners_actions
 from components import notifier_unexpected_openai_response
 from domain.command import SeleniumReceiver, LinkedinDiscardJobCommand
 from domain.criteria import ICriteria, JobDescriptionOAICriteria
-from infraestracture.notifications.fs import FileSystemNotificator
 from job_url_builder import SalaryCodes, LocationCodes, RemoteCodes
 from logger import app_logger
 from openai_api import OpenAIClient
 from scanners.linkedin import LinkedinStates, Linkedin, JobsFilter
-
-
-# TODO P4: yaml is cacota, change it.
-import yaml
 
 
 with open("app_config1.yaml", "r") as f:
@@ -80,7 +74,6 @@ def main():
         net_navigator=selenium_receiver,
         notifier=notifier_unexpected_openai_response,
         criteria=init_discard_criteria()
-
     )
     actions = [
         discard_jobs
