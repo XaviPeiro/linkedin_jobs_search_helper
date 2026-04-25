@@ -126,3 +126,19 @@ For each list of questions you receive from a job offer do the following:
 
 Remember to answer a single "yes" or "no", according to the rules defined above.
 """
+
+@dataclass
+class PersistDataCommand(Command):
+    net_navigator: CrawlerReceiver
+    notifier: Notifier
+    _action_name: ClassVar[str] = "Persist Jobs"
+
+    def __str__(self):
+        return f"Action: {self._action_name}."
+
+    def __call__(self, *args, **kwargs):
+        app_logger.info(f"Executing {str(self)} for {self.net_navigator.get_job_title()}")
+
+        """
+        """
+        self.net_navigator.get_job_title()
