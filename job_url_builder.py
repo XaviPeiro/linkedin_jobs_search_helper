@@ -1,4 +1,5 @@
 from enum import Enum, IntEnum
+from typing import Optional
 from urllib.parse import urlparse, urlunparse, urlencode
 from urllib.parse import urlunsplit
 
@@ -16,7 +17,11 @@ class LocationCodes(Enum):
     UK: str = "3702942170"
     PL: str = "105072130"
 
+"""
+https://www.linkedin.com/jobs/search/?origin=JOBS_HOME_LOCATION_HISTORY&geoId=91000000&lipi=urn%3Ali%3Apage%3Ad_flagship3_job_home%3BE%2B17Bc50QRa0cf0VeosBHw%3D%3D
+https://www.linkedin.com/jobs/search/?geoId=101620260&lipi=urn%3Ali%3Apage%3Ad_flagship3_job_home%3BE%2B17Bc50QRa0cf0VeosBHw%3D%3D
 
+"""
 class RemoteCodes(Enum):
     IN_SITE: str = "1"
     REMOTE: str = "2"
@@ -25,6 +30,7 @@ class RemoteCodes(Enum):
 
 class SalaryCodes(Enum):
     # It defines the minimum salary. EG
+
     X0K: str = ""
     X40K: str = "1"
     X60K: str = "2"
@@ -46,7 +52,7 @@ class UrlGenerator:
     def generate(
         self,
         search_term: str,
-        remote: [RemoteCodes],
+        remote: list[RemoteCodes],
         salary: SalaryCodes,
         posted_days_ago: int,
         location: LocationCodes,
@@ -64,6 +70,7 @@ class UrlGenerator:
         query_d = (
                 self.location(location=location) | self.posted_on(days=posted_days_ago) | self.remote(remote) |
                 self.salary(salary) | {"start": start} | {"keywords": search_term}
+                | {"lipi": "urn:li:page:d_flagship3_job_home;E+17Bc50QRa0cf0VeosBHw=="}
         )
 
         query = urlencode(query_d)
@@ -84,5 +91,9 @@ class UrlGenerator:
         return {"f_WT": ",".join(parsed_choices)}
 
     # As long as I know this only works for the USA and UK. Not such a feature for other countries.
-    def salary(self, minimum: SalaryCodes) -> dict[str, str]:
-        return {"f_SB2": str(minimum.value)}
+    def salary(self, minimum: Optional[SalaryCodes] = None) -> dict[str, str]:
+        res = {}
+        if minimum is not None:
+            res = {"f_SB2": str(minimum.value)}
+
+        return res

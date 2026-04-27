@@ -53,15 +53,21 @@ class Linkedin:
         try:
             # TODO P4: Move URL, no magic strings
             self.web_driver.get("https://www.linkedin.com/login?trk=guest_homepage-basic_nav-header-signin")
-            self.web_driver.find_element("id", "username").send_keys(email)
+            username_input: WebElement = WebDriverWait(self.web_driver, timeout=30).until(
+                expected_conditions.presence_of_element_located((By.ID, "username")),
+            )
+            username_input.clear()
+            username_input.send_keys(email)
+
             time.sleep(1)
+
             self.web_driver.find_element("id", "password").send_keys(pw)
             time.sleep(2.8)
             self.web_driver.find_element("xpath", LoginElements.submit_btn_xpath).click()
             try:
                 profile_icon = WebDriverWait(self.web_driver, 5).until(
                     expected_conditions.presence_of_element_located(
-                        (By.CSS_SELECTOR, ".global-nav__me-photo.evi-image.ember-view")
+                        (By.CSS_SELECTOR, "#job-medium")
                     ),
                 )
             except TimeoutException as timeout_exception:
