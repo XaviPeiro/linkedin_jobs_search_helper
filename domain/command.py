@@ -10,8 +10,10 @@ from selenium.webdriver.support.wait import WebDriverWait
 from domain.criteria import ICriteria
 from domain.notifier import Notifier
 from elements_paths import JobsElements
-from logger import app_logger
+from infraestracture.persistance.file_persistance import Job, FilePersistence
+import logging
 
+logger = logging.getLogger(__file__)
 
 class CrawlerReceiver(ABC):
     # net_navigator: Any
@@ -31,6 +33,14 @@ class CrawlerReceiver(ABC):
     def get_job_title(self) -> str:
         ...
 
+    @abstractmethod
+    def get_url(self) -> str:
+        ...
+
+    @abstractmethod
+    def get_job_id(self) -> str:
+        ...
+
 
 class Command(ABC):
     """
@@ -45,6 +55,9 @@ class Command(ABC):
 
 @dataclass
 class SeleniumReceiver(CrawlerReceiver):
+    def get_url(self) -> str:
+        return self.net_navigator.current_url
+
     # Makes no sense to place here actions related to concrete crawlers, so the receiver is Selenium. However, as long
     # as I do not intend to add any other crawler I will leave it like this for the nonce.
     net_navigator: WebDriver
@@ -65,9 +78,13 @@ class SeleniumReceiver(CrawlerReceiver):
         return job_title
         
     def get_job_link(self) -> str:
-        job_id = self.net_navigator.find_element(By.CSS_SELECTOR, JobsElements.selected_job_css).get_attribute("data-job-id")
+        job_id = self.get_job_id()
         job_link: str = f"https://www.linkedin.com/jobs/view/{job_id}/"
         return job_link
+
+    def get_job_id(self) -> str:
+        return self.net_navigator.find_element(By.CSS_SELECTOR, JobsElements.selected_job_css).get_attribute("data-job-id")
+
 
 
 @dataclass
@@ -85,7 +102,7 @@ class LinkedinDiscardJobCommand(Command):
         However, it can be done by requesting to the proper endpoint.
     """
     def __call__(self):
-        app_logger.info(f"Executing {str(self)} for {self.net_navigator.get_job_title()}")
+        logger.info(f"Executing {str(self)} for {self.net_navigator.get_job_title()}")
         # TODO: Will be nice to have track of processed elements in order to repeat the same analysis
         #  over the already processed element thus reducing the time it takes and reqs to openai.
         #  !!!NOT IN THIS FUNCTION.!!!!
@@ -97,12 +114,12 @@ class LinkedinDiscardJobCommand(Command):
             answer: [bool, None] = criteria.apply(entities=[job_descr])[0]
             if answer is True:
                 self.net_navigator.linkedin_discard_job()
-                app_logger.info("DISCARDED")
+                logger.info("DISCARDED")
             elif answer is False:
-                app_logger.info("NOT DISCARDED")
+                logger.info("NOT DISCARDED")
             else:
                 # The model is returning an unexpected message.
-                app_logger.info("NOT DISCARDED - Because unexpected answer from OPENAI.")
+                logger.info("NOT DISCARDED - Because unexpected answer from OPENAI.")
 
 
 """
@@ -130,15 +147,20 @@ Remember to answer a single "yes" or "no", according to the rules defined above.
 @dataclass
 class PersistDataCommand(Command):
     net_navigator: CrawlerReceiver
-    notifier: Notifier
     _action_name: ClassVar[str] = "Persist Jobs"
+    persistence: FilePersistence
 
     def __str__(self):
         return f"Action: {self._action_name}."
 
     def __call__(self, *args, **kwargs):
-        app_logger.info(f"Executing {str(self)} for {self.net_navigator.get_job_title()}")
-
-        """
-        """
-        self.net_navigator.get_job_title()
+        logger.info(f"Executing {str(self)} for {self.net_navigator.get_job_title()}")
+        job: Job = Job.model_validate_strings(
+            {
+                'id': self.net_navigator.get_job_id(),
+                'url': self.net_navigator.get_url(),
+                'description': self.net_navigator.get_job_description(),
+                'title': self.net_navigator.get_job_title()
+            }
+        )
+        self.persistence(job)

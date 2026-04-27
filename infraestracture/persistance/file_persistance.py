@@ -1,9 +1,8 @@
-from dataclasses import Field
-from datetime import date
 import os
+from pathlib import Path
+from datetime import date
 
 from pydantic import BaseModel, AnyHttpUrl
-
 
 class Job(BaseModel):
     id: int
@@ -12,34 +11,35 @@ class Job(BaseModel):
     title: str
 
 class FilePersistence:
-    persistence_file_path: str
-    base_path: str
+    persistence_file_path: Path
+    base_path: Path
     items_added: int
 
-    def __init__(self, base_path: str):
-        self.base_path = base_path
-        day = str(date.today())
-        number: int = self._get_file_number()
+    _logs_dir: Path
 
-        self.persistence_file_path = f'{self.base_path}/collected_jobs/{day}/execution#{number}.txt'
+    def __init__(self, base_path: str):
+        self.items_added = 0
+        self.base_path = Path(base_path)
+
+        day = str(date.today())
+        self._logs_dir = Path(f'{self.base_path}/collected_jobs/{day}/')
+
+        number: int = self._get_files_number(self._logs_dir)
+        path = self._logs_dir.joinpath(f"execution#{number}.txt")
+        path.parent.mkdir(parents=True, exist_ok=True)
+        self.persistence_file_path = path
 
     @staticmethod
-    def _get_file_number() -> int:
-        files = os.listdir()
+    def _get_files_number(path: Path) -> int:
+        files = os.listdir(path)
         return len(files)
 
-    def __call__(self, content: dict):
-        formatted_content = self._format_content(content)
+    def __call__(self, job: Job):
+        # TODO: Could be nice to not open/close the file over and over
         with open(self.persistence_file_path, 'a+') as file:
-            file.write(formatted_content)
+            file.write(job.model_dump_json())
 
         self.items_added+=1
 
-
-    @staticmethod
-    def _format_content(self, content:dict) -> str:
-        f"""
-        Item {}
-        """
 
 
