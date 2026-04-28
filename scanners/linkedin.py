@@ -81,17 +81,45 @@ class Linkedin:
         try:
             # TODO P4: Move URL, no magic strings
             self.web_driver.get("https://www.linkedin.com/login?trk=guest_homepage-basic_nav-header-signin")
-            username_input: WebElement = WebDriverWait(self.web_driver, timeout=300).until(
-                expected_conditions.presence_of_element_located((By.ID, "username")),
-            )
-            username_input.clear()
-            username_input.send_keys(email)
 
-            time.sleep(1)
+            def login_or_account_picker(driver: WebDriver):
+                username_inputs = driver.find_elements(By.ID, "username")
+                if username_inputs:
+                    return "credentials", username_inputs[0]
 
-            self.web_driver.find_element("id", "password").send_keys(pw)
-            time.sleep(2.8)
-            self.web_driver.find_element("xpath", LoginElements.submit_btn_xpath).click()
+                email_matches = driver.find_elements(By.XPATH, f"//p[normalize-space()='{email}']")
+                if email_matches:
+                    return "account_picker", email_matches[0]
+
+                return False
+
+            login_mode, login_target = WebDriverWait(self.web_driver, timeout=300).until(login_or_account_picker)
+
+            if login_mode == "account_picker":
+                account_selector = WebDriverWait(self.web_driver, timeout=30).until(
+                    expected_conditions.presence_of_element_located(
+                        (By.XPATH, f"//p[normalize-space()='{email}']/ancestor::div[@role='button'][1]")
+                    )
+                )
+                self.web_driver.execute_script(
+                    "arguments[0].scrollIntoView({block: 'center'});",
+                    account_selector,
+                )
+                try:
+                    account_selector.click()
+                except Exception:
+                    self.web_driver.execute_script("arguments[0].click();", account_selector)
+            else:
+                username_input: WebElement = login_target
+                username_input.clear()
+                username_input.send_keys(email)
+
+                time.sleep(1)
+
+                self.web_driver.find_element("id", "password").send_keys(pw)
+                time.sleep(2.8)
+                self.web_driver.find_element("xpath", LoginElements.submit_btn_xpath).click()
+
             try:
                 profile_icon = WebDriverWait(self.web_driver, 5).until(
                     expected_conditions.presence_of_element_located(
