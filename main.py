@@ -103,7 +103,7 @@ def main():
         app_logger.info(jf)
         app_logger.info("############")
 
-    linkedin_scrapper(job_filters=job_filters, max_jobs=25)
+    linkedin_scrapper(job_filters=job_filters, max_jobs=150)
 
 
 if __name__ == "__main__":
