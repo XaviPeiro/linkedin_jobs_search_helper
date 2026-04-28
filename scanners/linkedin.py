@@ -2,15 +2,19 @@ import sys
 import time
 from dataclasses import field, dataclass
 from enum import StrEnum
-from functools import partial
+from pathlib import Path
 from typing import Callable, Optional
 
 from selenium.common import TimeoutException
+from selenium.webdriver import Chrome
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
+from webdriver_manager.chrome import ChromeDriverManager
 
 from elements_paths import LoginElements, JobsElements
 from job_url_builder import UrlGenerator, SalaryCodes, LocationCodes, RemoteCodes
@@ -34,26 +38,50 @@ class JobsFilter:
 
 # TODO P2: Ideally the Crawlers should only gather data, and the data processing should be apart and agnostic.
 #  However, if an action (changing state) depends on processing data... I have to think about that.
-@dataclass
 class Linkedin:
     web_driver: WebDriver
     user: str
     password: str
-    _actions: dict = field(init=False, default_factory=dict)
+    _actions: dict
+
+    def __init__(self, web_driver: WebDriver, user: str, password: str):
+        self.web_driver = self._create_driver()
+        self.user = user
+        self.password = password
+        self._actions = {}
 
     def set_actions(self, state: LinkedinStates, actions: list[Callable]):
         self._actions[state] = actions
 
-    def __call__(self, job_filters: list[JobsFilter], max_jobs: Optional[int] = None):
+    @staticmethod
+    def _create_driver() -> WebDriver:
+        profile_dir = Path.home() / ".selenium-profiles" / "linkedin"
+
+        options = Options()
+        options.add_argument(f"--user-data-dir={profile_dir}")
+        options.add_argument("--profile-directory=Default")
+
+        # Keep it normal-looking and stable
+        options.add_argument("--window-size=1400,1000")
+        options.add_argument("--lang=en-US")
+
+        # Do NOT use headless for login-heavy sites
+        # options.add_argument("--headless=new")
+        driver = Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
+        return driver
+
+    def __call__(self, job_filters: list[JobsFilter], max_jobs: int = 1):
         self._do_login(email=self.user, pw=self.password)
         for job_filter in job_filters:
+
             self._iterate_jobs(jobs_filter=job_filter, max_jobs=max_jobs)
 
     def _do_login(self, email: str, pw: str):
         try:
             # TODO P4: Move URL, no magic strings
             self.web_driver.get("https://www.linkedin.com/login?trk=guest_homepage-basic_nav-header-signin")
-            username_input: WebElement = WebDriverWait(self.web_driver, timeout=30).until(
+            username_input: WebElement = WebDriverWait(self.web_driver, timeout=300).until(
                 expected_conditions.presence_of_element_located((By.ID, "username")),
             )
             username_input.clear()
@@ -99,7 +127,10 @@ class Linkedin:
 
     # TODO P2: Split navigation and parse/actions
     # TODO P1: Pass filter attributes
-    def _iterate_jobs(self, jobs_filter: JobsFilter, max_jobs: Optional[int] = None):
+    def _iterate_jobs(self, jobs_filter: JobsFilter, max_jobs: int):
+        if max_jobs <= 0:
+            return
+
         url: str = UrlGenerator().generate(
             search_term=jobs_filter.search_term,
             salary=jobs_filter.salary,
@@ -135,6 +166,10 @@ class Linkedin:
             app_logger.info(f"Job number: {index}")
             app_logger.info(f"Job URL: {self.web_driver.current_url}")
 
+            WebDriverWait(self.web_driver, timeout=30).until(
+                expected_conditions.presence_of_element_located((By.ID, "job-details"))
+            )
+
             # TODO: Actions can alter the webdriver's state, so the outcome of the following actions. Kurwa macz...
             for action in self._actions[LinkedinStates.ACTIVE_JOB_CARD]:
                 action()
@@ -145,9 +180,12 @@ class Linkedin:
             # next page
             # Apparently, LinkedIn's jobs per page is fixed to 25, so...
             jobs_number = 25
-            # TODO: This just works if multiple of 25 (pages), not important rn.
-            if jobs_filter.pagination_offset + jobs_number >= max_jobs:
-                return None
+            # This just works if multiple of 25 (pages), not important rn.
+            # if jobs_filter.pagination_offset + jobs_number >= max_jobs:
+            #     return None
+
+            # TODO: Deshacer recursive approach
 
             jobs_filter.pagination_offset += jobs_number
-            self._iterate_jobs(jobs_filter=jobs_filter)
+            next_max_jobs = max(max_jobs-jobs_number, 0)
+            self._iterate_jobs(jobs_filter=jobs_filter, max_jobs=next_max_jobs)
