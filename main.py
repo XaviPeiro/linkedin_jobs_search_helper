@@ -7,8 +7,9 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.webdriver import WebDriver
 from webdriver_manager.chrome import ChromeDriverManager
 
-from domain.command import SeleniumReceiver, PersistDataCommand, Command
+from domain.command import SeleniumReceiver, Command
 from domain.criteria import ICriteria, JobDescriptionOAICriteria
+from domain.persist_data_command import PersistDataCommand
 from infraestracture.persistance.file_persistance import FilePersistence
 from job_url_builder import SalaryCodes, LocationCodes, RemoteCodes
 from logger import app_logger
