@@ -77,11 +77,7 @@ def main():
         password=config["password"],
     )
     selenium_receiver = SeleniumReceiver(net_navigator=linkedin_scrapper.web_driver)
-    # discard_jobs = LinkedinDiscardJobCommand(
-    #     net_navigator=selenium_receiver,
-    #     notifier=notifier_unexpected_openai_response,
-    #     criteria=init_discard_criteria()
-    # )
+
     persistence_service = FilePersistence(base_path=str(PROJECT_ROOTDIR))
     persist_command = PersistDataCommand(
         net_navigator=selenium_receiver,

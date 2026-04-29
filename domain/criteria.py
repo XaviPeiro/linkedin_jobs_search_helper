@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Union
 
 from components import notifier_unexpected_openai_response
 from logger import app_logger
@@ -48,7 +49,7 @@ class JobDescriptionOAICriteria(ICriteria):
             notifier_unexpected_openai_response.notify(f"{datetime.now()} - {answer}")
             return None
 
-    def apply(self, entities: list) -> list[bool, None]:
+    def apply(self, entities: list) -> list[Union[bool, int]]:
         res: list = []
 
         # To keep it cheap I use 3.5-turbo. Besides that, I want to get only True/False as response, but the only way
