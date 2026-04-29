@@ -67,5 +67,5 @@ def test_unknown_language_for_empty_description():
     detected_language = detector.detect("")
 
     assert detected_language.language == "unknown"
-    assert detected_language.confidence == 0.0
+    assert detected_language.confidence == 1.0
     assert detected_language.scores == {}

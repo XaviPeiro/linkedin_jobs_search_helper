@@ -47,7 +47,7 @@ class LanguageDetector:
         normalized_text = _normalize_text(text)
 
         if not normalized_text:
-            return DetectedLanguage(language=UNKNOWN_LANGUAGE, confidence=0.0, scores={})
+            return DetectedLanguage(language=UNKNOWN_LANGUAGE, confidence=1.0, scores={})
 
         ranked_languages = langid.rank(normalized_text)
         scores = {
