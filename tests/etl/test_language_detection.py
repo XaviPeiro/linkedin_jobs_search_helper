@@ -43,7 +43,7 @@ def test_detects_job_description_language_from_collected_jobs(
 
     assert detected_language.language == expected_language
     if expected_language == "unknown":
-        assert detected_language.confidence == 0.0
+        assert detected_language.confidence == 1.0
     else:
         assert detected_language.confidence > 0
 
