@@ -1,6 +1,13 @@
 user:
 password:
 
+database:
+  host: localhost
+  port: 5432
+  name: linkedin_jobs
+  user: linkedin_jobs
+  password:
+
 openai_api:
   secret:
 
