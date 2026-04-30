@@ -5,6 +5,7 @@
 # Python
 __pycache__
 .env
+docker/mongo/data/
 
 
 # Project files

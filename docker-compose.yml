@@ -1,26 +1,24 @@
+name: external_jobs_ingestion
+
 services:
-  pg:
-    image: pgvector/pgvector:pg17
+  mongo:
+    image: mongo:7
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      PGDATA: /var/lib/postgresql/data/pgdata
+      MONGO_INITDB_ROOT_USERNAME: external_jobs
+      MONGO_INITDB_ROOT_PASSWORD: external_jobs
+      MONGO_INITDB_DATABASE: external_jobs
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "27018:27017"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+      - ./docker/mongo/data:/data/db
+      - ./docker/init/mongo:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}",
+          "mongosh 'mongodb://external_jobs:external_jobs@localhost:27017/external_jobs' --quiet --eval 'db.runCommand({ ping: 1 }).ok'",
         ]
       interval: 10s
       timeout: 5s
       retries: 5
-
-volumes:
-  postgres_data:

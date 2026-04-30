@@ -1,12 +1,9 @@
 user:
 password:
 
-database:
-  host: localhost
-  port: 5432
-  name: linkedin_jobs
-  user: linkedin_jobs
-  password:
+mongodb:
+  uri: mongodb://external_jobs:external_jobs@localhost:27018/external_jobs
+  database: external_jobs
 
 openai_api:
   secret:
