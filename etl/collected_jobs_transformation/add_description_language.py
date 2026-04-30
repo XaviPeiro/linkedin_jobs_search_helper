@@ -13,11 +13,11 @@ class AddDescriptionLanguage:
         self,
         input_path: Path,
         output_path: Path,
-        language_detector: LanguageDetector | None = None,
+        language_detector: LanguageDetector
     ):
         self.input_path = input_path
         self.output_path = output_path
-        self.language_detector = language_detector or LanguageDetector()
+        self.language_detector = language_detector
 
     def __call__(self) -> None:
         self.output_path.parent.mkdir(parents=True, exist_ok=True)
