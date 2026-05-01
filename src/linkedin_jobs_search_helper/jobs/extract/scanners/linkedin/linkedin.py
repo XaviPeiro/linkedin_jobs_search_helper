@@ -1,10 +1,10 @@
 import logging
 import sys
 import time
-from dataclasses import field, dataclass
+from dataclasses import dataclass
 from enum import StrEnum
 from pathlib import Path
-from typing import Callable, Optional
+from typing import Callable
 
 from selenium.common import TimeoutException
 from selenium.webdriver import Chrome
@@ -17,9 +17,9 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 
-from linkedin_jobs_search_helper.elements_paths import LoginElements, JobsElements
-from linkedin_jobs_search_helper.job_url_builder import UrlGenerator, SalaryCodes, LocationCodes, RemoteCodes
-from linkedin_jobs_search_helper.scanners.utilities import element_exists
+from linkedin_jobs_search_helper.jobs.extract.scanners.linkedin.elements_paths import LoginElements, JobsElements
+from linkedin_jobs_search_helper.jobs.extract.scanners.linkedin.job_url_builder import UrlGenerator, SalaryCodes, LocationCodes, RemoteCodes
+from linkedin_jobs_search_helper.jobs.extract.scanners.utilities import element_exists
 
 logger = logging.getLogger(__name__)
 

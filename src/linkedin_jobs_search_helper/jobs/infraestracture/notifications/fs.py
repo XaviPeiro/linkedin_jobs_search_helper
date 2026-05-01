@@ -1,4 +1,4 @@
-from linkedin_jobs_search_helper.domain.notifier import Notifier
+from linkedin_jobs_search_helper.jobs.extract.scanners.commands.notifier import Notifier
 
 
 class FileSystemNotificator(Notifier):

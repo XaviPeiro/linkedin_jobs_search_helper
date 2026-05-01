@@ -4,8 +4,8 @@ import argparse
 import logging
 from pathlib import Path
 
-from linkedin_jobs_search_helper.logger import configure_logging
-from linkedin_jobs_search_helper.transform_jobs.language_detection import LanguageDetector
+from linkedin_jobs_search_helper.common.logger import configure_logging
+from linkedin_jobs_search_helper.jobs.transform_jobs.language_detection import LanguageDetector
 from .add_description_language import AddDescriptionLanguage
 
 logger = logging.getLogger(__name__)

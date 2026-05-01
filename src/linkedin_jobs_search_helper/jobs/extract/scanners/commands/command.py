@@ -6,7 +6,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 
-from linkedin_jobs_search_helper.elements_paths import JobsElements
+from linkedin_jobs_search_helper.jobs.extract.scanners.linkedin.elements_paths import JobsElements
 
 class CrawlerReceiver(ABC):
     # net_navigator: Any

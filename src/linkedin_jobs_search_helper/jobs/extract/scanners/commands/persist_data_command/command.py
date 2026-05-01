@@ -2,8 +2,8 @@ import logging
 from dataclasses import dataclass
 from typing import ClassVar
 
-from linkedin_jobs_search_helper.domain.command import Command, CrawlerReceiver
-from linkedin_jobs_search_helper.infraestracture.persistance.file_persistance import FilePersistence, Job
+from linkedin_jobs_search_helper.jobs.extract.scanners.commands.command import Command, CrawlerReceiver
+from linkedin_jobs_search_helper.jobs.infraestracture.persistance.file_persistance import FilePersistence, Job
 
 logger = logging.getLogger(__name__)
 

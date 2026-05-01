@@ -8,9 +8,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 
-from linkedin_jobs_search_helper.domain.notifier import Notifier
-from linkedin_jobs_search_helper.elements_paths import JobsElements
-from linkedin_jobs_search_helper.openai_api import OpenAIClient, RateLimitException
+from linkedin_jobs_search_helper.jobs.extract.scanners.commands.notifier import Notifier
+from linkedin_jobs_search_helper.jobs.extract.scanners.linkedin.elements_paths import JobsElements
+from linkedin_jobs_search_helper.common.openai_api import OpenAIClient, RateLimitException
 
 logger = logging.getLogger(__name__)
 

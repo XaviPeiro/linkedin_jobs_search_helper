@@ -8,14 +8,14 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.webdriver import WebDriver
 from webdriver_manager.chrome import ChromeDriverManager
 
-from linkedin_jobs_search_helper.domain.command import SeleniumReceiver, Command
-from linkedin_jobs_search_helper.domain.criteria import ICriteria, JobDescriptionOAICriteria
-from linkedin_jobs_search_helper.domain.persist_data_command import PersistDataCommand
-from linkedin_jobs_search_helper.infraestracture.persistance.file_persistance import FilePersistence
-from linkedin_jobs_search_helper.job_url_builder import SalaryCodes, LocationCodes, RemoteCodes
-from linkedin_jobs_search_helper.logger import configure_logging
-from linkedin_jobs_search_helper.openai_api import OpenAIClient
-from linkedin_jobs_search_helper.scanners.linkedin import LinkedinStates, Linkedin, JobsFilter
+from linkedin_jobs_search_helper.jobs.extract.scanners.commands.command import SeleniumReceiver, Command
+from linkedin_jobs_search_helper.jobs.extract.scanners.commands.criteria import ICriteria, JobDescriptionOAICriteria
+from linkedin_jobs_search_helper.jobs.extract.scanners.commands.persist_data_command import PersistDataCommand
+from linkedin_jobs_search_helper.jobs.extract.scanners.linkedin.linkedin import JobsFilter, Linkedin, LinkedinStates
+from linkedin_jobs_search_helper.jobs.infraestracture.persistance.file_persistance import FilePersistence
+from linkedin_jobs_search_helper.jobs.extract.scanners.linkedin.job_url_builder import SalaryCodes, LocationCodes, RemoteCodes
+from linkedin_jobs_search_helper.common.logger import configure_logging
+from linkedin_jobs_search_helper.common.openai_api import OpenAIClient
 
 PROJECT_ROOTDIR = pathlib.Path(__file__).parent.absolute()
 logger = logging.getLogger(__name__)
@@ -87,7 +87,6 @@ def main():
         persistence=persistence_service
     )
     actions: list[Command] = [
-        # discard_jobs
         persist_command
     ]
     linkedin_scrapper.set_actions(state=LinkedinStates.ACTIVE_JOB_CARD, actions=actions)

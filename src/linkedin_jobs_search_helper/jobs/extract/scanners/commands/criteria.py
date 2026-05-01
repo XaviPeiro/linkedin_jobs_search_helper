@@ -4,8 +4,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Union
 
-from linkedin_jobs_search_helper.components import notifier_unexpected_openai_response
-from linkedin_jobs_search_helper.openai_api import OpenAIClient
+from linkedin_jobs_search_helper.jobs.extract.scanners.components import notifier_unexpected_openai_response
+from linkedin_jobs_search_helper.common.openai_api import OpenAIClient
 
 logger = logging.getLogger(__name__)
 

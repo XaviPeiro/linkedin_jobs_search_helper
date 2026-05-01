@@ -1,7 +1,7 @@
 import json
 
-from linkedin_jobs_search_helper.transform_jobs.add_language import AddDescriptionLanguage
-from linkedin_jobs_search_helper.transform_jobs.language_detection import LanguageDetector
+from linkedin_jobs_search_helper.jobs.transform_jobs.add_language import AddDescriptionLanguage
+from linkedin_jobs_search_helper.jobs.transform_jobs.language_detection import LanguageDetector
 
 
 def test_add_description_language_reads_jobs_and_persists_one_output(tmp_path):

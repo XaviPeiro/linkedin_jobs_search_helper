@@ -2,9 +2,9 @@ import logging
 from dataclasses import dataclass
 from typing import ClassVar
 
-from linkedin_jobs_search_helper.domain.command import Command, CrawlerReceiver
-from linkedin_jobs_search_helper.domain.criteria import ICriteria
-from linkedin_jobs_search_helper.domain.notifier import Notifier
+from linkedin_jobs_search_helper.jobs.extract.scanners.commands.command import Command, CrawlerReceiver
+from linkedin_jobs_search_helper.jobs.extract.scanners.commands.criteria import ICriteria
+from linkedin_jobs_search_helper.jobs.extract.scanners.commands.notifier import Notifier
 
 logger = logging.getLogger(__name__)
 
