@@ -5,6 +5,9 @@ description = ""
 authors = ["Strong Punch Xavier"]
 packages = [{ include = "linkedin_jobs_search_helper", from = "src" }]
 
+[tool.poetry.scripts]
+in-scan = "linkedin_jobs_search_helper.jobs.extract.scanners.linkedin.main:main"
+
 [tool.poetry.dependencies]
 python = "^3.11"
 selenium = "4.9.0"

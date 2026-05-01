@@ -1,6 +1,7 @@
 import os
-from pathlib import Path
 from datetime import date
+from pathlib import Path
+from os import PathLike
 
 from pydantic import BaseModel, AnyHttpUrl
 
@@ -12,17 +13,17 @@ class Job(BaseModel):
 
 class FilePersistence:
     persistence_file_path: Path
-    base_path: Path
+    collected_jobs_dir: Path
     items_added: int
 
     _logs_dir: Path
 
-    def __init__(self, base_path: str):
+    def __init__(self, collected_jobs_dir: str | PathLike):
         self.items_added = 0
-        self.base_path = Path(base_path)
+        self.collected_jobs_dir = Path(collected_jobs_dir)
 
         day = str(date.today())
-        self._logs_dir = Path(f'{self.base_path}/collected_jobs/{day}/')
+        self._logs_dir = self.collected_jobs_dir / day
 
         number: int = self._get_files_number(self._logs_dir)
         path = self._logs_dir.joinpath(f"execution#{number}.jsonl")

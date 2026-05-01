@@ -79,7 +79,7 @@ class UrlGenerator:
         return url
 
     def location(self, location: LocationCodes) -> dict[str, str]:
-        return {"location": location.value}
+        return {"geoId": location.value}
 
     def posted_on(self, days: int) -> dict[str, str]:
         total_seconds: str = str(86400 * days)

@@ -36,6 +36,7 @@ class JobsFilter:
     posted_days_ago: int
     search_term: str
     pagination_offset: int = 0
+    max_jobs: int = 50
 
 
 # TODO P2: Ideally the Crawlers should only gather data, and the data processing should be apart and agnostic.
@@ -73,11 +74,10 @@ class Linkedin:
 
         return driver
 
-    def __call__(self, job_filters: list[JobsFilter], max_jobs: int = 1):
+    def __call__(self, job_filters: list[JobsFilter]):
         self._do_login(email=self.user, pw=self.password)
         for job_filter in job_filters:
-
-            self._iterate_jobs(jobs_filter=job_filter, max_jobs=max_jobs)
+            self._iterate_jobs(jobs_filter=job_filter, max_jobs=job_filter.max_jobs)
 
     def _do_login(self, email: str, pw: str):
         try:

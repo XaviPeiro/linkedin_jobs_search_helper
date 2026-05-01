@@ -4,8 +4,8 @@ from pathlib import Path
 
 from colorlog import ColoredFormatter
 
+from linkedin_jobs_search_helper.settings import get_settings
 
-DEFAULT_LOG_DIR = Path("logs")
 QUIET_LOGGERS = ("selenium", "urllib3", "webdriver_manager")
 
 _configured_log_file: Path | None = None
@@ -13,7 +13,7 @@ _configured_log_file: Path | None = None
 
 def configure_logging(
     *,
-    log_dir: Path = DEFAULT_LOG_DIR,
+    log_dir: Path | None = None,
     console_level: int = logging.INFO,
     file_level: int = logging.DEBUG,
 ) -> Path:
@@ -22,8 +22,9 @@ def configure_logging(
     if _configured_log_file is not None:
         return _configured_log_file
 
-    log_dir.mkdir(parents=True, exist_ok=True)
-    log_file = log_dir / f"{datetime.now():%Y-%m-%d_%H-%M-%S}.log"
+    resolved_log_dir = log_dir or get_settings().logs_dir
+    resolved_log_dir.mkdir(parents=True, exist_ok=True)
+    log_file = resolved_log_dir / f"{datetime.now():%Y-%m-%d_%H-%M-%S}.log"
 
     root_logger = logging.getLogger()
     lowest_enabled_level = min(console_level, file_level)

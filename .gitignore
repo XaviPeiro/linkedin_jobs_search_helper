@@ -10,4 +10,5 @@ docker/mongo/data/
 
 # Project files
 app_config*.yaml
+!app_config*.template.yaml
 openai_playground.txt

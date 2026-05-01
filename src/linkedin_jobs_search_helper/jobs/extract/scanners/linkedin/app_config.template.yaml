@@ -1,10 +1,6 @@
 user:
 password:
 
-mongodb:
-  uri: mongodb://external_jobs:external_jobs@localhost:27018/external_jobs
-  database: external_jobs
-
 openai_api:
   secret:
 
@@ -17,3 +13,18 @@ discard_job:
     - '- Is it written in any other language than spanish, catalan or english?'
     - '- Will I be discarded from this selection process if I intend to work remotely from Poland?'
     - '- Is Python irrelevant for this offer?'
+
+filters:
+#  minimum_salary:
+  - location: "PL"
+    search_term: "python engineer"
+    max_ad_days: 1
+    remote:
+      - REMOTE
+      - HYBRID
+  - location: "EU"
+    search_term: "python engineer"
+    max_ad_days: 1
+    remote:
+      - REMOTE
+      - HYBRID

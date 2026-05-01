@@ -1,5 +1,6 @@
 import logging
-import pathlib
+from pathlib import Path
+from typing import Any
 
 import yaml
 from selenium.webdriver import Chrome
@@ -12,37 +13,36 @@ from linkedin_jobs_search_helper.jobs.extract.scanners.commands.command import S
 from linkedin_jobs_search_helper.jobs.extract.scanners.commands.criteria import ICriteria, JobDescriptionOAICriteria
 from linkedin_jobs_search_helper.jobs.extract.scanners.commands.persist_data_command import PersistDataCommand
 from linkedin_jobs_search_helper.jobs.extract.scanners.linkedin.linkedin import JobsFilter, Linkedin, LinkedinStates
+import linkedin_jobs_search_helper.jobs.extract.scanners.settings as scanner_settings
 from linkedin_jobs_search_helper.jobs.infraestracture.persistance.file_persistance import FilePersistence
 from linkedin_jobs_search_helper.jobs.extract.scanners.linkedin.job_url_builder import SalaryCodes, LocationCodes, RemoteCodes
 from linkedin_jobs_search_helper.common.logger import configure_logging
 from linkedin_jobs_search_helper.common.openai_api import OpenAIClient
+from linkedin_jobs_search_helper.settings import Settings, get_settings
 
-PROJECT_ROOTDIR = pathlib.Path(__file__).parent.absolute()
 logger = logging.getLogger(__name__)
 
-with open("app_config1.yaml", "r") as f:
-    config = yaml.load(f, Loader=yaml.FullLoader)
+
+def load_config(app_config_path: Path) -> dict[str, Any]:
+    with app_config_path.open() as config_file:
+        return yaml.load(config_file, Loader=yaml.FullLoader)
 
 
-def config_to_job_filters(file_path: str = "app_config1.yaml") -> list[JobsFilter]:
-    # Use settings
-    with open(file_path, "r") as f:
-        config = yaml.load(f, Loader=yaml.FullLoader)
-
-        # TODO: This return part should be a service on its own, for reusability. However, not necessary for the nonce,
-        #  due to this is the only client available.
-
-        salary_or_none = lambda d, k: SalaryCodes[d[k]] if k in d else None
-        remote_opts = lambda d,k: [RemoteCodes[x] for x in d[k]]
-        return [
-            JobsFilter(
-                salary=salary_or_none(c, "minimum_salary"),
-                location=LocationCodes[c["location"]],
-                search_term=c["search_term"],
-                posted_days_ago=c["max_ad_days"],
-                remote=remote_opts(c, "remote")
-            ) for c in config["filters"]
-        ]
+def config_to_job_filters(config: dict) -> list[JobsFilter]:
+    # TODO: This return part should be a service on its own, for reusability. However, not necessary for the nonce,
+    #  due to this is the only client available.
+    salary_or_none = lambda d, k: SalaryCodes[d[k]] if k in d else None
+    remote_opts = lambda d,k: [RemoteCodes[x] for x in d[k]]
+    return [
+        JobsFilter(
+            salary=salary_or_none(c, "minimum_salary"),
+            location=LocationCodes[c["location"]],
+            search_term=c["search_term"],
+            posted_days_ago=c["max_ad_days"],
+            remote=remote_opts(c, "remote"),
+            max_jobs=c["max_jobs"],
+        ) for c in config["filters"]
+    ]
 
 
 # TODO: Add dependency_injector lib
@@ -57,7 +57,7 @@ def init_bot() -> WebDriver:
     return driver
 
 
-def init_discard_criteria() -> list[ICriteria]:
+def init_discard_criteria(config: dict) -> list[ICriteria]:
     system_message = """
         You will be provided with IT job descriptions and you will be asked many questions about it in order to know if I should discard this job offer or not. 
         Answer exclusively with a "yes" and "no". I do not want you to answer anything else than "yes" or "no", no explanation allowed.
@@ -70,7 +70,11 @@ def init_discard_criteria() -> list[ICriteria]:
 
 # TODO P2: Handle graceful stop
 def main():
-    configure_logging()
+    settings: Settings = get_settings()
+    app_config_path = scanner_settings.SCANNER_ROOT / 'linkedin' / "app_config1.yaml"
+    collected_jobs_dir = settings.project_root / "collected_jobs"
+    config = load_config(app_config_path)
+    configure_logging(log_dir=settings.logs_dir)
     chrome: WebDriver = init_bot()
 
     logger.info("Logging into linkedin.")
@@ -81,7 +85,7 @@ def main():
     )
     selenium_receiver = SeleniumReceiver(net_navigator=linkedin_scrapper.web_driver)
 
-    persistence_service = FilePersistence(base_path=str(PROJECT_ROOTDIR))
+    persistence_service = FilePersistence(collected_jobs_dir=collected_jobs_dir)
     persist_command = PersistDataCommand(
         net_navigator=selenium_receiver,
         persistence=persistence_service
@@ -90,7 +94,7 @@ def main():
         persist_command
     ]
     linkedin_scrapper.set_actions(state=LinkedinStates.ACTIVE_JOB_CARD, actions=actions)
-    job_filters = config_to_job_filters()
+    job_filters = config_to_job_filters(config)
 
     logger.info("""
     ----
@@ -102,7 +106,7 @@ def main():
         logger.info(jf)
         logger.info("############")
 
-    linkedin_scrapper(job_filters=job_filters, max_jobs=150)
+    linkedin_scrapper(job_filters=job_filters)
 
 
 if __name__ == "__main__":
