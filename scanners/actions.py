@@ -1,3 +1,4 @@
+import logging
 import time
 from dataclasses import dataclass
 from datetime import datetime
@@ -9,14 +10,15 @@ from selenium.webdriver.remote.webelement import WebElement
 
 from domain.notifier import Notifier
 from elements_paths import JobsElements
-from logger import app_logger
 from openai_api import OpenAIClient, RateLimitException
+
+logger = logging.getLogger(__name__)
 
 
 # TODO P2: change these lil bitches into Commands and inject dependencies.
 def print_job_title(element: WebDriver):
     job_title: str = element.find_element(By.CLASS_NAME, "job-card-list__title").text
-    app_logger.info(f"Job title = {job_title}")
+    logger.info(f"Job title = {job_title}")
 
 
 @dataclass
@@ -39,21 +41,21 @@ def ask_openai(openai_client: OpenAIClient, prelude: list[str], questions: list[
     try:
         for question in questions:
             answer = openai_client.chat_request(message=question)
-            app_logger.info(f"Question: {question}")
-            app_logger.info(f"ANSWER: {answer}")
+            logger.info(f"Question: {question}")
+            logger.info(f"ANSWER: {answer}")
     except RateLimitException as rle:
         # TODO: this is a retry policy. Should no bet here, move it into the client.
-        app_logger.warn("Openai API Rate limit reached 🤷.")
+        logger.warning("Openai API Rate limit reached 🤷.")
         remaining_time = 61
         while remaining_time > 0:
-            app_logger.warn(f"Let's wait {remaining_time}")
+            logger.warning(f"Let's wait {remaining_time}")
             time.sleep(min(remaining_time, 5))
             remaining_time -= 5
 
         answer = openai_client.chat_request(message=question)
     except Exception as e:
         # TODO: Ensure every action stores the result achieved.
-        app_logger.error(
+        logger.error(
             "Some unexpected error happened. Do not worry, previous work has been saved, next execution will"
             "continue from the prev last job."
         )
@@ -82,7 +84,7 @@ def discard_job(element: WebElement, criteria: str, notifier: Notifier, apply_cr
     res = apply_criteria(question=criteria.format(job_descr))
 
     answer: str = res["choices"][0]["message"]["content"]
-    app_logger.info(f"ANSWER: {answer}")
+    logger.info(f"ANSWER: {answer}")
 
     # To keep it cheap I use 3.5-turbo. Besides that, I want to get only True/False as response, but the only way
     # I've found to do that is specifying "this is a yes-no question" (pregunta directa total); exchanging
@@ -90,14 +92,14 @@ def discard_job(element: WebElement, criteria: str, notifier: Notifier, apply_cr
 
     # TODO: I need a simple response. RN depends on the message set in the app_config.yaml... It is not ideal.
     if answer.lower().strip(".") == "yes":
-        app_logger.info("DISCARDED")
+        logger.info("DISCARDED")
         # discard job
         element.find_element(By.CSS_SELECTOR, JobsElements.discard_selected_job_css).click()
     elif answer.lower().strip(".") == "no":
-            app_logger.info("NOT DISCARDED")
+            logger.info("NOT DISCARDED")
     else:
         # The model is returning an unexpected message (I request a yes-no response, but sometimes...)
-        app_logger.info("NOT DISCARDED - Because unexpected answer from OPENAI.")
+        logger.info("NOT DISCARDED - Because unexpected answer from OPENAI.")
         notifier.notify(f"{datetime.now()} - {answer}")
 
 

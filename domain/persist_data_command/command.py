@@ -5,7 +5,7 @@ from typing import ClassVar
 from domain.command import Command, CrawlerReceiver
 from infraestracture.persistance.file_persistance import FilePersistence, Job
 
-logger = logging.getLogger(__file__)
+logger = logging.getLogger(__name__)
 
 
 @dataclass

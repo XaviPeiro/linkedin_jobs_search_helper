@@ -6,7 +6,7 @@ from domain.command import Command, CrawlerReceiver
 from domain.criteria import ICriteria
 from domain.notifier import Notifier
 
-logger = logging.getLogger(__file__)
+logger = logging.getLogger(__name__)
 
 
 @dataclass

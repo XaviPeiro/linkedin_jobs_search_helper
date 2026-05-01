@@ -1,3 +1,4 @@
+import logging
 import sys
 import time
 from dataclasses import field, dataclass
@@ -18,8 +19,9 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 from elements_paths import LoginElements, JobsElements
 from job_url_builder import UrlGenerator, SalaryCodes, LocationCodes, RemoteCodes
-from logger import app_logger
 from scanners.utilities import element_exists
+
+logger = logging.getLogger(__name__)
 
 
 class LinkedinStates(StrEnum):
@@ -145,12 +147,12 @@ class Linkedin:
                 chance.
                 !!IT WILL BE NECESSARY ONLY ONCE!!
                 """
-                app_logger.error(message)
+                logger.error(message)
                 time.sleep(300)
                 # TODO: Detect if pin has been introduced in order to keep with the normal execution.
                 sys.exit()
         except Exception as e:
-            app_logger.error("Couldn't log in Linkedin! ☠ Check if any intermediate screen appeared and credentials.")
+            logger.error("Couldn't log in Linkedin! ☠ Check if any intermediate screen appeared and credentials.")
             raise e
 
     # TODO P2: Split navigation and parse/actions
@@ -178,7 +180,7 @@ class Linkedin:
 
         # TODO: ¿Iterate view items in the commands and just using crawlers to request data?
         job_cards = self.web_driver.find_elements(By.XPATH, JobsElements.all_not_dismissed_job_cards_xpath)
-        app_logger.info(f"scanning {len(job_cards)} elements from page {jobs_filter.pagination_offset // 25 + 1}")
+        logger.info(f"scanning {len(job_cards)} elements from page {jobs_filter.pagination_offset // 25 + 1}")
         job_card: WebElement
         for index, job_card in enumerate(reversed(job_cards)):
             # If it is the first element (the last on the document) the click is not fully working on the first click
@@ -190,9 +192,9 @@ class Linkedin:
             time.sleep(3)
 
             # STATE: Active job
-            app_logger.info("---------------------------------")
-            app_logger.info(f"Job number: {index}")
-            app_logger.info(f"Job URL: {self.web_driver.current_url}")
+            logger.info("---------------------------------")
+            logger.info(f"Job number: {index}")
+            logger.info(f"Job URL: {self.web_driver.current_url}")
 
             WebDriverWait(self.web_driver, timeout=30).until(
                 expected_conditions.presence_of_element_located((By.ID, "job-details"))
@@ -202,8 +204,8 @@ class Linkedin:
             for action in self._actions[LinkedinStates.ACTIVE_JOB_CARD]:
                 action()
                 # action(element=self.web_driver.find_element(By.CSS_SELECTOR, "div.scaffold-layout__list-detail-inner"))
-                app_logger.info("__ __\n")
-            app_logger.info("----------------------------------\n")
+                logger.info("__ __\n")
+            logger.info("----------------------------------\n")
         else:
             # next page
             # Apparently, LinkedIn's jobs per page is fixed to 25, so...

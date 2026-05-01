@@ -1,3 +1,4 @@
+import logging
 import pathlib
 
 import yaml
@@ -12,11 +13,12 @@ from domain.criteria import ICriteria, JobDescriptionOAICriteria
 from domain.persist_data_command import PersistDataCommand
 from infraestracture.persistance.file_persistance import FilePersistence
 from job_url_builder import SalaryCodes, LocationCodes, RemoteCodes
-from logger import app_logger
+from logger import configure_logging
 from openai_api import OpenAIClient
 from scanners.linkedin import LinkedinStates, Linkedin, JobsFilter
 
 PROJECT_ROOTDIR = pathlib.Path(__file__).parent.absolute()
+logger = logging.getLogger(__name__)
 
 with open("app_config1.yaml", "r") as f:
     config = yaml.load(f, Loader=yaml.FullLoader)
@@ -68,9 +70,10 @@ def init_discard_criteria() -> list[ICriteria]:
 
 # TODO P2: Handle graceful stop
 def main():
+    configure_logging()
     chrome: WebDriver = init_bot()
 
-    app_logger.info("Logging into linkedin.")
+    logger.info("Logging into linkedin.")
     linkedin_scrapper = Linkedin(
         web_driver=chrome,
         user=config["user"],
@@ -90,15 +93,15 @@ def main():
     linkedin_scrapper.set_actions(state=LinkedinStates.ACTIVE_JOB_CARD, actions=actions)
     job_filters = config_to_job_filters()
 
-    app_logger.info("""
+    logger.info("""
     ----
     🚀 Starting scrapping:
     ----
     """)
     for jf in job_filters:
-        app_logger.info("############")
-        app_logger.info(jf)
-        app_logger.info("############")
+        logger.info("############")
+        logger.info(jf)
+        logger.info("############")
 
     linkedin_scrapper(job_filters=job_filters, max_jobs=150)
 

@@ -1,11 +1,13 @@
+import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Union
 
 from components import notifier_unexpected_openai_response
-from logger import app_logger
 from openai_api import OpenAIClient
+
+logger = logging.getLogger(__name__)
 
 # Let's assume criteria is a text to search in the descr
 system_message = """
@@ -66,11 +68,10 @@ class JobDescriptionOAICriteria(ICriteria):
             bool_answer = self.any_yes_in_response(answer)
             res.append(bool_answer)
 
-            app_logger.info(f"Question: {criteria}")
-            app_logger.info(f"ANSWER: {answer}")
+            logger.info(f"Question: {criteria}")
+            logger.info(f"ANSWER: {answer}")
 
             self.open_ai_client.clear_chat()
 
         return res
-
 
