@@ -1,3 +1,3 @@
-from infraestracture.notifications.fs import FileSystemNotificator
+from linkedin_jobs_search_helper.infraestracture.notifications.fs import FileSystemNotificator
 
 notifier_unexpected_openai_response = FileSystemNotificator(filepath="logs/openai_unexpected_responses.txt")

@@ -3,7 +3,7 @@ name = "linkedin_jobs_search_helper"
 version = "0.1.0"
 description = ""
 authors = ["Strong Punch Xavier"]
-package-mode = false
+packages = [{ include = "linkedin_jobs_search_helper", from = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -23,7 +23,7 @@ pymongo = "^4.17.0"
 pytest = "^9.0.3"
 
 [tool.pytest.ini_options]
-pythonpath = ["."]
+pythonpath = ["src"]
 norecursedirs = ["docker/mongo/data"]
 
 [build-system]

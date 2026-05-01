@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from transform_jobs.language_detection import LanguageDetector
+from linkedin_jobs_search_helper.transform_jobs.language_detection import LanguageDetector
 
 
 @pytest.fixture(scope="module")

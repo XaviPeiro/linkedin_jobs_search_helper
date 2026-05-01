@@ -4,9 +4,12 @@ import json
 from pathlib import Path
 from typing import Any
 
-from transform_jobs.add_language.conf import ACCEPTED_INPUT_SUFFIX
-from transform_jobs.helpers.collected_jobs_parser import iter_json_objects, iter_collected_job_files
-from transform_jobs.language_detection import LanguageDetector
+from linkedin_jobs_search_helper.transform_jobs.add_language.conf import ACCEPTED_INPUT_SUFFIX
+from linkedin_jobs_search_helper.transform_jobs.helpers.collected_jobs_parser import (
+    iter_collected_job_files,
+    iter_json_objects,
+)
+from linkedin_jobs_search_helper.transform_jobs.language_detection import LanguageDetector
 
 
 class AddDescriptionLanguage:

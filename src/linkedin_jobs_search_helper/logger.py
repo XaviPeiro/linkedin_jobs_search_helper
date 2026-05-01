@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import logging
 from datetime import datetime
 from pathlib import Path
@@ -28,7 +26,8 @@ def configure_logging(
     log_file = log_dir / f"{datetime.now():%Y-%m-%d_%H-%M-%S}.log"
 
     root_logger = logging.getLogger()
-    root_logger.setLevel(min(console_level, file_level))
+    lowest_enabled_level = min(console_level, file_level)
+    root_logger.setLevel(lowest_enabled_level)
 
     file_handler = logging.FileHandler(log_file, encoding="utf-8")
     file_handler.setLevel(file_level)

@@ -8,14 +8,14 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.webdriver import WebDriver
 from webdriver_manager.chrome import ChromeDriverManager
 
-from domain.command import SeleniumReceiver, Command
-from domain.criteria import ICriteria, JobDescriptionOAICriteria
-from domain.persist_data_command import PersistDataCommand
-from infraestracture.persistance.file_persistance import FilePersistence
-from job_url_builder import SalaryCodes, LocationCodes, RemoteCodes
-from logger import configure_logging
-from openai_api import OpenAIClient
-from scanners.linkedin import LinkedinStates, Linkedin, JobsFilter
+from linkedin_jobs_search_helper.domain.command import SeleniumReceiver, Command
+from linkedin_jobs_search_helper.domain.criteria import ICriteria, JobDescriptionOAICriteria
+from linkedin_jobs_search_helper.domain.persist_data_command import PersistDataCommand
+from linkedin_jobs_search_helper.infraestracture.persistance.file_persistance import FilePersistence
+from linkedin_jobs_search_helper.job_url_builder import SalaryCodes, LocationCodes, RemoteCodes
+from linkedin_jobs_search_helper.logger import configure_logging
+from linkedin_jobs_search_helper.openai_api import OpenAIClient
+from linkedin_jobs_search_helper.scanners.linkedin import LinkedinStates, Linkedin, JobsFilter
 
 PROJECT_ROOTDIR = pathlib.Path(__file__).parent.absolute()
 logger = logging.getLogger(__name__)

@@ -17,9 +17,9 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 
-from elements_paths import LoginElements, JobsElements
-from job_url_builder import UrlGenerator, SalaryCodes, LocationCodes, RemoteCodes
-from scanners.utilities import element_exists
+from linkedin_jobs_search_helper.elements_paths import LoginElements, JobsElements
+from linkedin_jobs_search_helper.job_url_builder import UrlGenerator, SalaryCodes, LocationCodes, RemoteCodes
+from linkedin_jobs_search_helper.scanners.utilities import element_exists
 
 logger = logging.getLogger(__name__)
 

@@ -1,6 +1,6 @@
 from typing import Optional
 
-from domain.notifier import Notifier
+from linkedin_jobs_search_helper.domain.notifier import Notifier
 
 
 class FakeNotifierMessageExecutor(Notifier):
