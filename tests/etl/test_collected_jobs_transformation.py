@@ -1,12 +1,18 @@
 import json
 
-from etl.collected_jobs_transformation import AddDescriptionLanguage
+from transform_jobs.add_language import AddDescriptionLanguage
+from transform_jobs.language_detection import LanguageDetector
 
 
 def test_add_description_language_reads_jobs_and_persists_one_output(tmp_path):
     collected_jobs_dir = tmp_path / "collected_jobs" / "2026-04-30"
     collected_jobs_dir.mkdir(parents=True)
-    (collected_jobs_dir / "execution#0.json").write_text(
+    job_lang_map = {
+        1: "en",
+        2: "pl",
+        3: "fr",
+    }
+    (collected_jobs_dir / "execution#0.jsonl").write_text(
         "\n".join(
             [
                 json.dumps(
@@ -28,7 +34,7 @@ def test_add_description_language_reads_jobs_and_persists_one_output(tmp_path):
             ]
         )
     )
-    (collected_jobs_dir / "execution#1.json").write_text(
+    (collected_jobs_dir / "execution#1.jsonl").write_text(
         json.dumps(
             {
                 "id": 3,
@@ -43,6 +49,7 @@ def test_add_description_language_reads_jobs_and_persists_one_output(tmp_path):
     AddDescriptionLanguage(
         input_path=collected_jobs_dir,
         output_path=output_file,
+        language_detector=LanguageDetector(),
     )()
 
     transformed_jobs = [
@@ -51,13 +58,11 @@ def test_add_description_language_reads_jobs_and_persists_one_output(tmp_path):
         if line.strip()
     ]
 
-    assert transformed_jobs[0]["description_language"] == "en"
-    assert transformed_jobs[1]["description_language"] == "pl"
-    assert transformed_jobs[2]["description_language"] == "fr"
-
+    for t in transformed_jobs:
+        assert t['description_language'] == job_lang_map[t['id']]
 
 def test_add_description_language_accepts_one_input_file(tmp_path):
-    input_file = tmp_path / "execution#0.json"
+    input_file = tmp_path / "execution#0.jsonl"
     output_file = tmp_path / "transformed" / "jobs.json"
     input_file.write_text(
         json.dumps(
@@ -73,6 +78,7 @@ def test_add_description_language_accepts_one_input_file(tmp_path):
     AddDescriptionLanguage(
         input_path=input_file,
         output_path=output_file,
+        language_detector=LanguageDetector(),
     )()
 
     transformed_job = json.loads(output_file.read_text())

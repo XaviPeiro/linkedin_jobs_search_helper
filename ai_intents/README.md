@@ -79,10 +79,7 @@ db.external_jobs.find(
 
 Read all files under `collected_jobs/YYYY-MM-DD/*.{json,txt}`.
 
-Support both formats already present in the repository:
-
-- JSONL: one JSON object per line.
-- Concatenated JSON objects: multiple JSON objects in the same line or file.
+Support JSONL input: one JSON object per non-empty line.
 
 Validate each source row with Pydantic before storing:
 
@@ -127,7 +124,6 @@ Upsert by `{ platform, ejib }`:
 Parser tests:
 
 - Parses JSONL files.
-- Parses concatenated JSON object files.
 - Reports invalid JSON without stopping the whole ingestion run.
 
 Validation tests:

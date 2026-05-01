@@ -1,9 +1,8 @@
 import json
-from pathlib import Path
 
 import pytest
 
-from etl.language_detection import LanguageDetector
+from transform_jobs.language_detection import LanguageDetector
 
 
 @pytest.fixture(scope="module")

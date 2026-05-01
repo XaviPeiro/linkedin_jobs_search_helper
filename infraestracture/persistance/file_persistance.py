@@ -25,7 +25,7 @@ class FilePersistence:
         self._logs_dir = Path(f'{self.base_path}/collected_jobs/{day}/')
 
         number: int = self._get_files_number(self._logs_dir)
-        path = self._logs_dir.joinpath(f"execution#{number}.json")
+        path = self._logs_dir.joinpath(f"execution#{number}.jsonl")
         path.parent.mkdir(parents=True, exist_ok=True)
         self.persistence_file_path = path
 

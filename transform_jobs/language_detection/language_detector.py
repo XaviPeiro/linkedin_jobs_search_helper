@@ -33,6 +33,9 @@ class DetectedLanguage:
 
 
 class LanguageDetector:
+    _supported_languages: set[str]
+    _top_k: int
+
     def __init__(
         self,
         supported_languages: Iterable[str] | None = None,

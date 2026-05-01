@@ -43,7 +43,7 @@ Build a first ingestion pipeline for already collected job data that validates e
 
 **Ingestion Behavior**
 - Read all files under `collected_jobs/YYYY-MM-DD/*.{json,txt}`.
-- Support both proper JSONL and older concatenated JSON-object files using `json.JSONDecoder.raw_decode`.
+- Support JSONL input: one JSON object per non-empty line.
 - Validate each source row with Pydantic:
   - required: `id`, `url`, `description`, `title`
   - `url` must be a valid URL
@@ -62,7 +62,6 @@ Build a first ingestion pipeline for already collected job data that validates e
 **Tests**
 - Unit tests for source parsing:
   - JSONL rows parse correctly.
-  - Concatenated JSON rows parse correctly.
   - Bad rows are reported, not fatal.
 - Unit tests for validation:
   - missing `id`, bad URL, empty title, and empty description fail validation.
