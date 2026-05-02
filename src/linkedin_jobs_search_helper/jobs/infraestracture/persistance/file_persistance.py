@@ -2,14 +2,16 @@ import os
 from datetime import date
 from pathlib import Path
 from os import PathLike
+from typing import Any
 
-from pydantic import BaseModel, AnyHttpUrl
+from pydantic import BaseModel, AnyHttpUrl, Field
 
 class Job(BaseModel):
     id: int
     description: str
     title: str
     url: AnyHttpUrl
+    extra_data: dict[str, Any] = Field(default_factory=dict)
 
 class FilePersistence:
     persistence_file_path: Path

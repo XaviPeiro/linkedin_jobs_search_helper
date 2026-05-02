@@ -17,7 +17,9 @@ class JobsElements(ElementsPaths):
     discard_selected_job_css: str = ".jobs-search-results-list__list-item--active div.job-card-list__dismiss > button"
     selected_job_css: str = ".jobs-search-results-list__list-item--active"
     job_card_title_css: str = ".job-details-jobs-unified-top-card__job-title"
+    job_top_card_tertiary_description_css: str = (
+        ".job-details-jobs-unified-top-card__tertiary-description-container"
+    )
     discarded_job_card_css = ".job-card-list--is-dismissed"
     selected_job_card_title_css: str = selected_job_css + " " + job_card_title_css
     # job
-

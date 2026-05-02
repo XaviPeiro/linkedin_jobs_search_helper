@@ -25,6 +25,7 @@ class PersistDataCommand(Command):
                 "url": self.net_navigator.get_url(),
                 "description": self.net_navigator.get_job_description(),
                 "title": self.net_navigator.get_job_title(),
+                "extra_data": self.net_navigator.get_extra_data(),
             }
         )
         self.persistence(job)

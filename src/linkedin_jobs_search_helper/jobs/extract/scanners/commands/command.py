@@ -1,12 +1,17 @@
+import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from typing import Any
 
+from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 
 from linkedin_jobs_search_helper.jobs.extract.scanners.linkedin.elements_paths import JobsElements
+
+logger = logging.getLogger(__name__)
 
 class CrawlerReceiver(ABC):
     # net_navigator: Any
@@ -32,6 +37,10 @@ class CrawlerReceiver(ABC):
 
     @abstractmethod
     def get_job_id(self) -> str:
+        ...
+
+    @abstractmethod
+    def get_extra_data(self) -> dict[str, Any]:
         ...
 
 
@@ -77,3 +86,17 @@ class SeleniumReceiver(CrawlerReceiver):
 
     def get_job_id(self) -> str:
         return self.net_navigator.find_element(By.CSS_SELECTOR, JobsElements.selected_job_css).get_attribute("data-job-id")
+
+    def get_extra_data(self) -> dict[str, Any]:
+        try:
+            top_card_tertiary_description = self.net_navigator.find_element(
+                By.CSS_SELECTOR,
+                JobsElements.job_top_card_tertiary_description_css,
+            ).text.strip()
+        except NoSuchElementException:
+            logger.warning(f"No extra data found for job {self.get_job_id()}")
+            top_card_tertiary_description = ""
+
+        return {
+            "top_card_tertiary_description": top_card_tertiary_description,
+        }
