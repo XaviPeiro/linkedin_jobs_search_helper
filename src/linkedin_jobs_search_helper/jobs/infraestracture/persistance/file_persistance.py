@@ -7,9 +7,9 @@ from pydantic import BaseModel, AnyHttpUrl
 
 class Job(BaseModel):
     id: int
-    url: AnyHttpUrl
     description: str
     title: str
+    url: AnyHttpUrl
 
 class FilePersistence:
     persistence_file_path: Path
