@@ -44,7 +44,7 @@ def test_add_description_language_reads_jobs_and_persists_one_output(tmp_path):
             }
         )
     )
-    output_file = collected_jobs_dir / "transformed" / "jobs.json"
+    output_file = collected_jobs_dir / "1-descr-language-added" / "jobs.json"
 
     AddDescriptionLanguage(
         input_path=collected_jobs_dir,
@@ -63,7 +63,7 @@ def test_add_description_language_reads_jobs_and_persists_one_output(tmp_path):
 
 def test_add_description_language_accepts_one_input_file(tmp_path):
     input_file = tmp_path / "execution#0.jsonl"
-    output_file = tmp_path / "transformed" / "jobs.json"
+    output_file = tmp_path / "1-descr-language-added" / "jobs.json"
     input_file.write_text(
         json.dumps(
             {
