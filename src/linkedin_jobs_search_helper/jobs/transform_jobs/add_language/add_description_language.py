@@ -10,7 +10,9 @@ from linkedin_jobs_search_helper.jobs.transform_jobs.helpers.collected_jobs_pars
     iter_json_objects,
 )
 from linkedin_jobs_search_helper.jobs.transform_jobs.language_detection import LanguageDetector
+import logging
 
+logger = logging.getLogger(__name__)
 
 class AddDescriptionLanguage:
     def __init__(
@@ -25,18 +27,20 @@ class AddDescriptionLanguage:
 
     def __call__(self) -> None:
         self.output_path.parent.mkdir(parents=True, exist_ok=True)
-
-        print("hello2")
+        jobs_counter: int = 0
         with self.output_path.open("w") as output_file:
-            print("hello3")
             for input_file in iter_collected_job_files(self.input_path, ACCEPTED_INPUT_SUFFIX):
-                print(input_file)
-                print("hello3")
                 for job in iter_json_objects(input_file.read_text()):
+                    jobs_counter += 1
                     enriched_job = self._add_description_language(job)
-                    print(enriched_job)
                     output_file.write(json.dumps(enriched_job, ensure_ascii=False))
                     output_file.write("\n")
+
+        logger.info("🟢Successfully added description language")
+        logger.info(f"🥤Jobs processed: {jobs_counter}")
+        logger.info(f"📁Find results in: {self.output_path}")
+        logger.info("🤖Sayonara, baby.")
+
 
     def _add_description_language(self, job: dict[str, Any]) -> dict[str, Any]:
         description = str(job.get("description", ""))

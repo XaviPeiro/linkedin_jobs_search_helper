@@ -23,7 +23,7 @@ class FilePersistence:
         self.collected_jobs_dir = Path(collected_jobs_dir)
 
         day = str(date.today())
-        self._logs_dir = self.collected_jobs_dir / day
+        self._logs_dir = self.collected_jobs_dir / day / 'raw'
 
         number: int = self._get_files_number(self._logs_dir)
         path = self._logs_dir.joinpath(f"execution#{number}.jsonl")
