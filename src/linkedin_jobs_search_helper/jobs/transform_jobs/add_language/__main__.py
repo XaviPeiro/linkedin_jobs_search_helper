@@ -12,8 +12,8 @@ logger = logging.getLogger(__name__)
 
 
 def main() -> None:
-    configure_logging()
 
+    # to the enntrypoint
     parser = argparse.ArgumentParser()
     parser.add_argument("input_path", type=Path)
     parser.add_argument("--output", type=Path)
@@ -33,4 +33,5 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    configure_logging()
     main()
