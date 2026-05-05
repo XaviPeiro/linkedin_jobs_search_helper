@@ -23,7 +23,7 @@ def main(input_path: Path | None = None, output_path: Path | None = None) -> Non
         output_path = args.output
 
     default_output_dir = input_path.parent if input_path.is_file() else input_path
-    output_path = output_path or default_output_dir / "2-posting-metadata-added" / "jobs.json"
+    output_path = output_path or default_output_dir / "2-posting-metadata-added" / "jobs.jsonl"
     logger.debug(f"Output path: {output_path}")
     logger.debug(f"Input path: {input_path}")
 

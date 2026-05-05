@@ -20,7 +20,7 @@ def main() -> None:
     args = parser.parse_args()
 
     default_output_dir = args.input_path.parent if args.input_path.is_file() else args.input_path
-    output_path = args.output or default_output_dir / "1-descr-language-added" / "jobs.json"
+    output_path = args.output or default_output_dir / "1-descr-language-added" / "jobs.jsonl"
     logger.debug(f"Output path: {output_path}")
     logger.debug(f"Input path: {args.input_path}")
 

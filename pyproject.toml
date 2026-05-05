@@ -8,6 +8,7 @@ packages = [{ include = "linkedin_jobs_search_helper", from = "src" }]
 [tool.poetry.scripts]
 in-scan = "linkedin_jobs_search_helper.jobs.extract.scanners.linkedin.main:main"
 add-posting-metadata = "linkedin_jobs_search_helper.jobs.transform_jobs.add_posting_metadata.__main__:main"
+create-batch = "linkedin_jobs_search_helper.jobs.transform_jobs.create_batch.__main__:main"
 
 [tool.poetry.dependencies]
 python = "^3.11"

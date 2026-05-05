@@ -1,15 +1,15 @@
 import json
 import os
-import uuid
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
-from urllib.error import HTTPError
-from urllib.request import Request, urlopen
+from typing import Any, Literal
+from openai import OpenAI
+from openai.lib._parsing import type_to_response_format_param
 
+from linkedin_jobs_search_helper.jobs.evaluate.job_evaluation import JobEvaluation
 
-CHAT_COMPLETIONS_BATCH_ENDPOINT = "/v1/chat/completions"
-DEFAULT_COMPLETION_WINDOW = "24h"
+CHAT_COMPLETIONS_BATCH_ENDPOINT: Literal["/v1/chat/completions"] = "/v1/chat/completions"
+DEFAULT_COMPLETION_WINDOW: Literal["24h"] = "24h"
 
 
 class OpenAIBatchClientError(Exception):
@@ -25,17 +25,10 @@ class StoredBatchJob:
 
 
 class OpenAIBatchClient:
-    def __init__(self, api_key: str, base_url: str = "https://api.openai.com/v1"):
-        self.api_key = api_key
-        self.base_url = base_url.rstrip("/")
+    client: OpenAI
 
-    @classmethod
-    def from_env(cls) -> "OpenAIBatchClient":
-        api_key = os.getenv("OPENAI_API_KEY")
-        if not api_key:
-            raise OpenAIBatchClientError("OPENAI_API_KEY is not set")
-
-        return cls(api_key=api_key)
+    def __init__(self, client: OpenAI):
+        self.client = client
 
     def create_chat_completion_batch(
         self,
@@ -44,6 +37,7 @@ class OpenAIBatchClient:
         instruction: str,
         model: str,
         storage_dir: Path,
+        sources: list[dict[str, str]] | None = None,
     ) -> StoredBatchJob:
         storage_dir.mkdir(parents=True, exist_ok=True)
         batch_input_jsonl_path = storage_dir / f"{input_jsonl_path.stem}.batch-input.jsonl"
@@ -52,70 +46,48 @@ class OpenAIBatchClient:
             output_jsonl_path=batch_input_jsonl_path,
             instruction=instruction,
             model=model,
+            sources=sources or [],
         )
 
-        uploaded_file = self.upload_batch_file(batch_input_jsonl_path)
-        batch = self.create_batch(
-            input_file_id=uploaded_file["id"],
+        batch_input_file = self.upload_batch_file(batch_input_jsonl_path)
+        batch =  self.client.batches.create(
+            input_file_id=batch_input_file.id,
             endpoint=CHAT_COMPLETIONS_BATCH_ENDPOINT,
+            completion_window=DEFAULT_COMPLETION_WINDOW,
         )
-        manifest_path = storage_dir / f"{batch['id']}.json"
+        manifest_path = storage_dir / f"{batch.id}.json"
         _write_json(
             manifest_path,
             {
-                "batch_id": batch["id"],
-                "input_file_id": uploaded_file["id"],
+                "batch_id": batch.id,
+                "input_file_id": batch_input_file.id,
                 "input_jsonl_path": str(input_jsonl_path),
                 "batch_input_jsonl_path": str(batch_input_jsonl_path),
-                "batch": batch,
+                "batch": _model_to_dict(batch),
             },
         )
 
         return StoredBatchJob(
             manifest_path=manifest_path,
-            batch_id=batch["id"],
+            batch_id=batch.id,
             input_jsonl_path=input_jsonl_path,
             batch_input_jsonl_path=batch_input_jsonl_path,
         )
 
-    def upload_batch_file(self, path: Path) -> dict[str, Any]:
-        boundary = f"----linkedin-jobs-search-helper-{uuid.uuid4().hex}"
-        body = _multipart_form_data(
-            boundary=boundary,
-            fields={"purpose": "batch"},
-            files={"file": path},
-        )
-        return self._request_json(
-            method="POST",
-            path="/files",
-            body=body,
-            headers={"Content-Type": f"multipart/form-data; boundary={boundary}"},
-        )
+    def upload_batch_file(self, path: Path) -> Any:
+        with path.open("rb") as batch_input_file:
+            return self.client.files.create(
+                file=batch_input_file,
+                purpose="batch",
+            )
 
-    def create_batch(
-        self,
-        *,
-        input_file_id: str,
-        endpoint: str = CHAT_COMPLETIONS_BATCH_ENDPOINT,
-        completion_window: str = DEFAULT_COMPLETION_WINDOW,
-    ) -> dict[str, Any]:
-        return self._request_json(
-            method="POST",
-            path="/batches",
-            json_body={
-                "input_file_id": input_file_id,
-                "endpoint": endpoint,
-                "completion_window": completion_window,
-            },
-        )
-
-    def retrieve_batch(self, batch_id: str) -> dict[str, Any]:
-        return self._request_json(method="GET", path=f"/batches/{batch_id}")
+    def retrieve_batch(self, batch_id: str) -> Any:
+        return self.client.batches.retrieve(batch_id)
 
     def refresh_manifest(self, manifest_path: Path) -> dict[str, Any]:
         manifest = _read_json(manifest_path)
         batch = self.retrieve_batch(manifest["batch_id"])
-        manifest["batch"] = batch
+        manifest["batch"] = _model_to_dict(batch)
         _write_json(manifest_path, manifest)
         return manifest
 
@@ -147,53 +119,7 @@ class OpenAIBatchClient:
         return manifest
 
     def download_file_content(self, file_id: str) -> bytes:
-        return self._request_bytes(method="GET", path=f"/files/{file_id}/content")
-
-    def _request_json(
-        self,
-        *,
-        method: str,
-        path: str,
-        json_body: dict[str, Any] | None = None,
-        body: bytes | None = None,
-        headers: dict[str, str] | None = None,
-    ) -> dict[str, Any]:
-        if json_body is not None:
-            body = json.dumps(json_body).encode("utf-8")
-            headers = {"Content-Type": "application/json", **(headers or {})}
-
-        response_body = self._request_bytes(
-            method=method,
-            path=path,
-            body=body,
-            headers=headers,
-        )
-        return json.loads(response_body.decode("utf-8"))
-
-    def _request_bytes(
-        self,
-        *,
-        method: str,
-        path: str,
-        body: bytes | None = None,
-        headers: dict[str, str] | None = None,
-    ) -> bytes:
-        request = Request(
-            url=f"{self.base_url}{path}",
-            data=body,
-            method=method,
-            headers={
-                "Authorization": f"Bearer {self.api_key}",
-                **(headers or {}),
-            },
-        )
-
-        try:
-            with urlopen(request) as response:
-                return response.read()
-        except HTTPError as exc:
-            error_body = exc.read().decode("utf-8", errors="replace")
-            raise OpenAIBatchClientError(f"OpenAI API request failed: {exc.code} {error_body}") from exc
+        return self.client.files.content(file_id).text.encode("utf-8")
 
 
 def write_chat_completion_batch_input(
@@ -202,8 +128,10 @@ def write_chat_completion_batch_input(
     output_jsonl_path: Path,
     instruction: str,
     model: str,
+    sources: list[dict[str, str]] | None = None,
 ) -> None:
     output_jsonl_path.parent.mkdir(parents=True, exist_ok=True)
+    sources = sources or []
     with input_jsonl_path.open() as input_file, output_jsonl_path.open("w") as output_file:
         request_number = 0
         for line in input_file:
@@ -223,9 +151,16 @@ def write_chat_completion_batch_input(
                 "url": CHAT_COMPLETIONS_BATCH_ENDPOINT,
                 "body": {
                     "model": model,
+                    "response_format": type_to_response_format_param(JobEvaluation),
                     "messages": [
                         {"role": "system", "content": instruction},
-                        {"role": "user", "content": json.dumps(job, ensure_ascii=False)},
+                        {
+                            "role": "user",
+                            "content": json.dumps(
+                                {"sources": sources, "job": job},
+                                ensure_ascii=False,
+                            ),
+                        },
                     ],
                 },
             }
@@ -238,36 +173,6 @@ def _custom_id_for_job(*, job: dict[str, Any], request_number: int) -> str:
     return f"job-{request_number}-{job_id}"
 
 
-def _multipart_form_data(*, boundary: str, fields: dict[str, str], files: dict[str, Path]) -> bytes:
-    chunks: list[bytes] = []
-    for name, value in fields.items():
-        chunks.extend(
-            [
-                f"--{boundary}\r\n".encode("utf-8"),
-                f'Content-Disposition: form-data; name="{name}"\r\n\r\n'.encode("utf-8"),
-                value.encode("utf-8"),
-                b"\r\n",
-            ]
-        )
-
-    for name, path in files.items():
-        chunks.extend(
-            [
-                f"--{boundary}\r\n".encode("utf-8"),
-                (
-                    f'Content-Disposition: form-data; name="{name}"; '
-                    f'filename="{path.name}"\r\n'
-                ).encode("utf-8"),
-                b"Content-Type: application/octet-stream\r\n\r\n",
-                path.read_bytes(),
-                b"\r\n",
-            ]
-        )
-
-    chunks.append(f"--{boundary}--\r\n".encode("utf-8"))
-    return b"".join(chunks)
-
-
 def _read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text())
 
@@ -275,3 +180,13 @@ def _read_json(path: Path) -> dict[str, Any]:
 def _write_json(path: Path, data: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False))
+
+
+def _model_to_dict(model: Any) -> dict[str, Any]:
+    if hasattr(model, "model_dump"):
+        return model.model_dump(mode="json")
+
+    if isinstance(model, dict):
+        return model
+
+    return dict(model)
