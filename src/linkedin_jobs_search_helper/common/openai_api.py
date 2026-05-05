@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Self
 
-import openai
+from openai import APIStatusError, OpenAI, RateLimitError
 
 
 class RateLimitException(Exception):
@@ -13,9 +13,10 @@ class OpenAIClient:
     secret: str
     _system: dict[str, str] = field(init=False, default_factory=lambda: {"system": ""})
     _chat_context: list[dict] = field(init=False, default_factory=list)
+    _client: OpenAI = field(init=False)
 
     def __post_init__(self):
-        openai.api_key = self.secret
+        self._client = OpenAI(api_key=self.secret)
 
     @classmethod
     def init_with_role(cls, secret: str, message: str) -> Self:
@@ -30,7 +31,7 @@ class OpenAIClient:
         #  (the response does not include any ID to the created chat.)
 
         try:
-            response = openai.ChatCompletion.create(
+            response = self._client.chat.completions.create(
                 # model="gpt-3.5-turbo",
                 model="gpt-3.5-turbo",
                 messages=messages,
@@ -40,9 +41,9 @@ class OpenAIClient:
                 frequency_penalty=0,
                 presence_penalty=0
             )
-        except openai.error.RateLimitError as rate_limit_e:
+        except RateLimitError as rate_limit_e:
             raise RateLimitException from rate_limit_e
-        except openai.error.ServiceUnavailableError as sue:
+        except APIStatusError as sue:
             # TODO: maybe wait or retry policy, by the moment only making this usecase obvious.
             raise sue
         except Exception as e:
@@ -77,7 +78,7 @@ class OpenAIClient:
     def chat_request(self, message: str):
         self.add_message(message=message)
         res = self._request(messages=self._chat_context)
-        answer = res["choices"][0]["message"]["content"]
+        answer = res.choices[0].message.content
         self._chat_context.append({"role": "assistant", "content": f"{answer}"})
 
         return answer
