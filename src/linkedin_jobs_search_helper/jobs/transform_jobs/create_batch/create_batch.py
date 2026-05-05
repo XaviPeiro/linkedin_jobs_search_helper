@@ -1,8 +1,10 @@
 from pathlib import Path
 
+from dotenv import load_dotenv
 from openai import OpenAI
 
 from linkedin_jobs_search_helper.common.openai_batch_client import (
+    DEFAULT_JOBS_PER_REQUEST,
     OpenAIBatchClient,
     StoredBatchJob,
 )
@@ -16,6 +18,7 @@ class CreateBatch:
         instruction: str,
         model: str,
         sources_path: Path | None = None,
+        jobs_per_request: int = DEFAULT_JOBS_PER_REQUEST,
         openai_client: OpenAI | None = None,
     ):
         self.input_path = input_path
@@ -23,6 +26,8 @@ class CreateBatch:
         self.instruction = instruction
         self.model = model
         self.sources_path = sources_path
+        self.jobs_per_request = jobs_per_request
+        load_dotenv()
         self.openai_client = openai_client or OpenAI()
 
     def __call__(self) -> StoredBatchJob:
@@ -32,6 +37,7 @@ class CreateBatch:
             model=self.model,
             storage_dir=self.output_dir,
             sources=read_source_documents(self.sources_path),
+            jobs_per_request=self.jobs_per_request,
         )
 
 

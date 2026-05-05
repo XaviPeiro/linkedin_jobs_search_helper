@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Self
 
+from dotenv import load_dotenv
 from openai import APIStatusError, OpenAI, RateLimitError
 
 
@@ -10,16 +11,17 @@ class RateLimitException(Exception):
 
 @dataclass
 class OpenAIClient:
-    secret: str
+    secret: str | None
     _system: dict[str, str] = field(init=False, default_factory=lambda: {"system": ""})
     _chat_context: list[dict] = field(init=False, default_factory=list)
     _client: OpenAI = field(init=False)
 
     def __post_init__(self):
-        self._client = OpenAI(api_key=self.secret)
+        load_dotenv()
+        self._client = OpenAI(api_key=self.secret or None)
 
     @classmethod
-    def init_with_role(cls, secret: str, message: str) -> Self:
+    def init_with_role(cls, secret: str | None, message: str) -> Self:
         instance: Self = cls(secret=secret)
         instance._system = {"role": "system", "content": f"{message}"}
 

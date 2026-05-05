@@ -46,11 +46,11 @@ def test_create_batch_creates_openai_batch_manifest(tmp_path):
     assert stored_batch.batch_id == "batch_123"
     assert manifest["batch_id"] == "batch_123"
     assert batch_request["body"]["model"] == "gpt-4o-mini"
-    assert batch_request["body"]["response_format"]["json_schema"]["name"] == "JobEvaluation"
+    assert batch_request["body"]["response_format"]["json_schema"]["name"] == "JobEvaluations"
     user_payload = json.loads(batch_request["body"]["messages"][1]["content"])
 
     assert batch_request["body"]["messages"][0]["content"] == "Extract structured job data."
-    assert user_payload["job"]["id"] == 4409802662
+    assert user_payload["jobs"][0]["id"] == 4409802662
     assert user_payload["sources"] == [
         {"name": "cv.md", "content": "Python developer CV"},
         {"name": "user_preferences.md", "content": "Remote Python jobs"},
@@ -66,7 +66,7 @@ def test_create_batch_main_reads_instruction_from_file(tmp_path, monkeypatch):
     calls = []
 
     class FakeCreateBatch:
-        def __init__(self, *, input_path, output_dir, instruction, model, sources_path):
+        def __init__(self, *, input_path, output_dir, instruction, model, sources_path, jobs_per_request):
             calls.append(
                 {
                     "input_path": input_path,
@@ -74,6 +74,7 @@ def test_create_batch_main_reads_instruction_from_file(tmp_path, monkeypatch):
                     "instruction": instruction,
                     "model": model,
                     "sources_path": sources_path,
+                    "jobs_per_request": jobs_per_request,
                 }
             )
 
@@ -102,6 +103,7 @@ def test_create_batch_main_reads_instruction_from_file(tmp_path, monkeypatch):
             "instruction": "Extract structured job data from this posting.",
             "model": "gpt-4o-mini",
             "sources_path": tmp_path / "user_data",
+            "jobs_per_request": 10,
         }
     ]
 

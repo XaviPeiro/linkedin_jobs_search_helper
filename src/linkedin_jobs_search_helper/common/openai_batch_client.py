@@ -6,10 +6,11 @@ from typing import Any, Literal
 from openai import OpenAI
 from openai.lib._parsing import type_to_response_format_param
 
-from linkedin_jobs_search_helper.jobs.evaluate.job_evaluation import JobEvaluation
+from linkedin_jobs_search_helper.jobs.evaluate.job_evaluation import JobEvaluations
 
 CHAT_COMPLETIONS_BATCH_ENDPOINT: Literal["/v1/chat/completions"] = "/v1/chat/completions"
 DEFAULT_COMPLETION_WINDOW: Literal["24h"] = "24h"
+DEFAULT_JOBS_PER_REQUEST = 10
 
 
 class OpenAIBatchClientError(Exception):
@@ -38,6 +39,7 @@ class OpenAIBatchClient:
         model: str,
         storage_dir: Path,
         sources: list[dict[str, str]] | None = None,
+        jobs_per_request: int = DEFAULT_JOBS_PER_REQUEST,
     ) -> StoredBatchJob:
         storage_dir.mkdir(parents=True, exist_ok=True)
         batch_input_jsonl_path = storage_dir / f"{input_jsonl_path.stem}.batch-input.jsonl"
@@ -47,6 +49,7 @@ class OpenAIBatchClient:
             instruction=instruction,
             model=model,
             sources=sources or [],
+            jobs_per_request=jobs_per_request,
         )
 
         batch_input_file = self.upload_batch_file(batch_input_jsonl_path)
@@ -129,35 +132,30 @@ def write_chat_completion_batch_input(
     instruction: str,
     model: str,
     sources: list[dict[str, str]] | None = None,
+    jobs_per_request: int = DEFAULT_JOBS_PER_REQUEST,
 ) -> None:
+    if jobs_per_request < 1:
+        raise ValueError("jobs_per_request must be greater than 0")
+
     output_jsonl_path.parent.mkdir(parents=True, exist_ok=True)
     sources = sources or []
-    with input_jsonl_path.open() as input_file, output_jsonl_path.open("w") as output_file:
-        request_number = 0
-        for line in input_file:
-            stripped_line = line.strip()
-            if not stripped_line:
-                continue
+    jobs = list(_iter_jobs(input_jsonl_path))
 
-            job = json.loads(stripped_line)
-            if not isinstance(job, dict):
-                raise ValueError("Expected one JSON object per JSONL line")
-
-            request_number += 1
-            custom_id = _custom_id_for_job(job=job, request_number=request_number)
+    with output_jsonl_path.open("w") as output_file:
+        for request_number, jobs_chunk in enumerate(_chunks(jobs, jobs_per_request), start=1):
             request_body = {
-                "custom_id": custom_id,
+                "custom_id": f"jobs-{request_number}",
                 "method": "POST",
                 "url": CHAT_COMPLETIONS_BATCH_ENDPOINT,
                 "body": {
                     "model": model,
-                    "response_format": type_to_response_format_param(JobEvaluation),
+                    "response_format": type_to_response_format_param(JobEvaluations),
                     "messages": [
                         {"role": "system", "content": instruction},
                         {
                             "role": "user",
                             "content": json.dumps(
-                                {"sources": sources, "job": job},
+                                {"sources": sources, "jobs": jobs_chunk},
                                 ensure_ascii=False,
                             ),
                         },
@@ -168,9 +166,25 @@ def write_chat_completion_batch_input(
             output_file.write("\n")
 
 
-def _custom_id_for_job(*, job: dict[str, Any], request_number: int) -> str:
-    job_id = job.get("id") or "no-id"
-    return f"job-{request_number}-{job_id}"
+def _iter_jobs(input_jsonl_path: Path) -> list[dict[str, Any]]:
+    jobs: list[dict[str, Any]] = []
+    with input_jsonl_path.open() as input_file:
+        for line in input_file:
+            stripped_line = line.strip()
+            if not stripped_line:
+                continue
+
+            job = json.loads(stripped_line)
+            if not isinstance(job, dict):
+                raise ValueError("Expected one JSON object per JSONL line")
+
+            jobs.append(job)
+
+    return jobs
+
+
+def _chunks(jobs: list[dict[str, Any]], chunk_size: int) -> list[list[dict[str, Any]]]:
+    return [jobs[index:index + chunk_size] for index in range(0, len(jobs), chunk_size)]
 
 
 def _read_json(path: Path) -> dict[str, Any]:

@@ -62,6 +62,7 @@ class AddPostingMetadata:
             "location": metadata.location,
             "date_posted": metadata.date_posted.isoformat() if metadata.date_posted else None,
             "applicants": metadata.applicants,
+            "workplace_type": job.get("extra_data", {}).get("workplace_type")
         }
 
 

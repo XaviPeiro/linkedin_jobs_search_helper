@@ -18,7 +18,7 @@ def main(input_path: Path, output_path: Path):
                 try:
                     # Slow, no need to create an object, but no need to optimise it right now.
                     json.loads(l)
-                    s.add(l)
+                    s.add(l.strip())
                 except json.JSONDecodeError:
                     pass
 
@@ -26,7 +26,7 @@ def main(input_path: Path, output_path: Path):
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "w") as out:
         for l in s:
-            out.write(l)
+            out.write(f"{l}\n")
 
     logger.info(f"Job complete. You can find your file in {output_path}")
     logger.info("🤖Sayonara, baby.")

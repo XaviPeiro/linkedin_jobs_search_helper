@@ -31,26 +31,25 @@ def test_write_chat_completion_batch_input_from_real_jobs_jsonl(tmp_path):
     first_request = batch_requests[0]
     custom_ids = [request["custom_id"] for request in batch_requests]
     first_user_payload = json.loads(first_request["body"]["messages"][1]["content"])
-    first_user_job = first_user_payload["job"]
+    first_user_job = first_user_payload["jobs"][0]
 
-    assert len(batch_requests) == 25
+    assert len(batch_requests) == 3
     assert len(custom_ids) == len(set(custom_ids))
-    assert first_request["custom_id"] == "job-1-4409802662"
+    assert first_request["custom_id"] == "jobs-1"
     assert first_request["method"] == "POST"
     assert first_request["url"] == CHAT_COMPLETIONS_BATCH_ENDPOINT
     assert first_request["body"]["model"] == "gpt-4o-mini"
     assert first_request["body"]["response_format"]["type"] == "json_schema"
-    assert first_request["body"]["response_format"]["json_schema"]["name"] == "JobEvaluation"
+    assert first_request["body"]["response_format"]["json_schema"]["name"] == "JobEvaluations"
     assert first_request["body"]["response_format"]["json_schema"]["strict"] is True
     assert first_request["body"]["response_format"]["json_schema"]["schema"]["required"] == [
-        "id",
-        "reason",
-        "decision",
+        "jobs",
     ]
     assert first_request["body"]["messages"][0] == {
         "role": "system",
         "content": "Extract structured job data.",
     }
+    assert len(first_user_payload["jobs"]) == 10
     assert first_user_payload["sources"] == [
         {"name": "cv.md", "content": "Python developer CV"}
     ]

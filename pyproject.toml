@@ -9,6 +9,8 @@ packages = [{ include = "linkedin_jobs_search_helper", from = "src" }]
 in-scan = "linkedin_jobs_search_helper.jobs.extract.scanners.linkedin.main:main"
 add-posting-metadata = "linkedin_jobs_search_helper.jobs.transform_jobs.add_posting_metadata.__main__:main"
 create-batch = "linkedin_jobs_search_helper.jobs.transform_jobs.create_batch.__main__:main"
+canonical-pipeline = "linkedin_jobs_search_helper.jobs.transform_jobs.pipelines.canonical.__main__:main"
+download-job-evaluations-batch = "linkedin_jobs_search_helper.jobs.extract.job_evaluations.openai_batch:entrypoint"
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -20,6 +22,7 @@ tiktoken = "^0.4.0"
 regex = "^2023.6.3"
 pydantic = "2.4.0"
 openai = ">=2.0.0,<3.0.0"
+python-dotenv = "^1.2.2"
 colorlog = "^6.7.0"
 langid = "^1.1.6"
 pymongo = "^4.17.0"

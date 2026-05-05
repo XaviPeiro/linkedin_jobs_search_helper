@@ -6,11 +6,12 @@ from pathlib import Path
 
 from linkedin_jobs_search_helper.common.logger import configure_logging
 from linkedin_jobs_search_helper.common.openai_batch_client import DEFAULT_JOBS_PER_REQUEST
-from .create_batch import CreateBatch
+from linkedin_jobs_search_helper.jobs.transform_jobs.create_batch.__main__ import DEFAULT_MODEL
+from .canonical import CanonicalPipeline
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_MODEL = 'gpt-5.4-mini'
+
 def main(
     input_path: Path | None = None,
     output_dir: Path | None = None,
@@ -31,34 +32,36 @@ def main(
         parser.add_argument("--jobs-per-request", type=int)
         args = parser.parse_args()
 
-        input_path: Path = args.input_path
+        input_path = args.input_path
         output_dir = args.output_dir
         instruction_path = args.instruction_path
         model = args.model
         sources_path = args.sources
         jobs_per_request = args.jobs_per_request
 
-    default_output_dir = input_path.parent if input_path.is_file() else input_path
-    output_dir = output_dir or default_output_dir / "openai-batch"
     if instruction_path is None:
         raise ValueError("instruction_path is required")
-    instruction = instruction_path.read_text()
+
+    default_output_dir = input_path.parent if input_path.is_file() else input_path
+    output_dir = output_dir or default_output_dir / "canonical"
+    model = model or DEFAULT_MODEL
+    jobs_per_request = jobs_per_request or DEFAULT_JOBS_PER_REQUEST
 
     logger.info(f"Input path: {input_path}")
     logger.info(f"Output dir: {output_dir}")
     logger.info(f"Instruction path: {instruction_path}")
     logger.info(f"Sources path: {sources_path}")
 
-    stored_batch = CreateBatch(
+    execution_dir = CanonicalPipeline(
         input_path=input_path,
         output_dir=output_dir,
-        instruction=instruction,
+        instruction_path=instruction_path,
         model=model,
         sources_path=sources_path,
-        jobs_per_request=jobs_per_request or DEFAULT_JOBS_PER_REQUEST,
+        jobs_per_request=jobs_per_request,
     )()
-    logger.info(f"Batch created: {stored_batch.batch_id}")
-    logger.info(f"Manifest: {stored_batch.manifest_path}")
+
+    logger.info(f"Pipeline output: {execution_dir}")
 
 
 if __name__ == "__main__":
