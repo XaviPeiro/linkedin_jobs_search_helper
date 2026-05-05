@@ -13,6 +13,13 @@ from linkedin_jobs_search_helper.jobs.extract.scanners.linkedin.elements_paths i
 
 logger = logging.getLogger(__name__)
 
+WORKPLACE_TYPES = {
+    "remote": "remote",
+    "hybrid": "hybrid",
+    "on-site": "in-situ",
+}
+
+
 class CrawlerReceiver(ABC):
     # net_navigator: Any
 
@@ -99,4 +106,17 @@ class SeleniumReceiver(CrawlerReceiver):
 
         return {
             "top_card_tertiary_description": top_card_tertiary_description,
+            "workplace_type": self.get_workplace_type(),
         }
+
+    def get_workplace_type(self) -> str | None:
+        workplace_elements = self.net_navigator.find_elements(
+            By.CSS_SELECTOR,
+            JobsElements.job_workplace_type_css,
+        )
+        for workplace_element in workplace_elements:
+            workplace_type = WORKPLACE_TYPES.get(workplace_element.text.strip().lower())
+            if workplace_type is not None:
+                return workplace_type
+
+        return None

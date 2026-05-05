@@ -20,6 +20,9 @@ class JobsElements(ElementsPaths):
     job_top_card_tertiary_description_css: str = (
         ".job-details-jobs-unified-top-card__tertiary-description-container"
     )
+    job_workplace_type_css: str = (
+        ".jobs-details__main-content .job-details-fit-level-preferences button strong"
+    )
     discarded_job_card_css = ".job-card-list--is-dismissed"
     selected_job_card_title_css: str = selected_job_css + " " + job_card_title_css
     # job
