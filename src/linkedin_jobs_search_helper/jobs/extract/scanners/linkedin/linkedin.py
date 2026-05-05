@@ -177,6 +177,28 @@ class Linkedin:
             logger.error("Couldn't log in Linkedin! ☠ Check if any intermediate screen appeared and credentials.")
             raise e
 
+    def _activate_job_card(self, job_card: WebElement, expected_job_id: str | None) -> bool:
+        self.web_driver.execute_script(
+            "arguments[0].scrollIntoView({block: 'center'});",
+            job_card,
+        )
+        job_card.click()
+        time.sleep(0.5)
+
+        if expected_job_id is None:
+            return True
+
+        try:
+            WebDriverWait(self.web_driver, timeout=10).until(
+                lambda driver: driver.find_element(
+                    By.CSS_SELECTOR,
+                    JobsElements.selected_job_css,
+                ).get_attribute("data-job-id") == expected_job_id
+            )
+            return True
+        except TimeoutException:
+            return False
+
     # TODO P2: Split navigation and parse/actions
     # TODO P1: Pass filter attributes
     def _iterate_jobs(self, jobs_filter: JobsFilter, max_jobs: int):
@@ -205,13 +227,10 @@ class Linkedin:
         logger.info(f"scanning {len(job_cards)} elements from page {jobs_filter.pagination_offset // 25 + 1}")
         job_card: WebElement
         for index, job_card in enumerate(reversed(job_cards)):
-            # If it is the first element (the last on the document) the click is not fully working on the first click
-            # (probably due to it is not fully loaded and requires to scroll). This is a shitty but working solution.
-            # Let's keep move and look for something more adequate later.
-            job_card.click()
-            if index == 0:
-                job_card.click()
-            time.sleep(3)
+            expected_job_id = job_card.get_attribute("data-occludable-job-id")
+            if not self._activate_job_card(job_card=job_card, expected_job_id=expected_job_id):
+                logger.warning(f"Skipping job card that did not become active: {expected_job_id}")
+                continue
 
             # STATE: Active job
             logger.info("---------------------------------")

@@ -1,3 +1,4 @@
+import logging
 import os
 from datetime import date
 from pathlib import Path
@@ -5,6 +6,8 @@ from os import PathLike
 from typing import Any
 
 from pydantic import BaseModel, AnyHttpUrl, Field
+
+logger = logging.getLogger(__name__)
 
 class Job(BaseModel):
     id: int
@@ -22,6 +25,7 @@ class FilePersistence:
 
     def __init__(self, collected_jobs_dir: str | PathLike):
         self.items_added = 0
+        self._seen_job_ids: set[int] = set()
         self.collected_jobs_dir = Path(collected_jobs_dir)
 
         day = str(date.today())
@@ -41,6 +45,11 @@ class FilePersistence:
         return 0
 
     def __call__(self, job: Job):
+        if job.id in self._seen_job_ids:
+            logger.info(f"Skipping duplicated job id in current execution: {job.id}")
+            return
+
+        self._seen_job_ids.add(job.id)
         # TODO: Could be nice to not open/close the file over and over
         with open(self.persistence_file_path, 'a+') as file:
             file.write("\n")
