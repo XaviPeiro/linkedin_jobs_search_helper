@@ -79,12 +79,26 @@ class Linkedin:
         for job_filter in job_filters:
             self._iterate_jobs(jobs_filter=job_filter, max_jobs=job_filter.max_jobs)
 
+    def is_top_bar_load(self) -> bool:
+        try:
+            profile_icon = WebDriverWait(self.web_driver, 5).until(
+                expected_conditions.presence_of_element_located(
+                    (By.CSS_SELECTOR, "#job-medium")
+                ),
+            )
+            return True
+        except TimeoutException:
+            return False
+
     def _do_login(self, email: str, pw: str):
         try:
             # TODO P4: Move URL, no magic strings
             self.web_driver.get("https://www.linkedin.com/login?trk=guest_homepage-basic_nav-header-signin")
 
             def login_or_account_picker(driver: WebDriver):
+                if self.is_top_bar_load():
+                    return "loggedin", None
+
                 username_inputs = driver.find_elements(By.ID, "username")
                 if username_inputs:
                     return "credentials", username_inputs[0]
@@ -97,12 +111,20 @@ class Linkedin:
 
             login_mode, login_target = WebDriverWait(self.web_driver, timeout=300).until(login_or_account_picker)
 
-            if login_mode == "account_picker":
-                account_selector = WebDriverWait(self.web_driver, timeout=30).until(
-                    expected_conditions.presence_of_element_located(
-                        (By.XPATH, f"//p[normalize-space()='{email}']/ancestor::div[@role='button'][1]")
+            if login_mode == 'loggedin':
+                return
+            elif login_mode == "account_picker":
+                try:
+                    account_selector = WebDriverWait(self.web_driver, timeout=30).until(
+                        expected_conditions.presence_of_element_located(
+                            (By.XPATH, f"//p[normalize-space()='{email}']/ancestor::div[@role='button'][1]")
+                        )
                     )
-                )
+                except TimeoutException as timeout_exception:
+                    if self.is_top_bar_load():
+                        return
+                    raise timeout_exception
+
                 self.web_driver.execute_script(
                     "arguments[0].scrollIntoView({block: 'center'});",
                     account_selector,
