@@ -12,3 +12,7 @@ docker/mongo/data/
 app_config*.yaml
 !app_config*.template.yaml
 openai_playground.txt
+
+user_data/
+collected_jobs/
+.env
