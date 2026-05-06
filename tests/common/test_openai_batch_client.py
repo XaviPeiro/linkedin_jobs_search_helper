@@ -37,6 +37,8 @@ def test_write_chat_completion_batch_input_from_real_jobs_jsonl(tmp_path):
     assert len(custom_ids) == len(set(custom_ids))
     assert first_request["custom_id"] == "jobs-1"
     assert first_request["method"] == "POST"
+    assert len(batch_requests[0]['body']['messages']) > 9
+    assert len(batch_requests[3]['body']['messages']) > 9
     assert first_request["url"] == CHAT_COMPLETIONS_BATCH_ENDPOINT
     assert first_request["body"]["model"] == "gpt-4o-mini"
     assert first_request["body"]["response_format"]["type"] == "json_schema"

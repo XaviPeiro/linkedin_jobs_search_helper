@@ -18,13 +18,14 @@ class PersistDataCommand(Command):
         return f"Action: {self._action_name}."
 
     def __call__(self, *args, **kwargs):
-        logger.info(f"Executing {str(self)} for {self.net_navigator.get_job_title()}")
+        job_title = self.net_navigator.get_job_title()
+        logger.info(f"Executing {str(self)} for {job_title}")
         job: Job = Job.model_validate_strings(
             {
                 "id": self.net_navigator.get_job_id(),
                 "url": self.net_navigator.get_url(),
                 "description": self.net_navigator.get_job_description(),
-                "title": self.net_navigator.get_job_title(),
+                "title": job_title,
                 "extra_data": self.net_navigator.get_extra_data(),
             }
         )

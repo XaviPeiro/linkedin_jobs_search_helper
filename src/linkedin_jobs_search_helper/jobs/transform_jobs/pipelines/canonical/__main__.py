@@ -7,10 +7,13 @@ from pathlib import Path
 from linkedin_jobs_search_helper.common.logger import configure_logging
 from linkedin_jobs_search_helper.common.openai_batch_client import DEFAULT_JOBS_PER_REQUEST
 from linkedin_jobs_search_helper.jobs.transform_jobs.create_batch.__main__ import DEFAULT_MODEL
+from linkedin_jobs_search_helper.settings import get_settings
 from .canonical import CanonicalPipeline
 
 logger = logging.getLogger(__name__)
+settings = get_settings()
 
+DEFAULT_INSTRUCTIONS_PATH = settings.project_root / 'src/linkedin_jobs_search_helper/jobs/evaluate/evaluation_prompt.md'
 
 def main(
     input_path: Path | None = None,
@@ -25,8 +28,8 @@ def main(
     if input_path is None:
         parser = argparse.ArgumentParser()
         parser.add_argument("input_path", type=Path)
+        parser.add_argument("--instruction-path", type=Path, default=DEFAULT_INSTRUCTIONS_PATH)
         parser.add_argument("--output-dir", type=Path)
-        parser.add_argument("--instruction-path", type=Path, required=True)
         parser.add_argument("--model", default=DEFAULT_MODEL)
         parser.add_argument("--sources", type=Path, default=Path("user_data"))
         parser.add_argument("--jobs-per-request", type=int)

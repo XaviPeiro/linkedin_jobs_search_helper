@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any
 
-from selenium.common import NoSuchElementException
+from selenium.common import NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions
@@ -95,12 +95,11 @@ class SeleniumReceiver(CrawlerReceiver):
         return self.net_navigator.find_element(By.CSS_SELECTOR, JobsElements.selected_job_css).get_attribute("data-job-id")
 
     def get_extra_data(self) -> dict[str, Any]:
-        try:
-            top_card_tertiary_description = self.net_navigator.find_element(
-                By.CSS_SELECTOR,
-                JobsElements.job_top_card_tertiary_description_css,
-            ).text.strip()
-        except NoSuchElementException:
+        top_card_tertiary_description = self._get_optional_element_text(
+            by=By.CSS_SELECTOR,
+            value=JobsElements.job_top_card_tertiary_description_css,
+        )
+        if top_card_tertiary_description is None:
             logger.warning(f"No extra data found for job {self.get_job_id()}")
             top_card_tertiary_description = ""
 
@@ -110,13 +109,28 @@ class SeleniumReceiver(CrawlerReceiver):
         }
 
     def get_workplace_type(self) -> str | None:
-        workplace_elements = self.net_navigator.find_elements(
-            By.CSS_SELECTOR,
-            JobsElements.job_workplace_type_css,
-        )
-        for workplace_element in workplace_elements:
-            workplace_type = WORKPLACE_TYPES.get(workplace_element.text.strip().lower())
-            if workplace_type is not None:
-                return workplace_type
+        for _ in range(3):
+            workplace_elements = self.net_navigator.find_elements(
+                By.CSS_SELECTOR,
+                JobsElements.job_workplace_type_css,
+            )
+            try:
+                for workplace_element in workplace_elements:
+                    workplace_type = WORKPLACE_TYPES.get(workplace_element.text.strip().lower())
+                    if workplace_type is not None:
+                        return workplace_type
+            except StaleElementReferenceException:
+                continue
+
+        return None
+
+    def _get_optional_element_text(self, *, by: str, value: str) -> str | None:
+        for _ in range(3):
+            try:
+                return self.net_navigator.find_element(by, value).text.strip()
+            except StaleElementReferenceException:
+                continue
+            except NoSuchElementException:
+                return None
 
         return None

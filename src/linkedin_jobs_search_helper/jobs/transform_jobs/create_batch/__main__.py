@@ -24,8 +24,8 @@ def main(
     if input_path is None:
         parser = argparse.ArgumentParser()
         parser.add_argument("input_path", type=Path)
-        parser.add_argument("--output-dir", type=Path)
         parser.add_argument("--instruction-path", type=Path, required=True)
+        parser.add_argument("--output-dir", type=Path)
         parser.add_argument("--model", default=DEFAULT_MODEL)
         parser.add_argument("--sources", type=Path, default=Path("user_data"))
         parser.add_argument("--jobs-per-request", type=int)
@@ -55,7 +55,7 @@ def main(
         instruction=instruction,
         model=model,
         sources_path=sources_path,
-        jobs_per_request=jobs_per_request or DEFAULT_JOBS_PER_REQUEST,
+        jobs_per_request=jobs_per_request or DEFAULT_JOBS_PER_REQUEST
     )()
     logger.info(f"Batch created: {stored_batch.batch_id}")
     logger.info(f"Manifest: {stored_batch.manifest_path}")

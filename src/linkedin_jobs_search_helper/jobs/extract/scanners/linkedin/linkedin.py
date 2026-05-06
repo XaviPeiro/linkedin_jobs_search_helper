@@ -183,7 +183,7 @@ class Linkedin:
             job_card,
         )
         job_card.click()
-        time.sleep(0.5)
+        time.sleep(0.9)
 
         if expected_job_id is None:
             return True
@@ -244,8 +244,8 @@ class Linkedin:
             # TODO: Actions can alter the webdriver's state, so the outcome of the following actions. Kurwa macz...
             for action in self._actions[LinkedinStates.ACTIVE_JOB_CARD]:
                 action()
-                # action(element=self.web_driver.find_element(By.CSS_SELECTOR, "div.scaffold-layout__list-detail-inner"))
                 logger.info("__ __\n")
+                time.sleep(2) # Throttling to avoid getting blocked
             logger.info("----------------------------------\n")
         else:
             # next page
